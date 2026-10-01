@@ -1,0 +1,5 @@
+# Session transcripts written by the preserve-the-evidence plugin
+docs/claude-log/
+
+# macOS
+.DS_Store
