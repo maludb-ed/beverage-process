@@ -188,7 +188,10 @@ def build_options(*, surface: str, system_prompt: str, resume: str | None, actio
         cwd=str(WORK_DIR),
         verbatim_prompts=True,                      # the user's text is never expanded (@path, /commands)
         env={
-            "ANTHROPIC_API_KEY": api_key,
+            # An OAuth token (claude setup-token) is rejected when sent as an API key, and the CLI
+            # prefers ANTHROPIC_API_KEY (inherited from the systemd EnvironmentFile), so blank it.
+            **({"CLAUDE_CODE_OAUTH_TOKEN": api_key, "ANTHROPIC_API_KEY": ""} if api_key.startswith("sk-ant-oat")
+               else {"ANTHROPIC_API_KEY": api_key}),
             "CLAUDE_CONFIG_DIR": str(CLI_HOME),
             "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
             "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
