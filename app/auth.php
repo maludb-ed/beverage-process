@@ -14,6 +14,14 @@ function current_user(): ?array
     }
     $id = $_SESSION['user_id'] ?? null;
     if ($id === null) {
+        // The assistant acting for a user (localhost only, see verify_action_token()).
+        $tokenUser = verify_action_token($_SERVER[ACTION_TOKEN_HEADER] ?? null);
+        if ($tokenUser !== null) {
+            $GLOBALS['__action_token_user'] = $tokenUser;
+            $id = $tokenUser;
+        }
+    }
+    if ($id === null) {
         return $user = null;
     }
     $found = find_user(db(), (int) $id);
@@ -148,4 +156,68 @@ function throttle_config(): array
         (int) config('security.lockout_attempts_per_ip', 20),
         (int) config('security.lockout_window_minutes', 15),
     ];
+}
+
+// Assistant action tokens ------------------------------------------------------------
+// The assistant service performs actions by calling the app's own endpoints, as the
+// user who spoke, through the localhost-only actions MCP server. PHP mints a short-lived
+// HMAC token per command-bar message; the endpoints accept it in place of the session
+// (and in place of CSRF, which protects cookie sessions) only from localhost.
+// Format: base64url("{user_id}.{expires_unix}.{nonce}") . "." . base64url(hmac_sha256(payload, key))
+
+const ACTION_TOKEN_HEADER = 'HTTP_X_ACTION_TOKEN';
+
+function base64url_encode(string $bytes): string
+{
+    return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
+}
+
+function base64url_decode(string $text): string|false
+{
+    return base64_decode(strtr($text, '-_', '+/') . str_repeat('=', (4 - strlen($text) % 4) % 4), true);
+}
+
+function action_token_key(): string
+{
+    $key = (string) config('security.action_token_key');
+    if (strlen($key) < 32) {
+        throw new RuntimeException('security.action_token_key is not configured.');
+    }
+    return $key;
+}
+
+/** A token that lets the assistant act as $userId for $ttlSeconds. */
+function mint_action_token(int $userId, int $ttlSeconds = 300): string
+{
+    $payload = base64url_encode($userId . '.' . (time() + $ttlSeconds) . '.' . bin2hex(random_bytes(8)));
+    return $payload . '.' . base64url_encode(hash_hmac('sha256', $payload, action_token_key(), true));
+}
+
+/** The user id a valid token carries, or null. Only accepted from localhost. */
+function verify_action_token(?string $token): ?int
+{
+    $remote = $_SERVER['REMOTE_ADDR'] ?? '';
+    if ($token === null || $token === '' || !in_array($remote, ['127.0.0.1', '::1'], true)) {
+        return null;
+    }
+    $parts = explode('.', $token);
+    if (count($parts) !== 2) {
+        return null;
+    }
+    [$payload, $signature] = $parts;
+    $expected = base64url_encode(hash_hmac('sha256', $payload, action_token_key(), true));
+    if (!hash_equals($expected, $signature)) {
+        return null;
+    }
+    $decoded = base64url_decode($payload);
+    if ($decoded === false || !preg_match('/^(\d+)\.(\d+)\.[a-f0-9]{16}$/', $decoded, $m) || (int) $m[2] < time()) {
+        return null;
+    }
+    return (int) $m[1];
+}
+
+/** True when this request is the assistant acting through a valid action token. */
+function is_action_token_request(): bool
+{
+    return ($GLOBALS['__action_token_user'] ?? null) !== null;
 }

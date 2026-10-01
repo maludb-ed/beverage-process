@@ -1,0 +1,25 @@
+# /etc/systemd/system/cidery-actions-mcp.service
+# The actions MCP server (cidery_actions_mcp) on 127.0.0.1 port 8703: navigation, voice
+# actions and undo for the assistant. Localhost only, never proxied by Apache. No bearer:
+# every tool call carries the X-Action-Token PHP minted for the message, and every write
+# goes through the app's own PHP endpoints. Needs config/manifest.json
+# (services/actions_mcp/build_manifest.py).
+[Unit]
+Description=Cidery actions MCP server (cidery_actions_mcp, port 8703)
+After=network.target postgresql.service apache2.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=maludb
+WorkingDirectory=/var/www/services
+EnvironmentFile=-/var/www/config/services.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/var/www/services/.venv/bin/python -m actions_mcp.server
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

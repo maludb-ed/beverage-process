@@ -8,3 +8,6 @@ docs/claude-log/
 config/local.php
 vendor/
 storage/
+config/services.env
+services/.venv/
+__pycache__/

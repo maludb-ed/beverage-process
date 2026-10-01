@@ -46,7 +46,7 @@ function log_activity(
     $statement->execute([
         'actor_id'     => $actorId ?? ($user['id'] ?? null),
         'actor_label'  => $actorLabel ?? actor_label(),
-        'source'       => $source,
+        'source'       => $source === 'screen' && function_exists('is_action_token_request') && is_action_token_request() ? 'command_bar' : $source,
         'session_hash' => session_hash(),
         'request_id'   => request_id(),
         'action'       => $action,

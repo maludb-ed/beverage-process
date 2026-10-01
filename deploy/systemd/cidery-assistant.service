@@ -1,0 +1,23 @@
+[Unit]
+Description=Cidery unified assistant (Claude Agent SDK; command bar + Ask me anything), localhost:8765
+After=network-online.target postgresql.service cidery-records-mcp.service cidery-activity-mcp.service cidery-actions-mcp.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=maludb
+Group=maludb
+WorkingDirectory=/var/www/services
+EnvironmentFile=-/var/www/config/services.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/var/www/services/.venv/bin/python -m assistant.app
+Restart=on-failure
+RestartSec=3
+# Each turn spawns the bundled Claude Code CLI as a child; let running turns finish on stop.
+KillMode=mixed
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

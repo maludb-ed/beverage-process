@@ -26,3 +26,17 @@ ALTER ROLE cidery_records_ro  SET statement_timeout = '15s';
 ALTER ROLE cidery_activity_ro SET statement_timeout = '15s';
 ALTER ROLE cidery_records_ro  SET default_transaction_read_only = on;
 ALTER ROLE cidery_activity_ro SET default_transaction_read_only = on;
+
+-- MaluDB facade views are security_invoker and filtered by a row policy on
+-- owner_schema = current_schema(). The activity reader therefore needs SELECT on
+-- the base tables and a search_path that starts at the memory schema. One database
+-- per client (SaaS Plus+) means these tables hold only this client's memory.
+GRANT USAGE ON SCHEMA maludb_core TO cidery_activity_ro;
+GRANT SELECT ON ALL TABLES IN SCHEMA maludb_core TO cidery_activity_ro;
+ALTER ROLE cidery_activity_ro SET search_path = memory, maludb_core, public;
+ALTER ROLE cidery_records_ro SET search_path = app, public;
+
+-- Activity reader: the client's time zone and display units, so answers use local
+-- time. (MaluDB's internal lookup functions are not granted: the reader role reads
+-- through the facade views and text search, as MaluDB intends for maludb_read.)
+GRANT SELECT (id, client_name, timezone, volume_display_unit, mass_display_unit, fruit_display_unit) ON app.client_settings TO cidery_activity_ro;

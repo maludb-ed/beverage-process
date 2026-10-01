@@ -4,6 +4,7 @@
     <form id="assistant-form" class="assistant-form" method="post" action="/assistant/message"
           hx-post="/assistant/message" hx-target="#assistant-reply" hx-swap="innerHTML"
           hx-vals='js:{screen: (document.getElementById("screen-context")||{dataset:{}}).dataset.screen, entity: (document.getElementById("screen-context")||{dataset:{}}).dataset.entity, record_id: (document.getElementById("screen-context")||{dataset:{}}).dataset.recordId}'
+          hx-disabled-elt="#assistant-send-btn"
           hx-on::after-request="if(event.detail.successful){this.reset();document.getElementById('assistant-reply').hidden=false;document.getElementById('assistant-input').focus();}">
         <?= csrf_field() ?>
         <div class="input-group">
@@ -23,3 +24,15 @@
         <p class="text-muted fs-12">Your recent exchanges with the assistant appear here.</p>
     </div>
 </div>
+<script>
+    // A navigation reply arrives with HX-Location, and htmx does not swap the body of such
+    // a response; show the reply bubble from the response text ourselves.
+    document.body.addEventListener('htmx:beforeOnLoad', function (evt) {
+        var xhr = evt.detail.xhr, elt = evt.detail.elt;
+        if (!xhr || !xhr.getResponseHeader('HX-Location') || !elt || !elt.closest || !elt.closest('#assistant-bar')) { return; }
+        var box = document.getElementById('assistant-reply');
+        box.innerHTML = xhr.responseText;
+        box.hidden = false;
+        if (window.htmx) { window.htmx.process(box); }
+    });
+</script>

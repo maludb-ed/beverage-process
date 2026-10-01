@@ -1,0 +1,23 @@
+# /etc/systemd/system/cidery-activity-mcp.service
+# The activity-memory MCP server (cidery_activity_mcp) on 127.0.0.1 port 8702. Read-only.
+# Exposed by Apache at /mcp/activity (deploy/apache/cidery-services.conf) behind bearer
+# tokens issued on the AI access tokens screen (scope 'activity').
+[Unit]
+Description=Cidery activity-memory MCP server (cidery_activity_mcp, port 8702)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=maludb
+WorkingDirectory=/var/www/services
+EnvironmentFile=-/var/www/config/services.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/var/www/services/.venv/bin/python -m activity_mcp.server
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
