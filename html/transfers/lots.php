@@ -1,0 +1,15 @@
+<?php
+declare(strict_types=1);
+require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
+require_once dirname(__DIR__, 2) . '/app/features/transfers/queries.php';
+
+// Pattern A fragment: the lot select (released lots at the source, FEFO order) for a chosen item.
+$user = require_role('receiving');
+$pdo = db();
+$n = preg_replace('/[^a-z0-9]/i', '', request_string('n', 20)) ?: 'n1';
+$itemId = request_integer('item_id') ?? (int) ($_GET['lines'][$n]['item_id'] ?? 0);
+$locationId = request_integer('location_id') ?? request_integer('from_location_id');
+$lines = transfer_prepare_lines($pdo, $locationId, [$n => ['item_id' => $itemId]]);
+echo view('transfers/partials/lot-select.php', [
+    'p' => 'transfer-form-line-' . $n, 'base' => 'lines[' . $n . ']', 'lots' => $lines[$n]['lots'], 'selected' => '', 'item' => $lines[$n]['item_facts'], 'error' => '',
+]);

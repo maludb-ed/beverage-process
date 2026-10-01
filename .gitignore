@@ -3,3 +3,8 @@ docs/claude-log/
 
 # macOS
 .DS_Store
+
+# Secrets and generated files
+config/local.php
+vendor/
+storage/

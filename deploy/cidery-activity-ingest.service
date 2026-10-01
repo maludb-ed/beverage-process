@@ -1,0 +1,12 @@
+# /etc/systemd/system/cidery-activity-ingest.service
+# Ships pending activity_log rows into the MaluDB memory schema of every active
+# client database. Paired with cidery-activity-ingest.timer (every minute).
+[Unit]
+Description=Cidery activity log ingestion into MaluDB
+After=postgresql.service
+
+[Service]
+Type=oneshot
+User=cidery
+EnvironmentFile=/etc/cidery/cidery.env
+ExecStart=/var/www/deploy/activity-ingest.sh

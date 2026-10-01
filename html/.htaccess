@@ -1,0 +1,12 @@
+# Pretty URLs (docs/05-action-manifest.md "URL conventions"): anything that is not a
+# real file or directory goes to the router, which maps it onto the page controllers.
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ _router.php [L,QSA]
+
+# Never serve dotfiles or PHP source maps
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

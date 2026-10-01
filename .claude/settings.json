@@ -1,0 +1,5 @@
+{
+  "enabledPlugins": {
+    "htmx-php-builder@maludb-ed": true
+  }
+}

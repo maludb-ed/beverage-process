@@ -1,0 +1,17 @@
+{
+    "name": "cidery/app",
+    "description": "Cidery memory-first inventory application",
+    "type": "project",
+    "minimum-stability": "stable",
+    "require": {
+        "league/oauth2-client": "^2.9",
+        "league/oauth2-google": "^5.0",
+        "spomky-labs/otphp": "^11.5",
+        "chillerlan/php-qrcode": "^6.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        }
+    }
+}
