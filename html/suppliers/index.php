@@ -14,4 +14,4 @@ if (is_results_request('suppliers-list-results')) {
     exit;
 }
 log_screen_entered('suppliers-list');
-render_screen('Suppliers', 'suppliers-list', view('suppliers/page.php', $data));
+render_screen('Vendors', 'suppliers-list', view('suppliers/page.php', $data));

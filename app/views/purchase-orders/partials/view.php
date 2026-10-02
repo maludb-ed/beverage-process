@@ -16,7 +16,7 @@ if (in_array($status, ['draft', 'open'], true) && $can('receiving') && (float) a
     $actions .= '<button type="button" class="btn btn-light-brand" id="purchase-order-view-cancel-btn" hx-post="/purchase-orders/' . e($id) . '/cancel" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="Cancel ' . e($order['number']) . '?"><i class="feather-x-circle me-2"></i><span>Cancel order</span></button>';
 }
 ?>
-<?= view('shared/page-header.php', ['title' => $order['number'], 'screen' => 'purchase-order-view', 'crumbs' => ['Receiving' => null, 'Purchase orders' => '/purchase-orders/', $order['number'] => null], 'actionsHtml' => $actions]) ?>
+<?= view('shared/page-header.php', ['title' => $order['number'], 'screen' => 'purchase-order-view', 'crumbs' => ['Purchasing' => null, 'Purchase Orders' => '/purchase-orders/', $order['number'] => null], 'actionsHtml' => $actions]) ?>
 <div class="main-content" id="purchase-order-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">

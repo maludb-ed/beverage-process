@@ -10,7 +10,7 @@ if ($canEdit && ($history === [] || $supplier['active'])) {
 }
 $tabs = ['overview' => 'Overview', 'items' => 'Items', 'orders' => 'Orders', 'performance' => 'Performance'];
 ?>
-<?= view('shared/page-header.php', ['title' => $supplier['name'], 'screen' => 'supplier-view', 'crumbs' => ['Setup' => null, 'Suppliers' => '/suppliers/', $supplier['name'] => null], 'actionsHtml' => $actions]) ?>
+<?= view('shared/page-header.php', ['title' => $supplier['name'], 'screen' => 'supplier-view', 'crumbs' => ['Purchasing' => null, 'Vendors' => '/suppliers/', $supplier['name'] => null], 'actionsHtml' => $actions]) ?>
 <div class="main-content" id="supplier-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">

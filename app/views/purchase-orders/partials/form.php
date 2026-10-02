@@ -5,7 +5,7 @@ $title = $isEdit ? 'Edit ' . ($order['number'] ?? 'Purchase Order') : 'Add Purch
 $cancelUrl = $isEdit ? '/purchase-orders/' . $id : '/purchase-orders/';
 $p = 'purchase-order-form';
 ?>
-<?= view('shared/page-header.php', ['title' => $title, 'screen' => 'purchase-order-form', 'crumbs' => ['Receiving' => null, 'Purchase orders' => '/purchase-orders/', $isEdit ? 'Edit' : 'Add' => null], 'actionsHtml' => form_actions('purchase-order-form', $cancelUrl, 'Save Order')]) ?>
+<?= view('shared/page-header.php', ['title' => $title, 'screen' => 'purchase-order-form', 'crumbs' => ['Purchasing' => null, 'Purchase Orders' => '/purchase-orders/', $isEdit ? 'Edit' : 'Add' => null], 'actionsHtml' => form_actions('purchase-order-form', $cancelUrl, 'Save Order')]) ?>
 <div class="main-content" id="purchase-order-form-content">
     <form id="purchase-order-form" method="post" action="/purchase-orders/save" hx-post="/purchase-orders/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>

@@ -52,7 +52,7 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | `item-add` / `item-edit` | `/items/new`, `/items/{id}/edit` | Item | add or change an item (class, unit, lot control, quarantine default, reorder point) | `name`, `item_class` |
 | `item-view` | `/items/{id}` | Item | see an item's stock, lots, alternate units, suppliers |  |
 | `units-list` | `/units/` | Units | see the unit conversions (read only) |  |
-| `suppliers-list` | `/suppliers/` | Suppliers | see suppliers and orchards |  |
+| `suppliers-list` | `/suppliers/` | Vendors | see vendors (suppliers) and orchards, under Purchasing |  |
 | `supplier-add` / `supplier-edit` | `/suppliers/new`, `/suppliers/{id}/edit` | Supplier | add or change a supplier | `name`, `kind` |
 | `supplier-view` | `/suppliers/{id}` | Supplier | see a supplier's items, prices, orders and performance |  |
 | `users-list` | `/users/` | Users | see who can sign in (owner only) |  |
@@ -64,7 +64,7 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 
 | Screen id | URL | Title | When the user wants to… | Prefill |
 |---|---|---|---|---|
-| `purchase-orders-list` | `/purchase-orders/` | Purchase orders | see open, overdue, or past orders |  |
+| `purchase-orders-list` | `/purchase-orders/` | Purchase orders | see open, overdue, or past purchase orders, under Purchasing |  |
 | `purchase-order-add` / `purchase-order-edit` | `/purchase-orders/new`, `/purchase-orders/{id}/edit` | Purchase order | create or change an order with its lines | `supplier`, `expected_on`, `item`, `qty` |
 | `purchase-order-view` | `/purchase-orders/{id}` | Purchase order | see an order, its lines, what has been received against it |  |
 | `receipts-list` | `/receipts/` | Receipts | see deliveries received or in progress |  |

@@ -4,7 +4,7 @@ $isEdit = $id !== null;
 $title = $isEdit ? 'Edit Supplier' : 'Add Supplier';
 $p = 'supplier-form';
 ?>
-<?= view('shared/page-header.php', ['title' => $title, 'screen' => 'supplier-form', 'crumbs' => ['Setup' => null, 'Suppliers' => '/suppliers/', $isEdit ? 'Edit' : 'Add' => null], 'actionsHtml' => form_actions('supplier-form', $isEdit ? '/suppliers/' . $id : '/suppliers/', 'Save Supplier')]) ?>
+<?= view('shared/page-header.php', ['title' => $title, 'screen' => 'supplier-form', 'crumbs' => ['Purchasing' => null, 'Vendors' => '/suppliers/', $isEdit ? 'Edit' : 'Add' => null], 'actionsHtml' => form_actions('supplier-form', $isEdit ? '/suppliers/' . $id : '/suppliers/', 'Save Supplier')]) ?>
 <div class="main-content" id="supplier-form-content">
     <form id="supplier-form" method="post" action="/suppliers/save" hx-post="/suppliers/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>

@@ -14,8 +14,11 @@ function navigation_groups(): array
             ['screen' => 'ama', 'label' => 'Ask me anything', 'url' => '/ama/', 'slice' => 0],
             ['screen' => 'activity-list', 'label' => 'Activity', 'url' => '/activity/', 'slice' => 0],
         ]],
+        ['label' => 'Purchasing', 'icon' => 'feather-clipboard', 'items' => [
+            ['screen' => 'purchase-orders-list', 'label' => 'Purchase Orders', 'url' => '/purchase-orders/', 'slice' => 2],
+            ['screen' => 'suppliers-list', 'label' => 'Vendors', 'url' => '/suppliers/', 'slice' => 1],
+        ]],
         ['label' => 'Receiving', 'icon' => 'feather-truck', 'items' => [
-            ['screen' => 'purchase-orders-list', 'label' => 'Purchase orders', 'url' => '/purchase-orders/', 'slice' => 2],
             ['screen' => 'receipts-list', 'label' => 'Receipts', 'url' => '/receipts/', 'slice' => 2],
             ['screen' => 'lots-list', 'label' => 'Lots', 'url' => '/lots/', 'slice' => 2],
         ]],
@@ -82,7 +85,6 @@ function navigation_groups(): array
             ['screen' => 'vessels-list', 'label' => 'Vessels', 'url' => '/vessels/', 'slice' => 1],
             ['screen' => 'items-list', 'label' => 'Items', 'url' => '/items/', 'slice' => 1],
             ['screen' => 'units-list', 'label' => 'Units', 'url' => '/units/', 'slice' => 1],
-            ['screen' => 'suppliers-list', 'label' => 'Suppliers', 'url' => '/suppliers/', 'slice' => 1],
             ['screen' => 'reason-codes-list', 'label' => 'Reason codes', 'url' => '/reason-codes/', 'slice' => 1],
             ['screen' => 'users-list', 'label' => 'Users', 'url' => '/users/', 'slice' => 1, 'roles' => ['owner']],
             ['screen' => 'settings-client', 'label' => 'Organization', 'url' => '/settings/client', 'slice' => 1, 'roles' => ['owner']],
