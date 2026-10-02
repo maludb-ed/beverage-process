@@ -6,7 +6,8 @@ GRANT USAGE ON SCHEMA app TO cidery_records_ro;
 GRANT SELECT ON ALL TABLES IN SCHEMA app TO cidery_records_ro;
 ALTER DEFAULT PRIVILEGES FOR ROLE cidery_app IN SCHEMA app GRANT SELECT ON TABLES TO cidery_records_ro;
 GRANT EXECUTE ON FUNCTION app.trace_forward(bigint), app.trace_backward(bigint),
-                          app.derive_tax_class(text, numeric, numeric, numeric, boolean, boolean, boolean, date)
+                          app.derive_tax_class(text, numeric, numeric, numeric, boolean, boolean, boolean, date),
+                          app.standing_order_occurrences(date, date)
     TO cidery_records_ro;
 -- The records server must never see auth material.
 REVOKE SELECT ON app.users, app.auth_identities, app.totp_recovery_codes, app.login_attempts,
