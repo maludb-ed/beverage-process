@@ -146,3 +146,34 @@ function update_supplier_item(PDO $pdo, int $id, ?string $supplierSku, string $p
     }
     return $row;
 }
+
+/** What refers to a supplier: label => count, only the non-zero ones (its item terms are setup, not history). */
+function supplier_history(PDO $pdo, int $id): array
+{
+    $statement = $pdo->prepare(<<<'SQL'
+        SELECT (SELECT count(*) FROM app.purchase_orders WHERE supplier_id = :id) AS purchase_orders,
+               (SELECT count(*) FROM app.goods_receipts WHERE supplier_id = :id) AS receipts,
+               (SELECT count(*) FROM app.lots WHERE supplier_id = :id) AS lots
+    SQL);
+    $statement->execute(['id' => $id]);
+    $labels = ['purchase_orders' => 'purchase orders', 'receipts' => 'receipts', 'lots' => 'lots'];
+    $out = [];
+    foreach ($statement->fetch() as $key => $count) {
+        if ((int) $count > 0) {
+            $out[$labels[$key]] = (int) $count;
+        }
+    }
+    return $out;
+}
+
+/** Delete a supplier with no history (its item terms go with it); one with history is deactivated instead (returns false). */
+function delete_supplier(PDO $pdo, int $id): bool
+{
+    if (supplier_history($pdo, $id) !== []) {
+        $pdo->prepare('UPDATE app.suppliers SET active = false WHERE id = :id')->execute(['id' => $id]);
+        return false;
+    }
+    $pdo->prepare('DELETE FROM app.suppliers WHERE id = :id')->execute(['id' => $id]);
+    return true;
+}
+

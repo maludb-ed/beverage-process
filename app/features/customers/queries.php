@@ -104,15 +104,31 @@ function update_customer(PDO $pdo, int $id, string $name, string $kind, string $
 }
 
 /** Deletes when no removal or keg movement references the customer; otherwise deactivates. True when deleted. */
-function delete_customer(PDO $pdo, int $id): bool
+/** What refers to a customer: label => count, only the non-zero ones. Empty means it can be deleted outright. */
+function customer_history(PDO $pdo, int $id): array
 {
     $statement = $pdo->prepare(<<<'SQL'
-        SELECT EXISTS (SELECT 1 FROM app.removals WHERE customer_id = :id)
-            OR EXISTS (SELECT 1 FROM app.keg_movements WHERE customer_id = :id)
-            OR EXISTS (SELECT 1 FROM app.kegs WHERE current_holder_kind = 'customer' AND current_holder_id = :id)
+        SELECT (SELECT count(*) FROM app.sales_orders WHERE customer_id = :id) AS orders,
+               (SELECT count(*) FROM app.standing_orders WHERE customer_id = :id) AS standing_orders,
+               (SELECT count(*) FROM app.removals WHERE customer_id = :id) AS removals,
+               (SELECT count(*) FROM app.keg_movements WHERE customer_id = :id)
+             + (SELECT count(*) FROM app.kegs WHERE current_holder_kind = 'customer' AND current_holder_id = :id) AS keg_records
     SQL);
     $statement->execute(['id' => $id]);
-    if ((bool) $statement->fetchColumn()) {
+    $labels = ['orders' => 'orders', 'standing_orders' => 'standing orders', 'removals' => 'removals', 'keg_records' => 'keg records'];
+    $out = [];
+    foreach ($statement->fetch() as $key => $count) {
+        if ((int) $count > 0) {
+            $out[$labels[$key]] = (int) $count;
+        }
+    }
+    return $out;
+}
+
+/** Delete a customer with no history; one with history is deactivated instead (returns false). */
+function delete_customer(PDO $pdo, int $id): bool
+{
+    if (customer_history($pdo, $id) !== []) {
         $pdo->prepare('UPDATE app.customers SET active = false WHERE id = :id')->execute(['id' => $id]);
         return false;
     }

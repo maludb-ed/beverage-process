@@ -238,6 +238,7 @@ Role column: the minimum role; `owner` can do everything.
 | `item_create` / `item_update` | `POST /items/save` | name, item_class, base_unit, lot_controlled, quarantine_default, reorder_point | delete_row / restore_prior | no | receiving |
 | `item_unit_add` | `POST /items/{id}/units/save` | unit_name, to_base_factor | delete_row | no | receiving |
 | `supplier_create` / `supplier_update` | `POST /suppliers/save` | name, kind, contact | delete_row / restore_prior | no | receiving |
+| `supplier_delete` | `POST /suppliers/{id}/delete` | — (deleted with no purchase orders, receipts or lots; otherwise deactivated) | none | yes | receiving |
 | `supplier_item_add` | `POST /suppliers/{id}/items/save` | item, purchase_unit, price, lead_time_days | delete_row | no | receiving |
 | `user_invite` | `POST /users/save` | email, display_name, role | delete_row (if never signed in) | no | owner |
 | `user_invite_resend` | `POST /users/{id}/resend` | — (new 3-day link; earlier links stop working; emails the invitee) | none | yes | owner |
@@ -353,6 +354,7 @@ Role column: the minimum role; `owner` can do everything.
 | Action | Endpoint | Parameters | Undo | Confirm | Role |
 |---|---|---|---|---|---|
 | `customer_create` / `customer_update` | `POST /customers/save` | name, kind, default_destination, permit_number | delete_row / restore_prior | no | compliance |
+| `customer_delete` | `POST /customers/{id}/delete` | — (deleted with no orders, standing orders, removals or keg records; otherwise deactivated) | none | yes | compliance, sales |
 | `removal_create` / `removal_update` | `POST /removals/save` | destination_kind, customer?, removed_at, lines[finished_lot, units, kegs[]] | delete_row / restore_prior (draft) | no | compliance |
 | `removal_post` | `POST /removals/{id}/post` | — (ledger removal, tax determination, keg ships) | reverse (posts a reversing removal) | yes (changes tax state) | compliance |
 | `removal_reverse` | `POST /removals/{id}/reverse` | reason | none | yes | compliance |

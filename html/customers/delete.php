@@ -5,17 +5,19 @@ require_once dirname(__DIR__, 2) . '/app/features/customers/queries.php';
 
 require_post();
 verify_csrf();
-$user = require_role('compliance');
+// Compliance, and sales (who can add customers from the order form), may delete a customer with no history.
+$user = require_role('compliance', 'sales');
 $pdo = db();
 $id = request_integer('id') ?? not_found('That customer does not exist.');
 $customer = find_customer($pdo, $id) ?? not_found('That customer does not exist.');
 try {
     $pdo->beginTransaction();
+    $history = customer_history($pdo, $id);
     $deleted = delete_customer($pdo, $id);
     log_activity($pdo, $deleted ? 'customer_deleted' : 'customer_updated', 'customer', $id, $customer['name'], $customer, $deleted ? null : ['active' => false],
-        ['reason' => $deleted ? 'deleted' : 'referenced by removals or kegs, deactivated'], 'customer-view');
+        ['reason' => $deleted ? 'deleted, no history' : 'has history (' . history_summary($history) . '), deactivated'], 'customer-view');
     $pdo->commit();
-    flash('success', $deleted ? 'Customer "' . $customer['name'] . '" deleted.' : 'Removals or kegs reference "' . $customer['name'] . '", so it was deactivated instead of deleted.');
+    flash('success', $deleted ? 'Customer "' . $customer['name'] . '" deleted.' : '"' . $customer['name'] . '" has history (' . history_summary($history) . '), so it was deactivated instead of deleted.');
     hx_trigger('customersChanged');
     hx_location($deleted ? '/customers/' : '/customers/' . $id);
 } catch (PDOException $exception) {

@@ -96,6 +96,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 
 - **New supplier from the purchase order form (2026-10-02):** the same pattern on `/purchase-orders/new` and edit: **New supplier** opens an inline panel (name, kind, contact, email, phone); **Add supplier** saves through `POST /purchase-orders/supplier-quick` (receiving, the supplier form's role; refuses a name that already exists), logs `supplier_created`, and returns the field with the new supplier selected. Checked over HTTP and in a browser at 375px; the test suppliers were removed afterwards (there is no supplier delete in the app, so by SQL).
 
+- **Delete customers and suppliers with no history (2026-10-02):** the customer and supplier views show **Delete** when nothing refers to the record (customers: orders, standing orders, removals, keg records; suppliers: purchase orders, receipts, lots; a supplier's item list is setup and goes with it), and **Deactivate** otherwise, naming the history in the confirmation. The customer delete check now includes orders and standing orders (before, deleting a customer with only orders failed on the foreign key), and sales may delete customers as well as compliance; suppliers delete through the new `POST /suppliers/{id}/delete` (receiving). Shared helper `history_summary()` in `app/ui.php`.
+
 ## Not built, or waiting on data
 
 - **Packaging plan on production orders:** the `app.production_order_packages` table exists (an optional split of a production order across formats, linked to order lines) but has no screen yet, so the projections treat planned production as bulk and the older `packaging_material_needs` tool still shows one scenario per format.

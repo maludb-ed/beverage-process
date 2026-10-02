@@ -1,7 +1,13 @@
-<?php /** @var array $supplier  @var array $items  @var array $itemInput  @var array $itemErrors  @var bool $canEdit  @var array $itemOptions  @var array $unitOptions */
+<?php /** @var array $supplier  @var array $items  @var array $itemInput  @var array $itemErrors  @var bool $canEdit  @var array $itemOptions  @var array $unitOptions  @var array $history */
 $id = (int) $supplier['id'];
 $actions = nav_button('supplier-view-back-btn', '/suppliers/', 'Suppliers', 'feather-arrow-left', 'btn btn-light-brand')
     . ($canEdit ? nav_button('supplier-view-edit-btn', '/suppliers/' . $id . '/edit', 'Edit Supplier', 'feather-edit') : '');
+// Delete with no history; with history, deactivate (the same endpoint decides).
+if ($canEdit && ($history === [] || $supplier['active'])) {
+    $actions .= $history === []
+        ? '<button type="button" class="btn btn-light-brand" id="supplier-view-delete-btn" hx-post="/suppliers/' . e($id) . '/delete" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="Delete ' . e($supplier['name']) . '? It has no purchase orders, receipts or lots, so it is removed for good with its item list."><i class="feather-trash-2 me-2"></i><span>Delete</span></button>'
+        : '<button type="button" class="btn btn-light-brand" id="supplier-view-delete-btn" hx-post="/suppliers/' . e($id) . '/delete" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="' . e($supplier['name']) . ' has history (' . e(history_summary($history)) . '), so it cannot be deleted. Deactivate it instead?"><i class="feather-slash me-2"></i><span>Deactivate</span></button>';
+}
 $tabs = ['overview' => 'Overview', 'items' => 'Items', 'orders' => 'Orders', 'performance' => 'Performance'];
 ?>
 <?= view('shared/page-header.php', ['title' => $supplier['name'], 'screen' => 'supplier-view', 'crumbs' => ['Setup' => null, 'Suppliers' => '/suppliers/', $supplier['name'] => null], 'actionsHtml' => $actions]) ?>

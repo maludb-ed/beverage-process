@@ -1,4 +1,4 @@
-<?php /** @var array $customer  @var array $removals  @var array $kegs  @var array $user  @var array $orders */
+<?php /** @var array $customer  @var array $removals  @var array $kegs  @var array $user  @var array $orders  @var array $history */
 $id = (int) $customer['id'];
 $canEdit = user_can($user, 'compliance');
 $out = array_values(array_filter($removals, static fn($r) => $r['direction'] === 'out'));
@@ -8,7 +8,12 @@ if ($canEdit) {
     $actions .= nav_button('customer-view-edit-btn', '/customers/' . $id . '/edit', 'Edit', 'feather-edit', 'btn btn-light-brand');
     $actions .= nav_button('customer-view-removal-btn', '/removals/new?customer=' . rawurlencode($customer['name']), 'Add removal', 'feather-log-out');
     $actions .= nav_button('customer-view-return-btn', '/removals/new?direction=in&customer=' . rawurlencode($customer['name']), 'Add return', 'feather-log-in', 'btn btn-light-brand');
-    $actions .= '<button type="button" class="btn btn-light-brand" id="customer-view-delete-btn" hx-post="/customers/' . e($id) . '/delete" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="Delete ' . e($customer['name']) . '? A customer with removals is deactivated instead."><i class="feather-trash-2 me-2"></i><span>Delete</span></button>';
+}
+// Delete with no history; with history, deactivate (the same endpoint decides). Sales may do this too.
+if (user_can($user, 'compliance', 'sales') && ($history === [] || $customer['active'])) {
+    $actions .= $history === []
+        ? '<button type="button" class="btn btn-light-brand" id="customer-view-delete-btn" hx-post="/customers/' . e($id) . '/delete" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="Delete ' . e($customer['name']) . '? It has no orders, removals or kegs, so it is removed for good."><i class="feather-trash-2 me-2"></i><span>Delete</span></button>'
+        : '<button type="button" class="btn btn-light-brand" id="customer-view-delete-btn" hx-post="/customers/' . e($id) . '/delete" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="' . e($customer['name']) . ' has history (' . e(history_summary($history)) . '), so it cannot be deleted. Deactivate it instead?"><i class="feather-slash me-2"></i><span>Deactivate</span></button>';
 }
 $removalTable = static function (array $rows, string $key, string $empty): string {
     ob_start(); ?>

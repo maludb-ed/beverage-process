@@ -14,5 +14,5 @@ log_screen_entered('supplier-view', 'supplier', $id, $supplier['name']);
 render_screen('Supplier ' . $supplier['name'], 'supplier-view', view('suppliers/view.php', [
     'supplier' => $supplier, 'items' => find_supplier_items($pdo, $id), 'itemInput' => [], 'itemErrors' => [], 'canEdit' => $canEdit,
     'itemOptions' => $canEdit ? item_options($pdo) : [], 'unitOptions' => $canEdit ? supplier_purchase_unit_options($pdo) : [],
-    'orders' => find_purchase_orders($pdo, '', '-number', 1, null, $id)['rows'], 'performance' => find_supplier_performance($pdo, $id), 'user' => $user,
+    'orders' => find_purchase_orders($pdo, '', '-number', 1, null, $id)['rows'], 'performance' => find_supplier_performance($pdo, $id), 'user' => $user, 'history' => supplier_history($pdo, $id),
 ]), 'supplier', $id);

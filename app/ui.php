@@ -258,3 +258,9 @@ function today(): string
 {
     return (new DateTimeImmutable('now', new DateTimeZone((string) config('app.timezone'))))->format('Y-m-d');
 }
+
+/** A record's history as counts by label ("3 orders, 1 removal"), for delete-or-deactivate messages. */
+function history_summary(array $history): string
+{
+    return implode(', ', array_map(static fn($label, $n) => $n . ' ' . ($n === 1 ? rtrim($label, 's') : $label), array_keys($history), $history));
+}
