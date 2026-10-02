@@ -10,8 +10,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 | 3 | Packaging runs and shipping from orders | Done 2026-10-02 | See below |
 | 4 | Spreadsheet import | Done 2026-10-02 | See below |
 | 5 | Standing orders and forecasts | Done 2026-10-02 | See below |
-| 6 | Projections | Next | |
-| 7 | Order history report, dashboard tiles | | |
+| 6 | Projections | Done 2026-10-02 | See below |
+| 7 | Order history report, dashboard tiles | Next | |
 | 8 | Assistant tools and actions | | Manifest, `prompts.py` roles (add `sales`), records tools |
 | 9 | Full test pass | | |
 
@@ -52,5 +52,16 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - **Forecast** (`/planning/forecast`, new Planning menu): per format and week (12 weeks), firm, standing, the forecast (run rate or manual) and the forecast counted after netting. **Generate from order history** sets each format's run rate (units ordered on confirmed, in-fulfillment, shipped and closed orders due in the last N weeks, divided by N) for the weeks ahead and keeps manual figures; **Set forecast** saves a manual figure for one week (blank clears it). Events: `forecast_generated`, `forecast_set`.
 - **Checked:** validation (interval, end before start), weekly and monthly schedules and next dates, value per delivery with a list-price line, order from a date (and refusal for a repeat or a non-date), standing demand replaced by firm demand for that date, pause removes demand; run rate 6 kegs / 26 weeks = 0.23 a week, manual 100 against 48 firm counts 52, regeneration keeps manual rows, viewer 403 on changes; conformance and the 375px sweep pass.
 - **Cleanup:** test standing orders STO-0001 and STO-0002 are paused, SO-00009 cancelled, and the test forecast rows deleted, so no test demand remains.
+
+## Step 6: projections
+
+- **Engine** (`app/features/planning/projection.php`, computed on request, nothing stored): 12 weekly buckets from this week, for one demand level (firm; firm and standing, the default; all with forecast).
+  1. *Finished goods* by format: released units plus draft packaging runs (in their run week) minus demand gives units to package.
+  2. *Bulk* by product: liters to package (units x fill / (1 - expected loss)) against active batches (volume less draft runs, ready when the recipe's remaining stage durations have passed, after the remaining stages' losses; carbonate and package stages are ready now) and production orders not yet started (at their planned package date, or pitch date plus the recipe's durations). Shortfalls become suggested batches, rounded up to the active recipe's batch size, with pitch-by = needed-by minus the recipe's pitch-to-ready days.
+  3. *Materials* by item: packaging bills of materials for units to package and for draft runs, recipe lines for suggested batches and unstarted production orders (in their pitch week), against released stock and open purchase order lines (in their expected week). Shortfalls become suggested purchases: first week short, total over the horizon, preferred supplier (shortest lead time, then price), order-by = needed-by minus lead time, quantity in the supplier's purchase unit. Juice shortfalls also show the fruit equivalent at the press-history yield.
+- **Driven by:** each suggestion is labelled with its first reason: planned production (needed even with no customer demand), firm, standing or forecast.
+- **Screens** (Planning menu): Projections (`/planning/`: batches to start, items to buy, data notes, week-by-week demand by type with value, units to package per format, bulk short per product), Suggested production (`/planning/production`, with **Create production order** prefilled with product, volume and pitch date, and the bulk counted as supply), Suggested purchases (`/planning/purchasing`, with **Create purchase order** prefilled with item, supplier, quantity and expected date; the purchase order form now accepts `?qty=`). A demand switch on each.
+- **Data notes** list what weakens the numbers: batches without a recipe to time them, stages without durations, production orders past their pitch date without a batch, items without a supplier or lead time.
+- **Checked:** a rolled-back scenario (2,400 cans and 30 kegs due in three weeks, a weekly standing order, a manual keg forecast): 2,346 cans and 27 kegs to package, one batch suggested and flagged late, juice short converted to 1,751 gal, standing and forecast levels adding their weeks; the screens with live data; prefills; conformance and the 375px sweep.
 
 **Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003, SO-00004 and SO-00009 (cancelled), standing orders STO-0001 and STO-0002 (paused), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.

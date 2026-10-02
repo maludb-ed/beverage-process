@@ -64,6 +64,9 @@ function navigation_groups(): array
             ['screen' => 'orders-import', 'label' => 'Import orders', 'url' => '/orders/import', 'slice' => 12, 'roles' => ['owner', 'sales']],
         ]],
         ['label' => 'Planning', 'icon' => 'feather-trending-up', 'items' => [
+            ['screen' => 'planning', 'label' => 'Projections', 'url' => '/planning/', 'slice' => 12],
+            ['screen' => 'planning-production', 'label' => 'Suggested production', 'url' => '/planning/production', 'slice' => 12],
+            ['screen' => 'planning-purchasing', 'label' => 'Suggested purchases', 'url' => '/planning/purchasing', 'slice' => 12],
             ['screen' => 'planning-forecast', 'label' => 'Forecast', 'url' => '/planning/forecast', 'slice' => 12],
         ]],
         ['label' => 'Compliance', 'icon' => 'feather-shield', 'items' => [

@@ -22,7 +22,7 @@ if ($id !== null) {
     }
     $screen = 'purchase-order-edit';
 } else {
-    // Prefill: ?supplier=<name> resolves to an id; ?expected_on=YYYY-MM-DD.
+    // Prefill: ?supplier=<name> resolves to an id; ?expected_on=YYYY-MM-DD; ?item=CODE and ?qty= fill the first line.
     $supplierName = request_string('supplier', 120);
     $supplierId = $supplierName !== '' ? (array_search(mb_strtolower($supplierName), array_map('mb_strtolower', $suppliers), true) ?: null) : request_integer('supplier_id');
     $expected = request_string('expected_on', 10);
@@ -33,7 +33,10 @@ if ($id !== null) {
     foreach ($catalog as $itemId => $item) {
         if ($itemCode !== '' && mb_strtolower($item['code']) === $itemCode) {
             $terms = $supplierId ? find_supplier_item_terms($pdo, (int) $supplierId, $itemId) : null;
-            $firstLine = ['item_id' => $itemId, 'purchase_unit_code' => $terms['purchase_unit_code'] ?? $item['base_unit_code'], 'unit_price' => $terms['last_price'] ?? ''];
+            // ?qty= (from suggested purchases) is in the supplier's purchase unit.
+            $qty = request_string('qty', 12);
+            $firstLine = ['item_id' => $itemId, 'purchase_unit_code' => $terms['purchase_unit_code'] ?? $item['base_unit_code'], 'unit_price' => $terms['last_price'] ?? '',
+                          'qty_ordered' => is_numeric($qty) && (float) $qty > 0 ? $qty : '', 'expected_on' => $order['expected_on']];
             break;
         }
     }
