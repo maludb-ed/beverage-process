@@ -9,8 +9,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 | 2 | Orders screens | Done 2026-10-02 | See below |
 | 3 | Packaging runs and shipping from orders | Done 2026-10-02 | See below |
 | 4 | Spreadsheet import | Done 2026-10-02 | See below |
-| 5 | Standing orders and forecasts | Next | |
-| 6 | Projections | | |
+| 5 | Standing orders and forecasts | Done 2026-10-02 | See below |
+| 6 | Projections | Next | |
 | 7 | Order history report, dashboard tiles | | |
 | 8 | Assistant tools and actions | | Manifest, `prompts.py` roles (add `sales`), records tools |
 | 9 | Full test pass | | |
@@ -46,4 +46,11 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - **Commit:** one transaction and one `orders_imported` event; new customers are created (kind "other") when allowed; rows with errors block the import unless the user chooses to skip them, and are kept on the import with their reasons. **Undo** deletes the import's orders while none has packaging runs, shipments or a production plan; customers it created stay. **Discard** sets a preview aside.
 - **Checked:** a CSV with history, upcoming, draft, new-customer, cancelled, duplicate and invalid rows (preview, refusal without skip, commit with skip, re-upload skips everything); an XLSX with date cells and unrecognised headers fixed through the Columns card; undo; viewer gets 403; conformance and the 375px sweep pass. Test imports were undone or discarded and the test customer deleted.
 
-**Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003 and SO-00004 (cancelled), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.
+## Step 5: standing orders and forecasts
+
+- **Standing orders** (`/orders/standing`, Sales menu): list (running by default; schedule, units each time, next date), form (customer, every week / every N weeks / every month on a day 1 to 28, start, optional end, lines with optional prices; a blank price uses the list price), view (lines, value per delivery, next 8 dates, orders made from it). **Create order** turns one date into a confirmed order (origin standing) due that day; each date converts once. **Pause/Resume**; paused or ended standing orders stop counting as demand. Events: `standing_order_created`, `standing_order_updated`, `standing_order_deactivated`, `order_created_from_standing`.
+- **Forecast** (`/planning/forecast`, new Planning menu): per format and week (12 weeks), firm, standing, the forecast (run rate or manual) and the forecast counted after netting. **Generate from order history** sets each format's run rate (units ordered on confirmed, in-fulfillment, shipped and closed orders due in the last N weeks, divided by N) for the weeks ahead and keeps manual figures; **Set forecast** saves a manual figure for one week (blank clears it). Events: `forecast_generated`, `forecast_set`.
+- **Checked:** validation (interval, end before start), weekly and monthly schedules and next dates, value per delivery with a list-price line, order from a date (and refusal for a repeat or a non-date), standing demand replaced by firm demand for that date, pause removes demand; run rate 6 kegs / 26 weeks = 0.23 a week, manual 100 against 48 firm counts 52, regeneration keeps manual rows, viewer 403 on changes; conformance and the 375px sweep pass.
+- **Cleanup:** test standing orders STO-0001 and STO-0002 are paused, SO-00009 cancelled, and the test forecast rows deleted, so no test demand remains.
+
+**Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003, SO-00004 and SO-00009 (cancelled), standing orders STO-0001 and STO-0002 (paused), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.
