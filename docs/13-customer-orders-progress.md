@@ -13,7 +13,7 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 | 6 | Projections | Done 2026-10-02 | See below |
 | 7 | Order history report, dashboard tiles | Done 2026-10-02 | See below |
 | 8 | Assistant tools and actions | Done 2026-10-02 | See below |
-| 9 | Full test pass | Next | |
+| 9 | Full test pass | Done 2026-10-02 | See below |
 
 ## Step 2: orders screens
 
@@ -79,5 +79,21 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - **Assistant prompt:** knows customer orders and planning, the sales role, and that only owner and sales see prices.
 - **Package defaults:** when no ready tank holds a format's need, the suggestion now falls back to the batch with the fullest tank (screen and voice).
 - **Checked:** every new records tool over MCP; price stripping; every action over MCP as the sales user (create, add line with confirmation, package, ship, undo chain, standing order date, pause and resume, viewer refused); two live assistant turns and a voice undo; a production user's value question answered without values. Test orders SO-00010, SO-00011, SO-00012 and SO-00013 were cancelled and their drafts deleted; STO-0001 is paused again.
+
+## Step 9: full test pass
+
+- **Conformance:** `scripts/conformance.sh` passes on all 44 feature directories (auth excluded as before: its pages run before sign-in).
+- **375px sweep:** 71 screens (every navigation item and the order, standing order, import, planning, customer and product detail screens): no horizontal scroll, no console errors, no failed loads. (A deleted test removal returned 404, as it should.)
+- **Records suite:** 92 of 92 calls behaved as expected, the seven new tools included (`test_client --suite`).
+- **End to end, order to production:** a confirmed order for 120 half barrels due in 8 weeks showed 117 kegs to package; the projection suggested 2 batches (3,785 L) to pitch by Oct 10; creating that production order through the production order form removed the suggestion and moved the juice need to the production order. Cleaned up (order and production order cancelled).
+- **End to end, history to forecast:** a CSV of 12 weeks of past orders imported as history; generating the forecast gave 3 kegs and 96 cans a week; the all-demand projection showed 42 cans to package this week then 96 a week, and cans and ends to buy driven by the forecast. Cleaned up (import undone, forecast regenerated empty).
+- Earlier steps covered order, package, ship, edit, delete and (in a rolled-back transaction) post, reverse and full shipment.
+- **PHP error log:** no warnings or fatals from this work.
+
+## Not built, or waiting on data
+
+- **Packaging plan on production orders:** the `app.production_order_packages` table exists (an optional split of a production order across formats, linked to order lines) but has no screen yet, so the projections treat planned production as bulk and the older `packaging_material_needs` tool still shows one scenario per format.
+- **Planning data** (the data notes on the planning screens list them): supplier lead times (none set, so order-by dates are unknown), suppliers for yeast, nutrient, cans and can ends, durations for 5 of 7 stages of the active recipe (pitch-by dates come out late, batch ready dates early), full bills of materials for both formats, real list prices (the $1.85 and $165 are placeholders), keg fills for lots L-261001-017 and L-261001-018, batch B-26-004 has no recipe, and WO-00006 was due to pitch on Oct 1 with no batch.
+- **Assistant evals:** the new tools were checked over MCP and in live turns; `assistant.run_eval` was not re-run.
 
 **Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003, SO-00004, SO-00009 to SO-00013 (cancelled), standing orders STO-0001 and STO-0002 (paused), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.

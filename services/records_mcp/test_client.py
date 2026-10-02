@@ -19,6 +19,13 @@ from mcp.shared._httpx_utils import create_mcp_http_client
 from common import config
 
 SUITE: list[tuple[str, str, dict[str, Any]]] = [
+    ("O1", "orders_find", {"status": None, "limit": 5}),
+    ("O2", "order_status", {"order": "SO-00001"}),
+    ("O3", "orders_history", {"group_by": "customer"}),
+    ("O4", "standing_orders_find", {"include_paused": True}),
+    ("O5", "demand_projection", {"level": "all", "weeks": 8}),
+    ("O6", "production_projection", {"weeks": 8}),
+    ("O7", "purchase_projection", {"level": "firm", "weeks": 8}),
     ("R1", "receiving_open_orders", {"date_from": "2026-09-28", "date_to": "2026-10-04"}),
     ("R5", "receiving_open_orders", {"overdue_only": True}),
     ("R2", "receiving_receipt_vs_order", {"receipt_number": "GR-00001"}),

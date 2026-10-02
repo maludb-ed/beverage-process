@@ -13,6 +13,7 @@
 | 2 Auth and shell | Login (password, Google, TOTP), nxl shell, command bar stub, activity logging live | Done 2026-10-01; look and feel approved (`docs/06-phase2-shell.md`) |
 | 3 Vertical slices | Ten slices in the order in section 4; receiving is the exemplar | Built 2026-10-01 (`docs/08-phase3-progress.md`) |
 | 4 MCP servers and assistant | Records MCP, activity MCP, actions MCP, unified Agent SDK assistant, client token screen | Built 2026-10-01; live model tests wait for an API key (`docs/10-phase4-progress.md`) |
+| 5 Customer orders and planning | Orders, packaging and shipping from orders, imports, standing orders, forecasts, projections, order history, assistant tools | Built 2026-10-02 (`docs/11` plan, `docs/12` design, `docs/13` progress) |
 
 Host check (2026-10-01): PostgreSQL 17.10 with `maludb_core` 0.104.0 and `vector` 0.8.5 available, PHP 8.3.6 with `pdo_pgsql`, Apache 2.4.58 (only the default site), Python 3.12 with `psycopg2` only. Phase 4 needs `mcp` (FastMCP) and `claude-agent-sdk` installed into a venv; nothing else is missing. The repo holds `docs/` and a placeholder `html/index.php`.
 
