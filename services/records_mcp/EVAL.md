@@ -81,3 +81,16 @@ called). Arguments are sent as `{"params": {...}}`. The dev data was entered in 
 - R37: production orders do not record a packaging configuration, so material needs are shown per configuration as "if all packaged as". A `packaging_configuration_id` on production orders would make this exact.
 - R40 and R45: `app.v_batch_costs` counts only a batch's own consumptions, so split and blend children look cheap (B-26-004 shows $56.20). `cost_batch` adds `inherited_from_parents` and a per-liter figure that includes them; folding that into the view is a schema decision for the coordinator.
 - R47: `compliance_period_summary` derives the figures live, using the same sources as the PHP report generator but a simpler rollup. The filed figures come from `compliance_report`.
+
+## Customer orders and planning (2026-10-02)
+
+| Q | Tool call | Result against the dev data |
+|---|---|---|
+| O1 | `orders_find {status: null, limit: 3}` | SO-00002 (Green Mountain, history, 6 half barrels, $960) first, by due date; `has_more` true. |
+| O2 | `order_status {order: "HT-1001"}` | Resolves the customer reference to SO-00001 (closed, 73 units, $129.60) with lines, runs and shipments. |
+| O3 | `orders_history {group_by: "month", 2026}` | 2026-06: 1 order, 6 units, $960; 2026-10: 1 order, 73 units, $129.60. |
+| O4 | `standing_orders_find {include_paused: true}` | STO-0001 (every week on Friday) and STO-0002 (every month on day 15), both paused, with lines. |
+| O5 to O7 | `purchase_projection {weeks: 6}`, `production_projection {level: "all"}` | Juice short 1,892.7 L this week (1,250 gal suggested, about $5,625) for planned production; bulk supply lists B-26-004, B-26-006, B-26-001 and the unstarted production orders. |
+| Prices | the same calls with `X-Cidery-Show-Prices: 0` | `unit_price`, `order_value`, `approx_cost` absent. |
+
+Live assistant turns (sales user): the AMA question "what do we need to buy in the next 4 weeks" answered from `purchase_projection` (driven by planned production); the dictated "the hill taproom wants three half barrels next friday, their PO is TAP-77" created and confirmed SO-00013; "undo that" cancelled it. As a production user, a question about order values was answered in units with the values withheld.

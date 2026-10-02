@@ -6,10 +6,14 @@ require_once dirname(__DIR__, 2) . '/app/features/orders/fulfillment.php';
 
 require_post();
 verify_csrf();
-$user = require_role('compliance');
+// Compliance deletes any draft; sales may delete a draft shipment drafted from a customer order (undoing Ship).
+$user = require_role('compliance', 'sales');
 $pdo = db();
 $id = request_integer('id') ?? not_found('That removal does not exist.');
 $removal = find_removal($pdo, $id) ?? not_found('That removal does not exist.');
+if (!user_can($user, 'compliance') && $removal['sales_order_id'] === null) {
+    forbidden();
+}
 try {
     $pdo->beginTransaction();
     $orderIds = orders_for_removal($pdo, $id);

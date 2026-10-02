@@ -9,11 +9,11 @@ from mcp.server.mcpserver import MCPServer
 from common import config, serve
 
 from . import fmt, schema_summary
-from . import tools_compliance, tools_inventory, tools_packaging, tools_production, tools_quality_cost, tools_receiving, tools_recipes  # noqa: F401 (register tools)
+from . import tools_compliance, tools_inventory, tools_orders, tools_packaging, tools_production, tools_quality_cost, tools_receiving, tools_recipes  # noqa: F401 (register tools)
 from .registry import REGISTRY, register_all
 
 INSTRUCTIONS = """Records memory of the cidery: inventory, receiving, recipes, production and batches, packaging and kegs, quality,
-costing, compliance (TTB 5120.17) and recall traceability, read-only. Call a purpose-built tool first; each description names the
+costing, compliance (TTB 5120.17), recall traceability, customer orders and planning projections, read-only. Call a purpose-built tool first; each description names the
 questions it answers. Pass arguments as {"params": {...}}. Use human labels: lot numbers (L-261001-004), batch numbers (B-26-001),
 item codes or names, supplier, product, vessel, customer and location names; "id:123" also works. When a label is ambiguous the
 result has ambiguous=true and candidates: call again with one of them. Quantities come in base units (_l, _kg, _units) with display

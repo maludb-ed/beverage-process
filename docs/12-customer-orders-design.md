@@ -93,15 +93,15 @@ Creating production and purchase orders from suggestions reuses `production_orde
 
 | Tool | Answers | Input | Returns | Backing |
 |---|---|---|---|---|
-| `orders_find` | "what orders does Joe's have?", "what's due this week?" | `customer?`, `product?`, `status?`, `due_from?`, `due_to?`, `origin?` | Orders with lines, open units, value | `v_sales_order_lines` |
-| `order_status` | "where is SO-00042?" | `order_number` or `customer_reference` | Lines with shipped, in runs, open; linked runs and removals | `v_sales_order_lines`, links |
-| `orders_history` | "what did we sell to X last quarter?", "best-selling format?" | `customer?`, `product?`, `date_from?`, `date_to?`, `group_by` (customer, product, format, month) | Units and value | `v_sales_order_lines` |
-| `standing_orders_find` | "what are our standing orders?", "when does X order next?" | `customer?`, `active?` | Schedules, lines, next occurrences | `standing_orders`, `standing_order_occurrences` |
-| `demand_projection` | "what do we need to deliver in the next 4 weeks?" | `weeks?`, `types?` (firm, standing, forecast), `product?` | Units, volume and value by week and type | `v_demand` |
-| `production_projection` | "what do we need to brew and when?" | `weeks?`, `types?` | Suggested batches with pitch-by dates and driving demand | step 6 functions |
-| `purchase_projection` | "what do we need to order this week?" | `weeks?`, `types?` | Items short, quantity, order-by date, supplier | step 6 functions |
+| `orders_find` | O1: "what orders does Joe's have?", "what's due this week?" | `customer?`, `product?`, `status?`, `due_from?`, `due_to?`, `origin?` | Orders with lines, open units, value | `v_sales_order_lines` |
+| `order_status` | O2: "where is SO-00042?" | `order_number` or `customer_reference` | Lines with shipped, in runs, open; linked runs and removals | `v_sales_order_lines`, links |
+| `orders_history` | O3: "what did we sell to X last quarter?", "best-selling format?" | `customer?`, `product?`, `date_from?`, `date_to?`, `group_by` (customer, product, format, month) | Units and value | `v_sales_order_lines` |
+| `standing_orders_find` | O4: "what are our standing orders?", "when does X order next?" | `customer?`, `active?` | Schedules, lines, next occurrences | `standing_orders`, `standing_order_occurrences` |
+| `demand_projection` | O5: "what do we need to deliver in the next 4 weeks?" | `weeks?`, `types?` (firm, standing, forecast), `product?` | Units, volume and value by week and type | `v_demand` |
+| `production_projection` | O6: "what do we need to brew and when?" | `weeks?`, `types?` | Suggested batches with pitch-by dates and driving demand | step 6 functions |
+| `purchase_projection` | O7: "what do we need to order this week?" | `weeks?`, `types?` | Items short, quantity, order-by date, supplier | step 6 functions |
 
-Value fields are returned only through tokens and sessions whose user is owner or sales.
+Value fields (prices, line totals, order values, approximate purchase cost) are left out unless the caller may see them: the app's assistant sends `X-Cidery-Show-Prices: 0` for users who are neither owner nor sales; client tokens, which only owners create, see them. The three projection tools run the PHP engine (`scripts/planning-json.php`) under the read-only records role, so screens and assistant agree. O8 ("enter an order by voice") is the actions server's `order_create`.
 
 ## 7. Open points for approval
 

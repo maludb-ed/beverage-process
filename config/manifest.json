@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-01T20:49:41+00:00",
+  "generated_at": "2026-10-02T15:36:04+00:00",
   "generated_by": "services/actions_mcp/build_manifest.py",
   "source": "docs/05-action-manifest.md",
   "screens": [
@@ -628,7 +628,9 @@
       "section": "Slice 2: receiving (exemplar)",
       "prefill": [
         "supplier",
-        "expected_on"
+        "expected_on",
+        "item",
+        "qty"
       ],
       "record_kind": null,
       "search": false,
@@ -2519,6 +2521,328 @@
         "sample_path": "/trace/",
         "status": "ok"
       }
+    },
+    {
+      "id": "orders-list",
+      "url": "/orders/",
+      "title": "Customer orders",
+      "when": "see open or past customer orders, what is due, overdue orders",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": null,
+      "search": true,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/index.php",
+        "http": 200,
+        "sample_path": "/orders/",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "order-add",
+      "url": "/orders/new",
+      "title": "Customer order",
+      "when": "enter a customer order: customer, due date, lines of product format and units, prices — the empty form for a new one",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "customer"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/form.php",
+        "http": 200,
+        "sample_path": "/orders/new",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "order-edit",
+      "url": "/orders/{id}/edit",
+      "title": "Customer order",
+      "when": "enter a customer order: customer, due date, lines of product format and units, prices — the form for an existing record",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": "sales_order",
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/form.php",
+        "http": 200,
+        "sample_path": "/orders/1/edit",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "order-view",
+      "url": "/orders/{id}",
+      "title": "Customer order",
+      "when": "see an order's lines, packaging runs and shipments; confirm, package, ship, close or cancel it",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": "sales_order",
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/view.php",
+        "http": 200,
+        "sample_path": "/orders/1",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "order-package",
+      "url": "/orders/{id}/package",
+      "title": "Package for an order",
+      "when": "create the draft packaging runs that fill an order",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": "sales_order",
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/package.php",
+        "http": 200,
+        "sample_path": "/orders/1/package",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "orders-package-format",
+      "url": "/orders/package",
+      "title": "Package for orders",
+      "when": "package one format for every open order that needs it",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "format"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/package.php",
+        "http": 200,
+        "sample_path": "/orders/package",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "orders-to-package",
+      "url": "/orders/to-package",
+      "title": "Packaging queue",
+      "when": "see what must be packaged for customer orders, by format and due date",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/to-package.php",
+        "http": 200,
+        "sample_path": "/orders/to-package",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "standing-orders-list",
+      "url": "/orders/standing",
+      "title": "Standing orders",
+      "when": "see recurring customer orders",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": null,
+      "search": true,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/standing.php",
+        "http": 200,
+        "sample_path": "/orders/standing",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "standing-order-add",
+      "url": "/orders/standing/new",
+      "title": "Standing order",
+      "when": "set up or change a recurring order (weekly, every few weeks, monthly) — the empty form for a new one",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "customer"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/standing-form.php",
+        "http": 200,
+        "sample_path": "/orders/standing/new",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "standing-order-edit",
+      "url": "/orders/standing/{id}/edit",
+      "title": "Standing order",
+      "when": "set up or change a recurring order (weekly, every few weeks, monthly) — the form for an existing record",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": "standing_order",
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/standing-edit.php",
+        "http": 200,
+        "sample_path": "/orders/standing/1/edit",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "standing-order-view",
+      "url": "/orders/standing/{id}",
+      "title": "Standing order",
+      "when": "see a standing order's next dates; turn a date into an order; pause or resume it",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": "standing_order",
+      "search": true,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/standing.php",
+        "http": 200,
+        "sample_path": "/orders/standing/1",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "orders-import",
+      "url": "/orders/import",
+      "title": "Import orders",
+      "when": "load past or upcoming orders from a spreadsheet (CSV or Excel)",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/import.php",
+        "http": 200,
+        "sample_path": "/orders/import",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "order-import-view",
+      "url": "/orders/import/{id}",
+      "title": "Order import",
+      "when": "see an import's preview, columns, result or errors; import, undo or discard it",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": "order_import",
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/orders/import.php",
+        "http": 200,
+        "sample_path": "/orders/import/1",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "planning",
+      "url": "/planning/",
+      "title": "Projections",
+      "when": "see demand by week and what to package, brew and buy",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "demand"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/planning/index.php",
+        "http": 200,
+        "sample_path": "/planning/",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "planning-production",
+      "url": "/planning/production",
+      "title": "Suggested production",
+      "when": "see which batches to start and by when",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "demand"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/planning/production.php",
+        "http": 200,
+        "sample_path": "/planning/production",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "planning-purchasing",
+      "url": "/planning/purchasing",
+      "title": "Suggested purchases",
+      "when": "see what to buy, how much and by when",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "demand"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/planning/purchasing.php",
+        "http": 200,
+        "sample_path": "/planning/purchasing",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "planning-forecast",
+      "url": "/planning/forecast",
+      "title": "Forecast",
+      "when": "see and set forecast demand per format and week",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/planning/forecast.php",
+        "http": 200,
+        "sample_path": "/planning/forecast",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "report-orders",
+      "url": "/reports/orders",
+      "title": "Order history",
+      "when": "see past orders by customer, product, format or month",
+      "section": "Customer orders and planning (docs/11, docs/12)",
+      "prefill": [
+        "group_by",
+        "date_from",
+        "date_to"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/reports/orders.php",
+        "http": 200,
+        "sample_path": "/reports/orders",
+        "status": "ok"
+      }
     }
   ],
   "actions": [
@@ -3753,13 +4077,167 @@
       "role": "compliance",
       "exposed_by": null,
       "exposed": false
+    },
+    {
+      "name": "order_create",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/save then POST /orders/{id}/confirm",
+      "params": "customer, due_on, lines[] (product, format, units, unit_price?), reference?, ordered_on?, confirm?",
+      "undo": "delete_row (cancels the order)",
+      "confirm": "no",
+      "role": "sales",
+      "exposed_by": "order_create",
+      "exposed": true
+    },
+    {
+      "name": "order_add_line",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/save (all lines)",
+      "params": "order, product, format, units, unit_price?",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": "order_add_line",
+      "exposed": true
+    },
+    {
+      "name": "order_confirm",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/{id}/confirm",
+      "params": "—",
+      "undo": "none",
+      "confirm": "no",
+      "role": "sales",
+      "exposed_by": "order_confirm",
+      "exposed": true
+    },
+    {
+      "name": "order_cancel",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/{id}/cancel",
+      "params": "reason",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": "order_cancel",
+      "exposed": true
+    },
+    {
+      "name": "order_close",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/{id}/close",
+      "params": "— (open lines become closed short)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": "order_close",
+      "exposed": true
+    },
+    {
+      "name": "order_package",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/package-save",
+      "params": "order (the suggested units, batch, vessel and location of the Package screen)",
+      "undo": "delete_row (deletes the draft runs)",
+      "confirm": "no",
+      "role": "sales",
+      "exposed_by": "order_package",
+      "exposed": true
+    },
+    {
+      "name": "order_ship",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/{id}/ship",
+      "params": "—",
+      "undo": "delete_row (deletes the draft removal)",
+      "confirm": "no",
+      "role": "sales",
+      "exposed_by": "order_ship",
+      "exposed": true
+    },
+    {
+      "name": "order_from_standing",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/standing/{id}/occurrence",
+      "params": "standing order, date",
+      "undo": "delete_row (cancels the order)",
+      "confirm": "no",
+      "role": "sales",
+      "exposed_by": "order_from_standing",
+      "exposed": true
+    },
+    {
+      "name": "standing_order_deactivate",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/standing/{id}/active",
+      "params": "— (active = 0; active = 1 resumes)",
+      "undo": "restore_prior",
+      "confirm": "no",
+      "role": "sales",
+      "exposed_by": "standing_order_deactivate",
+      "exposed": true
+    },
+    {
+      "name": "orders_import_commit",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/import/{id}/commit, /undo, /discard",
+      "params": "— (screen only: the file upload and preview happen on the screen)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "orders_import_undo",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/import/{id}/commit, /undo, /discard",
+      "params": "— (screen only: the file upload and preview happen on the screen)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "orders_import_discard",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /orders/import/{id}/commit, /undo, /discard",
+      "params": "— (screen only: the file upload and preview happen on the screen)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "forecast_generate",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /planning/forecast/generate, POST /planning/forecast/save",
+      "params": "history_weeks, horizon_weeks / format, week_start, units (screen only)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "forecast_set",
+      "section": "Customer orders and planning",
+      "endpoint": "POST /planning/forecast/generate, POST /planning/forecast/save",
+      "params": "history_weeks, horizon_weeks / format, week_start, units (screen only)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "sales",
+      "exposed_by": null,
+      "exposed": false
     }
   ],
   "tools": [
     {
       "name": "navigate",
       "title": "Navigate",
-      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class]\n  item-edit — Item [record]\n  item-view — Item [record]\n  units-list — Units\n  suppliers-list — Suppliers [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-list — Inventory [q]\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  rack-add — Rack [prefill rack_number]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]",
+      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class]\n  item-edit — Item [record]\n  item-view — Item [record]\n  units-list — Units\n  suppliers-list — Suppliers [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on, item, qty]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-list — Inventory [q]\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  rack-add — Rack [prefill rack_number]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]\n\nCustomer orders and planning (docs/11, docs/12):\n  orders-list — Customer orders [q]\n  order-add — Customer order [prefill customer]\n  order-edit — Customer order [record]\n  order-view — Customer order [record]\n  order-package — Package for an order [record]\n  orders-package-format — Package for orders [prefill format]\n  orders-to-package — Packaging queue\n  standing-orders-list — Standing orders [q]\n  standing-order-add — Standing order [prefill customer]\n  standing-order-edit — Standing order [record]\n  standing-order-view — Standing order [record; q]\n  orders-import — Import orders\n  order-import-view — Order import [record]\n  planning — Projections [prefill demand]\n  planning-production — Suggested production [prefill demand]\n  planning-purchasing — Suggested purchases [prefill demand]\n  planning-forecast — Forecast\n  report-orders — Order history [prefill group_by, date_from, date_to]",
       "input_schema": {
         "properties": {
           "screen": {
@@ -3832,11 +4310,11 @@
     {
       "name": "find_record",
       "title": "Find record",
-      "description": "Resolve a record label the user said to the matching records (id, label, detail), e.g. a batch\nnumber, lot number, item code or name, supplier, vessel. Call it only when an action or navigation failed as\nambiguous and you need to show the user the choices, or to check which record they mean; action tools and\nnavigate already resolve labels themselves. Kinds: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report. Read-only.",
+      "description": "Resolve a record label the user said to the matching records (id, label, detail), e.g. a batch\nnumber, lot number, item code or name, supplier, vessel. Call it only when an action or navigation failed as\nambiguous and you need to show the user the choices, or to check which record they mean; action tools and\nnavigate already resolve labels themselves. Kinds: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, sales_order, standing_order, order_import, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report. Read-only.",
       "input_schema": {
         "properties": {
           "kind": {
-            "description": "Record kind: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report",
+            "description": "Record kind: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, sales_order, standing_order, order_import, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report",
             "title": "Kind",
             "type": "string"
           },
@@ -6436,6 +6914,564 @@
         "countsChanged"
       ],
       "controller": "html/counts/cancel.php"
+    },
+    {
+      "name": "order_create",
+      "title": "Enter a customer order",
+      "description": "Enter a customer order: \"Joe's Taproom wants 4 half barrels of Hill Dry on the 15th\", \"Green Mountain ordered 20 cases\nof cans for next Friday, PO 7781\".\n\nExecutes immediately: the order is saved and confirmed (it then counts as firm demand in packaging and planning) and can\nbe undone (the order is cancelled). Units are kegs or cans: convert cases with the format's units per case. A blank\nprice uses the format's list price. To add to an existing order use order_add_line. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "$defs": {
+          "OrderLine": {
+            "additionalProperties": false,
+            "properties": {
+              "format": {
+                "description": "Package format as said: 'half barrel', 'kegs', '16 oz can case', 'cans'",
+                "maxLength": 120,
+                "minLength": 1,
+                "title": "Format",
+                "type": "string"
+              },
+              "units": {
+                "description": "Units: kegs, or cans (not cases: 2 cases of 24 = 48 units)",
+                "maximum": 1000000,
+                "minimum": 1,
+                "title": "Units",
+                "type": "integer"
+              },
+              "product": {
+                "anyOf": [
+                  {
+                    "maxLength": 120,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Product name when there is more than one product, e.g. 'Hill Dry Cider'",
+                "title": "Product"
+              },
+              "unit_price": {
+                "anyOf": [
+                  {
+                    "maximum": 100000,
+                    "minimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Price per unit in dollars when the user says one; omit for the list price",
+                "title": "Unit Price"
+              }
+            },
+            "required": [
+              "format",
+              "units"
+            ],
+            "title": "OrderLine",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "customer": {
+            "description": "Customer name as said, e.g. \"Joe's Taproom\"",
+            "title": "Customer",
+            "type": "string"
+          },
+          "due_on": {
+            "description": "The date the customer wants it, ISO YYYY-MM-DD (resolve 'the 15th', 'next Friday' from today)",
+            "format": "date",
+            "title": "Due On",
+            "type": "string"
+          },
+          "lines": {
+            "description": "One entry per product format ordered",
+            "items": {
+              "$ref": "#/$defs/OrderLine"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Lines",
+            "type": "array"
+          },
+          "reference": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The customer's PO number, if said",
+            "title": "Reference"
+          },
+          "ordered_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "When the order was placed; omit for today",
+            "title": "Ordered On"
+          },
+          "confirm": {
+            "default": true,
+            "description": "Confirm the order at once so it counts as demand (default). False keeps it a draft.",
+            "title": "Confirm",
+            "type": "boolean"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional note, the user's words",
+            "title": "Note"
+          }
+        },
+        "required": [
+          "customer",
+          "due_on",
+          "lines"
+        ],
+        "title": "order_createArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_create"
+      ],
+      "endpoint": "POST /orders/save (then POST /orders/{id}/confirm)",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "never",
+      "undo": {
+        "kind": "delete_row",
+        "how": "POST /orders/{id}/cancel with a reason (an order is cancelled, never deleted)"
+      },
+      "events": [
+        "order_created"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/save.php"
+    },
+    {
+      "name": "order_add_line",
+      "title": "Add a line to a customer order",
+      "description": "Add a product line to a draft or confirmed customer order: \"add 2 more half barrels to SO-00042\".\n\nAsks for confirmation first. If the result is needs_confirmation, ask the user the summary as one short yes/no question and end the turn; when the user confirms, call again with the same arguments plus confirmed=true (it executes only on the user's confirmed turn). Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "order": {
+            "description": "Order number (SO-00042) or the customer's PO reference; on an order screen use its record",
+            "title": "Order",
+            "type": "string"
+          },
+          "format": {
+            "description": "Package format as said",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Format",
+            "type": "string"
+          },
+          "units": {
+            "description": "Units: kegs or cans",
+            "maximum": 1000000,
+            "minimum": 1,
+            "title": "Units",
+            "type": "integer"
+          },
+          "product": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Product"
+          },
+          "unit_price": {
+            "anyOf": [
+              {
+                "maximum": 100000,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Unit Price"
+          },
+          "confirmed": {
+            "default": false,
+            "description": "Set true when re-calling after the user confirmed this tool's needs_confirmation summary. The app's confirmation header, not this flag, is what lets it execute.",
+            "title": "Confirmed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order",
+          "format",
+          "units"
+        ],
+        "title": "order_add_lineArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_add_line"
+      ],
+      "endpoint": "POST /orders/save (every line)",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "always (no undo endpoint for a changed order)",
+      "undo": {
+        "kind": "none",
+        "how": "Edit the order on its screen to remove the line."
+      },
+      "events": [
+        "order_updated"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/save.php"
+    },
+    {
+      "name": "order_confirm",
+      "title": "Confirm a customer order",
+      "description": "Confirm a draft customer order so it counts as firm demand (\"confirm SO-00042\", \"that order is firm\").\n\nExecutes immediately. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "order": {
+            "description": "Order number (SO-00042) or the customer's PO reference; on an order screen use its record",
+            "title": "Order",
+            "type": "string"
+          }
+        },
+        "required": [
+          "order"
+        ],
+        "title": "order_confirmArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_confirm"
+      ],
+      "endpoint": "POST /orders/{id}/confirm",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "never",
+      "undo": {
+        "kind": "none",
+        "how": "No endpoint returns an order to draft; cancel it instead."
+      },
+      "events": [
+        "order_confirmed"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/confirm.php"
+    },
+    {
+      "name": "order_cancel",
+      "title": "Cancel a customer order",
+      "description": "Cancel a draft or confirmed customer order with nothing shipped or packaged for it (\"cancel Joe's order, they called it off\").\n\nAsks for confirmation first. If the result is needs_confirmation, ask the user the summary as one short yes/no question and end the turn; when the user confirms, call again with the same arguments plus confirmed=true (it executes only on the user's confirmed turn). Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "order": {
+            "description": "Order number (SO-00042) or the customer's PO reference; on an order screen use its record",
+            "title": "Order",
+            "type": "string"
+          },
+          "reason": {
+            "description": "Why, in the user's words",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "confirmed": {
+            "default": false,
+            "description": "Set true when re-calling after the user confirmed this tool's needs_confirmation summary. The app's confirmation header, not this flag, is what lets it execute.",
+            "title": "Confirmed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order",
+          "reason"
+        ],
+        "title": "order_cancelArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_cancel"
+      ],
+      "endpoint": "POST /orders/{id}/cancel",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "always",
+      "undo": {
+        "kind": "none",
+        "how": "No endpoint reopens a cancelled order; enter it again."
+      },
+      "events": [
+        "order_cancelled"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/cancel.php"
+    },
+    {
+      "name": "order_close",
+      "title": "Close a customer order",
+      "description": "Close a customer order; whatever has not shipped is closed short (\"close SO-00042, they don't want the rest\").\n\nAsks for confirmation first. If the result is needs_confirmation, ask the user the summary as one short yes/no question and end the turn; when the user confirms, call again with the same arguments plus confirmed=true (it executes only on the user's confirmed turn). Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "order": {
+            "description": "Order number (SO-00042) or the customer's PO reference; on an order screen use its record",
+            "title": "Order",
+            "type": "string"
+          },
+          "confirmed": {
+            "default": false,
+            "description": "Set true when re-calling after the user confirmed this tool's needs_confirmation summary. The app's confirmation header, not this flag, is what lets it execute.",
+            "title": "Confirmed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "order"
+        ],
+        "title": "order_closeArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_close"
+      ],
+      "endpoint": "POST /orders/{id}/close",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "always",
+      "undo": {
+        "kind": "none",
+        "how": "No endpoint reopens a closed order."
+      },
+      "events": [
+        "order_closed"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/close.php"
+    },
+    {
+      "name": "order_package",
+      "title": "Create packaging runs for an order",
+      "description": "Create the draft packaging runs that fill a customer order (\"package Joe's order\", \"set up the canning run for SO-00042\").\n\nUses the Package screen's suggestions: units still to package after stock on hand and earlier orders, the oldest released\nbatch whose tank holds enough, today. Executes immediately and can be undone (the drafts are deleted). Formats with nothing\nto package or no batch ready are skipped and named. Production still enters ABV and CO2 and posts each run. To choose a\ndifferent batch or units, navigate to the order-package screen instead. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "order": {
+            "description": "Order number (SO-00042) or the customer's PO reference; on an order screen use its record",
+            "title": "Order",
+            "type": "string"
+          }
+        },
+        "required": [
+          "order"
+        ],
+        "title": "order_packageArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_package"
+      ],
+      "endpoint": "POST /orders/package-save (use_defaults)",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "never",
+      "undo": {
+        "kind": "delete_row",
+        "how": "POST /orders/package-undo with the draft runs"
+      },
+      "events": [
+        "order_packaging_runs_created"
+      ],
+      "refresh": [
+        "packagingRunsChanged",
+        "ordersChanged"
+      ],
+      "controller": "html/orders/package-save.php"
+    },
+    {
+      "name": "order_ship",
+      "title": "Ship a customer order",
+      "description": "Draft the shipment (a removal) for what is on hand for a customer order (\"ship SO-00042\", \"send Joe's order\").\n\nTakes released stock first-packaged first from the location holding the most, kegs filled with the lot; units not on hand\nstay open. Executes immediately and can be undone (the draft is deleted). Compliance reviews and posts the removal; posting\nis removal_post. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "order": {
+            "description": "Order number (SO-00042) or the customer's PO reference; on an order screen use its record",
+            "title": "Order",
+            "type": "string"
+          }
+        },
+        "required": [
+          "order"
+        ],
+        "title": "order_shipArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_ship"
+      ],
+      "endpoint": "POST /orders/{id}/ship",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "never",
+      "undo": {
+        "kind": "delete_row",
+        "how": "POST /removals/{id}/delete (the draft shipment)"
+      },
+      "events": [
+        "order_shipment_created"
+      ],
+      "refresh": [
+        "removalsChanged",
+        "ordersChanged"
+      ],
+      "controller": "html/orders/ship.php"
+    },
+    {
+      "name": "order_from_standing",
+      "title": "Order a standing order's date",
+      "description": "Turn one date of a standing order into a confirmed customer order (\"make the taproom's Friday order\", \"order STO-0001 for\nthe 16th\"). The date must be one of its scheduled dates. Executes immediately and can be undone (the order is cancelled). Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "standing_order": {
+            "description": "Standing order number (STO-0001) or the customer's name",
+            "title": "Standing Order",
+            "type": "string"
+          },
+          "on": {
+            "description": "The delivery date of the standing order to turn into an order, ISO YYYY-MM-DD",
+            "format": "date",
+            "title": "On",
+            "type": "string"
+          }
+        },
+        "required": [
+          "standing_order",
+          "on"
+        ],
+        "title": "order_from_standingArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "order_from_standing"
+      ],
+      "endpoint": "POST /orders/standing/{id}/occurrence",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "never",
+      "undo": {
+        "kind": "delete_row",
+        "how": "POST /orders/{id}/cancel with a reason"
+      },
+      "events": [
+        "order_created_from_standing"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/standing-occurrence.php"
+    },
+    {
+      "name": "standing_order_deactivate",
+      "title": "Pause or resume a standing order",
+      "description": "Pause a standing order (its dates stop counting as demand) or resume it (\"pause the taproom's weekly order\").\n\nExecutes immediately and can be undone. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "standing_order": {
+            "description": "Standing order number (STO-0001)",
+            "title": "Standing Order",
+            "type": "string"
+          },
+          "resume": {
+            "default": false,
+            "description": "True to resume a paused standing order",
+            "title": "Resume",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "standing_order"
+        ],
+        "title": "standing_order_deactivateArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "standing_order_deactivate"
+      ],
+      "endpoint": "POST /orders/standing/{id}/active",
+      "method": "POST",
+      "role": "sales",
+      "confirm": "never",
+      "undo": {
+        "kind": "restore_prior",
+        "how": "POST /orders/standing/{id}/active with active=1"
+      },
+      "events": [
+        "standing_order_deactivated",
+        "standing_order_updated"
+      ],
+      "refresh": [
+        "ordersChanged"
+      ],
+      "controller": "html/orders/standing-active.php"
     }
   ],
   "flagged": [

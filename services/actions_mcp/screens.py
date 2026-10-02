@@ -19,8 +19,10 @@ RECORD_KINDS = {
     "transfers": "transfer", "adjustments": "adjustment", "counts": "count", "products": "product", "recipes": "recipe",
     "packaging-configs": "packaging_config", "specs": "spec", "approvals": "approval", "production-orders": "production_order",
     "press-runs": "press_run", "batches": "batch", "packaging-runs": "packaging_run", "finished-lots": "finished_lot",
-    "kegs": "keg", "customers": "customer", "removals": "removal", "ttb-reports": "ttb_report",
+    "kegs": "keg", "customers": "customer", "removals": "removal", "ttb-reports": "ttb_report", "orders": "sales_order",
 }
+# Nested features under one first segment, matched on the first two segments before RECORD_KINDS.
+RECORD_KINDS_NESTED = {"orders/standing": "standing_order", "orders/import": "order_import"}
 
 # Screens a signed-in user is never sent to by the assistant (full-page auth flows).
 NOT_NAVIGABLE = {"login": "the sign-in page is for signed-out users", "login-2fa": "part of signing in",
@@ -93,8 +95,11 @@ def parse_doc(path: Path = DOC) -> dict[str, Any]:
 def record_kind(url: str) -> str | None:
     if "{id}" not in url:
         return None
-    first = url.strip("/").split("/")[0]
-    return RECORD_KINDS.get(first)
+    segments = url.strip("/").split("/")
+    nested = "/".join(segments[:2])
+    if nested in RECORD_KINDS_NESTED:
+        return RECORD_KINDS_NESTED[nested]
+    return RECORD_KINDS.get(segments[0])
 
 
 def build_path(url: str, record_id: int | None, params: dict[str, str] | None) -> str:

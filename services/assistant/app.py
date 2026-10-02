@@ -154,7 +154,7 @@ async def message(body: MessageIn) -> dict:
     async with lock:  # one turn at a time per user: a session transcript has one writer
         turn = await agent.run_turn(surface=body.surface, prompt=prompt, system_prompt=system_prompt,
                                     resume=session_id, action_token=body.action_token, confirmed=body.confirmed,
-                                    api_key=key, timeout_s=timeout)
+                                    api_key=key, timeout_s=timeout, show_prices=body.user.role in ("owner", "sales"))
     log.info("turn user=%s surface=%s tools=%d ms=%d error=%s", body.user.id, body.surface, len(turn.tool_calls),
              turn.duration_ms, turn.error)
     return {**turn.payload(), "mode": "live"}

@@ -25,7 +25,7 @@ from starlette.responses import JSONResponse
 from common import activity as common_activity
 from common import config, db, serve
 
-from . import actions, catalog, core, resolve, screens, undo  # noqa: F401  (actions registers the tools)
+from . import actions, actions_orders, catalog, core, resolve, screens, undo  # noqa: F401  (actions and actions_orders register the tools)
 
 log = logging.getLogger(core.SERVER_NAME)
 

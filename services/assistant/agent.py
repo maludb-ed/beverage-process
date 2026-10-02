@@ -143,14 +143,15 @@ def apply_directives(turn: TurnResult, obj: dict[str, Any]) -> None:
 
 # --- running a turn ------------------------------------------------------------------------
 
-def _mcp_servers(action_token: str | None, confirmed: bool) -> dict[str, Any]:
+def _mcp_servers(action_token: str | None, confirmed: bool, show_prices: bool = True) -> dict[str, Any]:
     actions_headers = {"X-Action-Token": action_token or ""}
     if confirmed:
         # The user pressed Confirm (a human click in PHP, never the model's say-so).
         actions_headers["X-Action-Confirmed"] = "1"
     return {
         "records": {"type": "http", "url": f"http://127.0.0.1:{config.get('CIDERY_RECORDS_MCP_PORT', '8701')}/mcp",
-                    "headers": {"Authorization": f"Bearer {config.get('CIDERY_SERVICE_RECORDS_TOKEN', '')}"}},
+                    # Prices and order values only for owner and sales users (records tools leave them out otherwise).
+                    "headers": {"Authorization": f"Bearer {config.get('CIDERY_SERVICE_RECORDS_TOKEN', '')}", "X-Cidery-Show-Prices": "1" if show_prices else "0"}},
         "activity": {"type": "http", "url": f"http://127.0.0.1:{config.get('CIDERY_ACTIVITY_MCP_PORT', '8702')}/mcp",
                      "headers": {"Authorization": f"Bearer {config.get('CIDERY_SERVICE_ACTIVITY_TOKEN', '')}"}},
         "actions": {"type": "http", "url": f"http://127.0.0.1:{config.get('CIDERY_ACTIONS_MCP_PORT', '8703')}/mcp",
@@ -159,7 +160,7 @@ def _mcp_servers(action_token: str | None, confirmed: bool) -> dict[str, Any]:
 
 
 def build_options(*, surface: str, system_prompt: str, resume: str | None, action_token: str | None,
-                  confirmed: bool, api_key: str) -> ClaudeAgentOptions:
+                  confirmed: bool, api_key: str, show_prices: bool = True) -> ClaudeAgentOptions:
     router = surface == "command_bar"
     model = config.get("CIDERY_ROUTER_MODEL" if router else "CIDERY_AMA_MODEL") or None
     effort = config.get("CIDERY_ROUTER_EFFORT", "low") if router else config.get("CIDERY_AMA_EFFORT")
@@ -172,7 +173,7 @@ def build_options(*, surface: str, system_prompt: str, resume: str | None, actio
         disallowed.append("ToolSearch")
     return ClaudeAgentOptions(
         tools=[],                                   # no built-in tools at all
-        mcp_servers=_mcp_servers(action_token, confirmed),
+        mcp_servers=_mcp_servers(action_token, confirmed, show_prices),
         strict_mcp_config=True,                     # ignore any other MCP config the CLI could find
         allowed_tools=["mcp__records__*", "mcp__activity__*", "mcp__actions__*"],
         disallowed_tools=disallowed,
@@ -222,13 +223,13 @@ def _friendly_error(result: ResultMessage | None, exc: BaseException | None) -> 
 
 
 async def run_turn(*, surface: str, prompt: str, system_prompt: str, resume: str | None, action_token: str | None,
-                   confirmed: bool, api_key: str, timeout_s: float) -> TurnResult:
+                   confirmed: bool, api_key: str, timeout_s: float, show_prices: bool = True) -> TurnResult:
     started = time.perf_counter()
     turn = TurnResult(reply="")
     try:
         await asyncio.wait_for(
             _collect(turn, surface=surface, prompt=prompt, system_prompt=system_prompt, resume=resume,
-                     action_token=action_token, confirmed=confirmed, api_key=api_key),
+                     action_token=action_token, confirmed=confirmed, api_key=api_key, show_prices=show_prices),
             timeout=timeout_s)
     except asyncio.TimeoutError:
         turn.error = "timeout"
@@ -239,11 +240,11 @@ async def run_turn(*, surface: str, prompt: str, system_prompt: str, resume: str
 
 
 async def _collect(turn: TurnResult, *, surface: str, prompt: str, system_prompt: str, resume: str | None,
-                   action_token: str | None, confirmed: bool, api_key: str) -> None:
+                   action_token: str | None, confirmed: bool, api_key: str, show_prices: bool = True) -> None:
     attempt_resume = resume
     for attempt in (1, 2):
         options = build_options(surface=surface, system_prompt=system_prompt, resume=attempt_resume,
-                                action_token=action_token, confirmed=confirmed, api_key=api_key)
+                                action_token=action_token, confirmed=confirmed, api_key=api_key, show_prices=show_prices)
         pending: dict[str, dict[str, Any]] = {}
         texts: list[str] = []
         result: ResultMessage | None = None

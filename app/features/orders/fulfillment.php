@@ -132,18 +132,25 @@ function orders_candidate_batches(PDO $pdo, int $productId): array
     return $out;
 }
 
-/** Oldest released batch with a vessel holding enough; else the oldest with enough; else the oldest. */
+/** Oldest released batch with a vessel holding enough; else the oldest with enough; else the one whose fullest vessel holds most. */
 function orders_default_batch(array $batches, float $volumeL): ?int
 {
-    $fits = static fn(array $b) => max(array_map(static fn($v) => (float) $v['volume_l'], $b['vessels']) ?: [0]) + 0.0005 >= $volumeL;
-    foreach ([static fn($b) => $b['released'] && $fits($b), $fits, static fn($b) => true] as $test) {
+    $largest = static fn(array $b) => max(array_map(static fn($v) => (float) $v['volume_l'], $b['vessels']) ?: [0]);
+    $fits = static fn(array $b) => $largest($b) + 0.0005 >= $volumeL;
+    foreach ([static fn($b) => $b['released'] && $fits($b), $fits] as $test) {
         foreach ($batches as $id => $batch) {
             if ($test($batch)) {
                 return $id;
             }
         }
     }
-    return null;
+    $best = null;
+    foreach ($batches as $id => $batch) {
+        if ($best === null || $largest($batch) > $largest($batches[$best])) {
+            $best = $id;
+        }
+    }
+    return $best;
 }
 
 /**

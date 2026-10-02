@@ -8,7 +8,7 @@ import json
 from typing import Any
 
 from . import db
-from .activity import current_server, current_token_name
+from .activity import current_server, current_show_prices, current_token_name
 
 
 async def check_token(token: str, scope: str) -> str | None:
@@ -56,11 +56,13 @@ class BearerTokenMiddleware:
             return
         token_var = current_token_name.set(name)
         server_var = current_server.set(self.server_name)
+        prices_var = current_show_prices.set(headers.get("x-cidery-show-prices", "1").strip() != "0")
         try:
             await self.app(scope, receive, send)
         finally:
             current_token_name.reset(token_var)
             current_server.reset(server_var)
+            current_show_prices.reset(prices_var)
 
 
 async def _respond(send: Any, status: int, body: dict, extra: list | None = None) -> None:

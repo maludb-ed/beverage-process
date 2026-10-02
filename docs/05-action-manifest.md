@@ -65,7 +65,7 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | Screen id | URL | Title | When the user wants to… | Prefill |
 |---|---|---|---|---|
 | `purchase-orders-list` | `/purchase-orders/` | Purchase orders | see open, overdue, or past orders |  |
-| `purchase-order-add` / `purchase-order-edit` | `/purchase-orders/new`, `/purchase-orders/{id}/edit` | Purchase order | create or change an order with its lines | `supplier`, `expected_on` |
+| `purchase-order-add` / `purchase-order-edit` | `/purchase-orders/new`, `/purchase-orders/{id}/edit` | Purchase order | create or change an order with its lines | `supplier`, `expected_on`, `item`, `qty` |
 | `purchase-order-view` | `/purchase-orders/{id}` | Purchase order | see an order, its lines, what has been received against it |  |
 | `receipts-list` | `/receipts/` | Receipts | see deliveries received or in progress |  |
 | `receipt-add` / `receipt-edit` | `/receipts/new`, `/receipts/{id}/edit` | Receipt | record a delivery: lines, quantities, lot numbers, weigh tags, discrepancies | `supplier`, `po_number` |
@@ -196,6 +196,27 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | `ttb-report-add` | `/ttb-reports/new` | Generate report | generate a 5120.17 for a period | `period` |
 | `ttb-report-view` | `/ttb-reports/{id}` | TTB report | see a report's lines, drill into the transactions behind a line, finalize, mark filed |  |
 | `trace` | `/trace/` | Trace | trace a lot forward or a batch backward for a recall | `lot_number`, `batch_number` |
+
+### Customer orders and planning (docs/11, docs/12)
+
+| Screen id | URL | Title | When the user wants to… | Prefill |
+|---|---|---|---|---|
+| `orders-list` | `/orders/` | Customer orders | see open or past customer orders, what is due, overdue orders |  |
+| `order-add` / `order-edit` | `/orders/new`, `/orders/{id}/edit` | Customer order | enter a customer order: customer, due date, lines of product format and units, prices | `customer` |
+| `order-view` | `/orders/{id}` | Customer order | see an order's lines, packaging runs and shipments; confirm, package, ship, close or cancel it |  |
+| `order-package` | `/orders/{id}/package` | Package for an order | create the draft packaging runs that fill an order |  |
+| `orders-package-format` | `/orders/package` | Package for orders | package one format for every open order that needs it | `format` |
+| `orders-to-package` | `/orders/to-package` | Packaging queue | see what must be packaged for customer orders, by format and due date |  |
+| `standing-orders-list` | `/orders/standing` | Standing orders | see recurring customer orders |  |
+| `standing-order-add` / `standing-order-edit` | `/orders/standing/new`, `/orders/standing/{id}/edit` | Standing order | set up or change a recurring order (weekly, every few weeks, monthly) | `customer` |
+| `standing-order-view` | `/orders/standing/{id}` | Standing order | see a standing order's next dates; turn a date into an order; pause or resume it |  |
+| `orders-import` | `/orders/import` | Import orders | load past or upcoming orders from a spreadsheet (CSV or Excel) |  |
+| `order-import-view` | `/orders/import/{id}` | Order import | see an import's preview, columns, result or errors; import, undo or discard it |  |
+| `planning` | `/planning/` | Projections | see demand by week and what to package, brew and buy | `demand` |
+| `planning-production` | `/planning/production` | Suggested production | see which batches to start and by when | `demand` |
+| `planning-purchasing` | `/planning/purchasing` | Suggested purchases | see what to buy, how much and by when | `demand` |
+| `planning-forecast` | `/planning/forecast` | Forecast | see and set forecast demand per format and week |  |
+| `report-orders` | `/reports/orders` | Order history | see past orders by customer, product, format or month | `group_by`, `date_from`, `date_to` |
 
 ## Action registry
 
@@ -341,6 +362,22 @@ Role column: the minimum role; `owner` can do everything.
 | `ttb_report_finalize` | `POST /ttb-reports/{id}/finalize` | — | restore_prior | yes | compliance |
 | `ttb_report_mark_filed` | `POST /ttb-reports/{id}/filed` | filed_at | restore_prior | yes | compliance |
 
+### Customer orders and planning
+
+| Action | Endpoint | Parameters | Undo | Confirm | Role |
+|---|---|---|---|---|---|
+| `order_create` | `POST /orders/save` then `POST /orders/{id}/confirm` | customer, due_on, lines[] (product, format, units, unit_price?), reference?, ordered_on?, confirm? | delete_row (cancels the order) | no | sales |
+| `order_add_line` | `POST /orders/save` (all lines) | order, product, format, units, unit_price? | none | yes | sales |
+| `order_confirm` | `POST /orders/{id}/confirm` | — | none | no | sales |
+| `order_cancel` | `POST /orders/{id}/cancel` | reason | none | yes | sales |
+| `order_close` | `POST /orders/{id}/close` | — (open lines become closed short) | none | yes | sales |
+| `order_package` | `POST /orders/package-save` | order (the suggested units, batch, vessel and location of the Package screen) | delete_row (deletes the draft runs) | no | sales |
+| `order_ship` | `POST /orders/{id}/ship` | — | delete_row (deletes the draft removal) | no | sales |
+| `order_from_standing` | `POST /orders/standing/{id}/occurrence` | standing order, date | delete_row (cancels the order) | no | sales |
+| `standing_order_deactivate` | `POST /orders/standing/{id}/active` | — (active = 0; active = 1 resumes) | restore_prior | no | sales |
+| `orders_import_commit` / `orders_import_undo` / `orders_import_discard` | `POST /orders/import/{id}/commit`, `/undo`, `/discard` | — (screen only: the file upload and preview happen on the screen) | none | yes | sales |
+| `forecast_generate` / `forecast_set` | `POST /planning/forecast/generate`, `POST /planning/forecast/save` | history_weeks, horizon_weeks / format, week_start, units (screen only) | none | yes | sales |
+
 ### Assistant-internal
 
 | Action | Endpoint | Parameters | Notes |
@@ -363,7 +400,13 @@ Role column: the minimum role; `owner` can do everything.
 | Keg | empty | returned_dirty, cleaning | lost | filled, at_customer | out_of_service | — |
 | TTB report | filed | — | — | final | — | draft |
 | User | active | invited | disabled | — | — | — |
+| Customer order | shipped | — | cancelled | confirmed, in_fulfillment | closed | draft |
+| Order line | — | closed_short | cancelled | open | — | — |
+| Order import | imported | previewed | — | — | undone, abandoned | — |
+| Demand type (badge) | firm | standing | — | forecast | planned production | — |
 
 ## Activity log event names
 
 `screen_entered` on every screen render, plus one event per action above using the action name as the event name (`receipt_posted`, `lot_released`, `batch_pitched`, `removal_posted`, ...), `login`, `login_google`, `login_2fa`, `logout`, `totp_enabled`, `totp_disabled`, `identity_linked`, `password_reset`, `action_undone`, `assistant_message`, `ama_question`, `mcp_tool_called`.
+
+Customer orders and planning: `order_created`, `order_updated`, `order_confirmed`, `order_cancelled`, `order_closed`, `order_status_changed` (roll-up), `order_packaging_runs_created`, `order_shipment_created`, `order_created_from_standing`, `standing_order_created`, `standing_order_updated`, `standing_order_deactivated`, `orders_import_previewed`, `orders_imported`, `orders_import_undone`, `orders_import_discarded`, `forecast_generated`, `forecast_set`; `packaging_run_created` and `removal_created` are also written when an order creates them.

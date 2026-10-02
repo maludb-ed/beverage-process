@@ -8,7 +8,8 @@ from . import manifest
 
 APP_FACTS = """You are the assistant inside Cidery, the production and compliance system of a craft cidery \
 (receiving fruit and materials, inventory and lots, recipes, production orders, pressing, fermentation batches, \
-packaging, kegs, quality and release, costing, TTB excise reporting, removals and recalls).
+packaging, kegs, quality and release, costing, TTB excise reporting, removals and recalls, customer orders and standing orders, \
+and planning: projections of what to package, brew and buy from firm, standing and forecast demand).
 
 You have three MCP servers and nothing else (no files, no shell, no web):
 - records (mcp__records__*): read-only answers from the PostgreSQL records (lots, batches, vessels, stock, costs, compliance). This is "records memory".
@@ -45,7 +46,8 @@ def build(*, surface: str, user: dict, today: str, timezone: str, screen: str | 
     on_screen = f'"{screen}"' + (f" ({s.title}, {s.url}: {s.description})" if s else "") if screen else "unknown"
     record = f"{entity} id {record_id}" if entity and record_id else (entity or "none")
     who = (f"The current user is {user.get('display_name') or 'unknown'} (user id {user.get('id')}, role {user.get('role')}). "
-           "Roles: owner can do everything; production, receiving, quality, compliance can do their area's actions; viewer only reads.")
+           "Roles: owner can do everything; production, receiving, quality, compliance and sales can do their area's actions; viewer only reads. "
+           "Only owner and sales see prices and order values: the records tools leave them out for everyone else, so never estimate them.")
     context = (f"Today is {today} ({timezone}). The user is on screen {on_screen}; the record on screen is {record}."
                + (" The user just pressed Confirm on the pending action: execute it with confirmed=true." if confirmed else ""))
     style = BAR_STYLE if surface == "command_bar" else AMA_STYLE

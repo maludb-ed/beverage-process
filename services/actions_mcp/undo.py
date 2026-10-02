@@ -167,6 +167,45 @@ async def _vessel(row, call):
             "summary": f"Vessel {row['entity_label']} back to {prior.replace('_', ' ')}"}
 
 
+@handles("order_created", "order_created_from_standing")
+async def _order_created(row, call):
+    o = await db.fetch_one("records", """SELECT so.status, EXISTS (SELECT 1 FROM app.v_sales_order_lines l WHERE l.sales_order_id = so.id
+                                                                  AND (l.units_shipped > 0 OR l.units_in_packaging_runs > 0)) AS busy
+                                         FROM app.sales_orders so WHERE so.id = %s""", (row["entity_id"],))
+    if o is None or o["status"] == "cancelled":
+        return {"status": "already_undone", "message": f"Order {row['entity_label']} is already cancelled."}
+    if o["status"] not in ("draft", "confirmed") or o["busy"]:
+        return _unavailable(f"Order {row['entity_label']} is {o['status'].replace('_', ' ')} with packaging or shipments; cancel those first.")
+    return {"path": f"/orders/{row['entity_id']}/cancel", "fields": [("cancel_reason", f"Undone by the assistant (activity #{row['id']})")],
+            "event": "order_cancelled", "summary": f"Order {row['entity_label']} cancelled"}
+
+
+@handles("order_packaging_runs_created")
+async def _order_runs(row, call):
+    runs = (row["after"] or {}).get("packaging_runs") or []
+    if not runs:
+        return _unavailable("The activity row does not name the packaging runs.")
+    return {"path": "/orders/package-undo", "fields": [("runs[]", n) for n in runs], "event": "packaging_run_deleted",
+            "summary": f"Draft packaging {'run' if len(runs) == 1 else 'runs'} {', '.join(runs)} deleted"}
+
+
+@handles("order_shipment_created")
+async def _order_shipment(row, call):
+    number = (row["after"] or {}).get("removal")
+    r = await db.fetch_one("records", "SELECT id, status FROM app.removals WHERE number = %s", (number,)) if number else None
+    if r is None:
+        return {"status": "already_undone", "message": f"Shipment {number or ''} no longer exists."}
+    if r["status"] != "draft":
+        return _unavailable(f"Shipment {number} is {r['status']}; a posted shipment is reversed by compliance on its screen.")
+    return {"path": f"/removals/{r['id']}/delete", "fields": [], "event": "removal_deleted", "summary": f"Draft shipment {number} deleted"}
+
+
+@handles("standing_order_deactivated")
+async def _standing_paused(row, call):
+    return {"path": f"/orders/standing/{row['entity_id']}/active", "fields": [("active", "1")], "event": "standing_order_updated",
+            "summary": f"Standing order {row['entity_label']} resumed"}
+
+
 UNDOABLE_EVENTS = set(UNDO)
 NEVER_UNDO = {"screen_entered", "action_undone", "mcp_tool_called", "assistant_message", "ama_question", "login", "logout"}
 
@@ -183,9 +222,18 @@ async def latest_undoable(user_id: int) -> dict[str, Any] | None:
 
 async def undo(call: Call, undo_id: int | None, confirmed: bool = False) -> dict[str, Any]:
     if undo_id is None:
-        latest = await latest_undoable(call.user_id)
-        if latest is None:
-            return {"status": "not_found", "message": "There is nothing of yours from the command bar in the last day that can be undone."}
+        # The latest undoable action; one whose effect is already gone (a draft another undo deleted, such as the
+        # removal_created row beside order_shipment_created) is marked undone and skipped, so "undo" keeps going back.
+        for _ in range(5):
+            latest = await latest_undoable(call.user_id)
+            if latest is None:
+                return {"status": "not_found", "message": "There is nothing of yours from the command bar in the last day that can be undone."}
+            row = await activity_row(latest["id"])
+            handler = UNDO.get(row["action"]) if row else None
+            plan = await handler(row, call) if handler else {}
+            if plan.get("status") != "already_undone":
+                break
+            await log_action_undone(row, None, plan.get("message", "already undone"))
         undo_id = latest["id"]
     row = await activity_row(undo_id)
     if row is None:

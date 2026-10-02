@@ -12,8 +12,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 | 5 | Standing orders and forecasts | Done 2026-10-02 | See below |
 | 6 | Projections | Done 2026-10-02 | See below |
 | 7 | Order history report, dashboard tiles | Done 2026-10-02 | See below |
-| 8 | Assistant tools and actions | Next | Manifest, `prompts.py` roles (add `sales`), records tools |
-| 9 | Full test pass | | |
+| 8 | Assistant tools and actions | Done 2026-10-02 | See below |
+| 9 | Full test pass | Next | |
 
 ## Step 2: orders screens
 
@@ -70,4 +70,14 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - **Dashboard:** four more tiles, each linking to its screen: orders due this week (with overdue), orders at risk (due in 14 days with units still to package after stock and draft runs), batches to start (pitch by the end of next week, late ones noted) and items to order (order by the end of next week, late and no-lead-time ones noted), the last two from the firm-and-standing projection. The dashboard renders in about 0.19 s.
 - **Checked:** report by customer, month and format with totals and CSV; dashboard figures against the data; conformance and the 375px sweep.
 
-**Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003, SO-00004 and SO-00009 (cancelled), standing orders STO-0001 and STO-0002 (paused), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.
+## Step 8: assistant
+
+- **Records server** (`records_mcp/tools_orders.py`, 65 tools now): `orders_find`, `order_status`, `orders_history`, `standing_orders_find`, `demand_projection`, `production_projection`, `purchase_projection` (questions O1 to O7 in docs/12; results in `records_mcp/EVAL.md`). The projection tools run `scripts/planning-json.php` under the read-only records role, so the screens and the assistant use one engine. Price and value fields are dropped when the request carries `X-Cidery-Show-Prices: 0`, which the assistant sends for users who are neither owner nor sales (`common/auth.py`, `assistant/agent.py`, `assistant/app.py`).
+- **Actions server** (`actions_mcp/actions_orders.py`): `order_create` (saves and confirms; undo cancels), `order_add_line` (confirms first), `order_confirm`, `order_cancel` and `order_close` (confirm first), `order_package` (the Package screen's suggestions, capped to what the suggested tank holds, skipped formats named; undo deletes the drafts through the new `POST /orders/package-undo`), `order_ship` (undo deletes the draft shipment; sales may now delete a draft removal tied to an order), `order_from_standing` (undo cancels), `standing_order_deactivate` (pause or resume; undo resumes). Imports and forecasts stay on their screens.
+- **Undo:** "undo" now skips an action whose effect is already gone (for example the `removal_created` row beside a shipment another undo deleted) and goes on to the one before.
+- **Manifest:** docs/05 gained the 16 customer order and planning screens, the actions, the colors and the events; `config/manifest.json` rebuilt (158 screens, 154 navigable; the three flags are older: login-2fa, rack-edit, recipe-edit). Navigation maps `/orders/standing/{id}` and `/orders/import/{id}` to their own records.
+- **Assistant prompt:** knows customer orders and planning, the sales role, and that only owner and sales see prices.
+- **Package defaults:** when no ready tank holds a format's need, the suggestion now falls back to the batch with the fullest tank (screen and voice).
+- **Checked:** every new records tool over MCP; price stripping; every action over MCP as the sales user (create, add line with confirmation, package, ship, undo chain, standing order date, pause and resume, viewer refused); two live assistant turns and a voice undo; a production user's value question answered without values. Test orders SO-00010, SO-00011, SO-00012 and SO-00013 were cancelled and their drafts deleted; STO-0001 is paused again.
+
+**Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003, SO-00004, SO-00009 to SO-00013 (cancelled), standing orders STO-0001 and STO-0002 (paused), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.
