@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/removals/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/orders/fulfillment.php';
 
 // Reverse a posted removal or return by posting the opposite document; the original becomes 'reversed'.
 require_post();
@@ -33,6 +34,7 @@ try {
             log_activity($pdo, $keg['event'], 'keg', $keg['keg_id'], $keg['serial'], null, null, ['removal' => $reversal['number'], 'reversal_of' => $result['original']['number']], 'removal-view');
         }
     }
+    orders_refresh_statuses($pdo, orders_for_removal($pdo, $id), 'removal-view');
     $pdo->commit();
     flash('success', $result['original']['number'] . ' reversed by ' . $reversal['number'] . '.');
     hx_trigger('removalsChanged, inventoryChanged, kegsChanged');

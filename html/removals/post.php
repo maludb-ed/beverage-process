@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/removals/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/orders/fulfillment.php';
 
 // Posting a removal changes tax state: ledger rows (bonded out, taproom in, or return in), keg movements,
 // tax determination in wine gallons. One transaction; copies html/receipts/post.php.
@@ -25,6 +26,7 @@ try {
             log_activity($pdo, $keg['event'], 'keg', $keg['keg_id'], $keg['serial'], null, null, ['removal' => $before['number']], 'removal-view');
         }
     }
+    orders_refresh_statuses($pdo, orders_for_removal($pdo, $id), 'removal-view');
     $pdo->commit();
     $gal = number_format((float) $posted['wine_gallons'], 2);
     flash('success', $before['number'] . ' posted: ' . $result['units'] . ' units, ' . $gal . ' wine gallons'

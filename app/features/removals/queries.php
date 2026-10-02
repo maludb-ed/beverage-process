@@ -66,7 +66,7 @@ function find_removal(PDO $pdo, int $id, bool $forUpdate = false): ?array
                p.name AS premises_name, p.cbma_tier, fl.name AS from_location_name, fl.tax_state AS from_tax_state,
                tl.name AS to_location_name, tl.tax_state AS to_tax_state,
                uc.display_name AS created_by_name, up.display_name AS posted_by_name,
-               rv.number AS reversed_by_number,
+               rv.number AS reversed_by_number, so.number AS sales_order_number,
                (SELECT o.id FROM app.removals o WHERE o.reversed_by_id = r.id LIMIT 1) AS reversal_of_id,
                (SELECT o.number FROM app.removals o WHERE o.reversed_by_id = r.id LIMIT 1) AS reversal_of_number
         FROM app.removals r
@@ -77,6 +77,7 @@ function find_removal(PDO $pdo, int $id, bool $forUpdate = false): ?array
         LEFT JOIN app.users uc ON uc.id = r.created_by
         LEFT JOIN app.users up ON up.id = r.posted_by
         LEFT JOIN app.removals rv ON rv.id = r.reversed_by_id
+        LEFT JOIN app.sales_orders so ON so.id = r.sales_order_id
         WHERE r.id = :id
     SQL . ($forUpdate ? ' FOR UPDATE OF r' : ''));
     $statement->execute(['id' => $id]);
@@ -669,7 +670,9 @@ function reverse_removal(PDO $pdo, int $id, int $actor_id, string $reason): arra
     }
     $reversal = insert_removal($pdo, (int) $original['premises_id'], $direction, $dest, $customerId, $from, $to, (new DateTimeImmutable())->format(DATE_ATOM),
         $original['reference'], 'Reversal of ' . $original['number'] . ': ' . $reason, $actor_id);
-    $copy = $pdo->prepare('INSERT INTO app.removal_lines (removal_id, lot_id, units, volume_l, keg_id, tax_class, note) SELECT :new, lot_id, units, volume_l, keg_id, tax_class, note FROM app.removal_lines WHERE removal_id = :old ORDER BY id');
+    // A reversal stays tied to the customer order of the original, line for line, so the order's shipped units net out.
+    $pdo->prepare('UPDATE app.removals SET sales_order_id = :o WHERE id = :id')->execute(['o' => $original['sales_order_id'], 'id' => $reversal['id']]);
+    $copy = $pdo->prepare('INSERT INTO app.removal_lines (removal_id, lot_id, units, volume_l, keg_id, tax_class, note, sales_order_line_id) SELECT :new, lot_id, units, volume_l, keg_id, tax_class, note, sales_order_line_id FROM app.removal_lines WHERE removal_id = :old ORDER BY id');
     $copy->execute(['new' => (int) $reversal['id'], 'old' => $id]);
     $newRemoval = find_removal($pdo, (int) $reversal['id'], true);
     $result = removals_post($pdo, $newRemoval, find_removal_lines($pdo, (int) $reversal['id']), $actor_id, $original);

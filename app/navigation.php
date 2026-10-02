@@ -59,6 +59,7 @@ function navigation_groups(): array
         ]],
         ['label' => 'Sales', 'icon' => 'feather-shopping-cart', 'items' => [
             ['screen' => 'orders-list', 'label' => 'Customer orders', 'url' => '/orders/', 'slice' => 12],
+            ['screen' => 'orders-to-package', 'label' => 'Packaging queue', 'url' => '/orders/to-package', 'slice' => 12],
         ]],
         ['label' => 'Compliance', 'icon' => 'feather-shield', 'items' => [
             ['screen' => 'customers-list', 'label' => 'Customers', 'url' => '/customers/', 'slice' => 10],

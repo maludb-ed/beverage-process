@@ -11,6 +11,13 @@ if (in_array($status, ['draft', 'confirmed'], true) && $canEdit) {
 if ($status === 'draft' && $canEdit) {
     $actions .= '<button type="button" class="btn btn-primary" id="order-view-confirm-btn" hx-post="/orders/' . e($id) . '/confirm" hx-target="#page-content" hx-swap="innerHTML"><i class="feather-check-circle me-2"></i><span>Confirm</span></button>';
 }
+$fulfilling = in_array($status, ['confirmed', 'in_fulfillment'], true) && (int) $order['units_open'] > 0;
+if ($fulfilling && user_can($user, 'sales', 'production')) {
+    $actions .= nav_button('order-view-package-btn', '/orders/' . $id . '/package', 'Package', 'feather-box', 'btn btn-light-brand');
+}
+if ($fulfilling && user_can($user, 'sales', 'compliance')) {
+    $actions .= '<button type="button" class="btn btn-primary" id="order-view-ship-btn" hx-post="/orders/' . e($id) . '/ship" hx-target="#page-content" hx-swap="innerHTML"><i class="feather-truck me-2"></i><span>Ship</span></button>';
+}
 if (in_array($status, ['confirmed', 'in_fulfillment', 'shipped'], true) && $canEdit) {
     $actions .= '<button type="button" class="btn btn-light-brand" id="order-view-close-btn" hx-post="/orders/' . e($id) . '/close" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="Close ' . e($order['number']) . '? Lines not fully shipped are closed short."><i class="feather-lock me-2"></i><span>Close</span></button>';
 }

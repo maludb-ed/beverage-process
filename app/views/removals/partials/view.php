@@ -37,6 +37,9 @@ $taxState = static fn(?string $s): string => $s === null ? '' : ' ' . badge(huma
                         <?= $row('to', 'feather-navigation', 'To', $removal['to_location_name'] ? e($removal['to_location_name']) . $taxState($removal['to_tax_state']) : '—') ?>
                         <?= $row('removed-at', 'feather-clock', $isReturn ? 'Returned' : 'Removed', e(format_datetime($removal['removed_at']))) ?>
                         <?= $row('reference', 'feather-file-text', 'Reference', e($removal['reference'] ?: '—')) ?>
+                        <?php if ($removal['sales_order_id'] !== null): ?>
+                            <?= $row('order', 'feather-shopping-cart', 'Customer order', '<a ' . nav_attrs('/orders/' . (int) $removal['sales_order_id']) . '>' . e($removal['sales_order_number']) . '</a>') ?>
+                        <?php endif; ?>
                         <?= $row('units', 'feather-package', 'Units', e($units)) ?>
                         <?= $row('gallons', 'feather-droplet', 'Wine gallons', e(number_format((float) ($removal['wine_gallons'] ?? $tax['total_gallons'] ?? 0), 4))) ?>
                         <?= $row('tax', 'feather-dollar-sign', 'Tax', $determined ? '$' . e(number_format((float) ($removal['tax_amount'] ?? $tax['total_tax'] ?? 0), 2)) . ($status === 'draft' ? ' <small class="text-muted">on posting</small>' : '') : 'Not tax determined') ?>

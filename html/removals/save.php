@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/removals/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/orders/fulfillment.php';
 
 require_post();
 verify_csrf();
@@ -83,9 +84,11 @@ if ($errors === []) {
             $removal['reference'] ?: null, $removal['notes'] ?: null];
         $saved = $id === null ? insert_removal($pdo, ...[...$args, (int) $user['id']]) : update_removal($pdo, $id, ...$args);
         replace_removal_lines($pdo, (int) $saved['id'], array_values($lines));
+        orders_link_removal_lines($pdo, (int) $saved['id']);
         $summary = array_map(static fn($l) => ['lot_id' => $l['lot_id'], 'units' => $l['units'], 'kegs' => count($l['keg_ids'])], array_values($lines));
         log_activity($pdo, $id === null ? 'removal_created' : 'removal_updated', 'removal', (int) $saved['id'], $saved['number'],
             $before === null ? null : array_intersect_key($before, $saved), $saved + ['lines' => $summary], [], $id === null ? ($direction === 'in' ? 'return-add' : 'removal-add') : 'removal-edit');
+        orders_refresh_statuses($pdo, orders_for_removal($pdo, (int) $saved['id']), 'removal-edit');
         $pdo->commit();
         flash('success', ($direction === 'in' ? 'Return ' : 'Removal ') . $saved['number'] . ' saved as a draft. Post it to move the stock' . (removal_determines_tax($direction, $dest) ? ' and determine tax.' : '.'));
         hx_trigger('removalsChanged');
