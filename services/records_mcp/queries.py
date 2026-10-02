@@ -202,6 +202,7 @@ SELECT extract(year FROM gr.received_at AT TIME ZONE %(tz)s)::int AS season_year
 ON_HAND = """
 SELECT i.code AS item_code, i.name AS item_name, i.item_class, i.base_unit_code, l.lot_number, l.quality_status,
        l.expires_on, COALESCE(l.received_on, l.produced_on) AS received_on, loc.name AS location_name, loc.tax_state,
+       (SELECT a.name FROM app.locations a WHERE a.id = loc.parent_location_id) AS rack_area, loc.rack_number,
        b.qty_on_hand, b.qty_allocated, (b.qty_on_hand - b.qty_allocated) AS qty_available,
        b.qty_on_hand * CASE WHEN i.costing_method = 'standard' THEN COALESCE(i.standard_cost_per_base, 0) ELSE l.unit_cost_base END AS value,
        fl.unit_volume_l
@@ -213,7 +214,8 @@ SELECT i.code AS item_code, i.name AS item_name, i.item_class, i.base_unit_code,
  WHERE (%(include_zero)s OR b.qty_on_hand <> 0 OR b.qty_allocated <> 0)
    AND (CAST(%(item_id)s AS bigint) IS NULL OR b.item_id = %(item_id)s)
    AND (CAST(%(item_class)s AS text) IS NULL OR i.item_class = %(item_class)s)
-   AND (CAST(%(location_id)s AS bigint) IS NULL OR b.location_id = %(location_id)s)
+   AND (CAST(%(location_id)s AS bigint) IS NULL OR b.location_id = %(location_id)s
+        OR b.location_id IN (SELECT r.id FROM app.locations r WHERE r.parent_location_id = %(location_id)s))
    AND (CAST(%(lot_id)s AS bigint) IS NULL OR b.lot_id = %(lot_id)s)
    AND (CAST(%(quality_status)s AS text) IS NULL OR l.quality_status = %(quality_status)s)
  ORDER BY i.code, l.expires_on NULLS LAST, l.lot_number, loc.name
@@ -233,7 +235,8 @@ SELECT i.code AS item_code, i.name AS item_name, i.item_class, i.base_unit_code,
  WHERE (b.qty_on_hand <> 0 OR b.qty_allocated <> 0)
    AND (CAST(%(item_id)s AS bigint) IS NULL OR b.item_id = %(item_id)s)
    AND (CAST(%(item_class)s AS text) IS NULL OR i.item_class = %(item_class)s)
-   AND (CAST(%(location_id)s AS bigint) IS NULL OR b.location_id = %(location_id)s)
+   AND (CAST(%(location_id)s AS bigint) IS NULL OR b.location_id = %(location_id)s
+        OR b.location_id IN (SELECT r.id FROM app.locations r WHERE r.parent_location_id = %(location_id)s))
    AND (CAST(%(lot_id)s AS bigint) IS NULL OR b.lot_id = %(lot_id)s)
    AND (CAST(%(quality_status)s AS text) IS NULL OR l.quality_status = %(quality_status)s)
  GROUP BY i.id, i.code, i.name, i.item_class, i.base_unit_code
@@ -907,9 +910,23 @@ SELECT pr.number AS run_number, pr.run_on, pr.status, b.number AS batch_number, 
  LIMIT %(lim)s
 """
 
+RACK_STOCK = """
+SELECT fs.*, fl.unit_volume_l
+  FROM app.v_fifo_stock fs
+  LEFT JOIN app.finished_lots fl ON fl.lot_id = fs.lot_id
+ WHERE (CAST(%(rack)s AS text) IS NULL OR fs.rack_number = %(rack)s)
+   AND (CAST(%(area_id)s AS bigint) IS NULL OR fs.area_location_id = %(area_id)s)
+   AND (CAST(%(product_id)s AS bigint) IS NULL OR fs.product_id = %(product_id)s)
+   AND (CAST(%(item_id)s AS bigint) IS NULL OR fs.item_id = %(item_id)s)
+   AND (CAST(%(item_class)s AS text) IS NULL OR fs.item_class = %(item_class)s)
+   AND (NOT %(released_only)s OR fs.quality_status = 'released')
+ ORDER BY fs.item_code, fs.fifo_rank NULLS LAST, fs.stock_date NULLS LAST, fs.lot_number, fs.area_name, fs.rack_sort NULLS FIRST
+ LIMIT %(lim)s OFFSET %(off)s
+"""
+
 FINISHED_STOCK = """
 SELECT fs.product_name, fs.package_name, fs.package_kind, pc.units_per_case, pc.fill_volume_l, fs.lot_number, fs.batch_number, l.quality_status,
-       fs.tax_class, fs.abv, fs.packaged_on, fs.best_before_on, fs.location_name, fs.tax_state, fs.units_on_hand, fs.units_available,
+       fs.tax_class, fs.abv, fs.packaged_on, fs.best_before_on, fs.location_name, fs.area_name, fs.rack_number, fs.tax_state, fs.units_on_hand, fs.units_available,
        fs.volume_on_hand_l, fs.unit_cost
   FROM app.v_finished_stock fs
   JOIN app.lots l ON l.id = fs.lot_id
@@ -918,7 +935,7 @@ SELECT fs.product_name, fs.package_name, fs.package_kind, pc.units_per_case, pc.
  WHERE fs.units_on_hand <> 0
    AND (CAST(%(product_id)s AS bigint) IS NULL OR fs.product_id = %(product_id)s)
    AND (CAST(%(package_kind)s AS text) IS NULL OR fs.package_kind = %(package_kind)s)
-   AND (CAST(%(location_id)s AS bigint) IS NULL OR fs.location_id = %(location_id)s)
+   AND (CAST(%(location_id)s AS bigint) IS NULL OR fs.location_id = %(location_id)s OR fs.area_location_id = %(location_id)s)
    AND (%(include_unreleased)s OR l.quality_status = 'released')
  ORDER BY fs.product_name, fs.package_name, fs.packaged_on, fs.lot_number, fs.location_name
  LIMIT %(lim)s OFFSET %(off)s

@@ -2,7 +2,7 @@
 <?= view('shared/page-header.php', ['title' => 'Ask me anything', 'screen' => 'ama', 'crumbs' => ['Ask me anything' => null]]) ?>
 <div class="main-content" id="ama-content">
     <div class="row"><div class="col-lg-12">
-        <div class="card stretch stretch-full" id="ama-card">
+        <div class="card" id="ama-card">
             <div class="card-header"><h5 class="card-title">Conversation</h5></div>
             <div class="card-body" id="ama-thread">
                 <p class="text-muted" id="ama-intro">Ask about records ("which lots expire this month?", "what is in every tank?") or about what happened ("who released batch B-26-003?", "what did the assistant do for me yesterday?"). Answers say which memory they came from. You can also ask it to do things, as in the command bar.</p>

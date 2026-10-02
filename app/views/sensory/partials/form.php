@@ -7,7 +7,7 @@ $kind = $input['target_kind'] === 'lot' ? 'lot' : 'batch';
     <form id="sensory-form" method="post" action="/sensory/save" hx-post="/sensory/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="sensory-form-card">
+            <div class="card" id="sensory-form-card">
                 <div class="card-body">
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'sensory-form-errors']) ?>
                     <?= view('lab/partials/target-kind.php', ['prefix' => $p, 'kind' => $kind]) ?>

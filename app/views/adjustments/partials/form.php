@@ -14,7 +14,7 @@ $adjustedAt = preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', (string) $adjusted
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="adjustment-form-header-card">
+            <div class="card" id="adjustment-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Correct stock</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Large adjustments need owner approval before they can be posted.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'adjustment-form-errors']) ?>
@@ -24,7 +24,7 @@ $adjustedAt = preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', (string) $adjusted
                     <?= form_textarea($p, 'notes', 'Notes', $adjustment['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="adjustment-form-lines-card">
+            <div class="card" id="adjustment-form-lines-card">
                 <div class="card-header">
                     <h5 class="card-title">Lines</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="adjustment-form-add-line-btn"

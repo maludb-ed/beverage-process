@@ -6,6 +6,7 @@
     <td id="location-row-<?= e($id) ?>-premises"><?= e($location['premises_name']) ?></td>
     <td id="location-row-<?= e($id) ?>-kind"><?= badge(LOCATION_KINDS[$location['kind']] ?? $location['kind'], 'info') ?></td>
     <td id="location-row-<?= e($id) ?>-tax-state"><?= badge(LOCATION_TAX_STATES[$location['tax_state']] ?? $location['tax_state'], $location['tax_state'] === 'bonded' ? 'info' : 'warning') ?></td>
+    <td id="location-row-<?= e($id) ?>-racks"><?= (int) $location['rack_count'] > 0 ? '<a ' . nav_attrs('/racks/?area_id=' . $id) . '>' . e((int) $location['rack_count']) . '</a>' : '<span class="text-muted">—</span>' ?></td>
     <td id="location-row-<?= e($id) ?>-allow-negative"><?= e(yes_no($location['allow_negative'])) ?></td>
     <td id="location-row-<?= e($id) ?>-actions" class="text-end">
         <div class="hstack gap-2 justify-content-end">

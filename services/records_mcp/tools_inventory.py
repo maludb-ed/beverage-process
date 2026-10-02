@@ -31,7 +31,7 @@ class OnHandInput(Paged):
 
 @records_tool("inventory_on_hand", "Stock on hand by lot and location",
               """Call for how much of an item (or class, location or lot) is on hand, by lot and location (R9). Each row: lot,
-              quality status, expiry, location and tax state, on hand, allocated and available (base units plus lb/gal; finished
+              quality status, expiry, location (with area and rack number when on a rack; an area filter includes its racks) and tax state, on hand, allocated and available (base units plus lb/gal; finished
               goods also in gallons), and value. 'totals' sums each item across all matching rows, released stock separately.""")
 async def inventory_on_hand(p: OnHandInput) -> dict:
     item = await resolve_opt("item", p.item)
@@ -43,7 +43,8 @@ async def inventory_on_hand(p: OnHandInput) -> dict:
     totals = await db.fetch_all("records", Q.ON_HAND_TOTALS, args)
     out = [fmt.drop_none({
         "item_code": r["item_code"], "item_name": r["item_name"], "lot_number": r["lot_number"], "quality_status": r["quality_status"],
-        "expires_on": r["expires_on"], "received_on": r["received_on"], "location": r["location_name"], "tax_state": r["tax_state"],
+        "expires_on": r["expires_on"], "received_on": r["received_on"], "location": r["location_name"],
+        "area": r["rack_area"], "rack_number": r["rack_number"], "tax_state": r["tax_state"],
         "on_hand": _qty(r, "qty_on_hand"), "allocated": _qty(r, "qty_allocated") if r["qty_allocated"] else None,
         "available": _qty(r, "qty_available"), "value": fmt.money(r["value"])}) for r in rows]
     tot = [fmt.drop_none({
@@ -275,3 +276,34 @@ async def inventory_movements(p: MovementsInput) -> dict:
         "reference_number": r["reference_number"], "counterparty": r["counterparty"], "reason_code": r["reason_code"], "actor": r["actor"],
         "note": r["note"]}) for r in rows]
     return page(out, p, resolved=echo(item=item, lot=lot, location=location))
+
+
+class RackStockInput(Paged):
+    rack: str | None = Field(None, max_length=20, description="Rack number, e.g. '7' or 'A-12'.")
+    area: str | None = Field(None, max_length=120, description="Area the racks stand in, e.g. 'Packaged goods'.")
+    product: str | None = Field(None, max_length=120, description="Product name or code (finished goods).")
+    item: str | None = Field(None, max_length=120, description="Item code or name (any stock).")
+    item_class: ITEM_CLASSES | None = Field(None, description="Restrict to one item class.")
+    released_only: bool = Field(False, description="Only released stock (what FIFO would pick).")
+
+
+@records_tool("inventory_rack_stock", "What is on each rack, in FIFO order",
+              """Call for where product is stored in the warehouse, what is on a rack, which lot or batch is on which rack, or
+              which lot to pick or use next (first in, first out). Each row: area, rack number (none = loose in the area, not
+              on a rack), item or product and package, lot, batch, stock date (packaged, produced or received), use-by date,
+              quality status, on hand and available, and fifo_rank: 1 is the oldest released lot of that item on the premises,
+              the one to pick next; unreleased lots have no rank. Rows come oldest first per item.""")
+async def inventory_rack_stock(p: RackStockInput) -> dict:
+    area = await resolve_opt("location", p.area)
+    product = await resolve_opt("product", p.product)
+    item = await resolve_opt("item", p.item)
+    rows = await db.fetch_all("records", Q.RACK_STOCK, std(p, rack=p.rack.upper() if p.rack else None, area_id=rid(area),
+                                                             product_id=rid(product), item_id=rid(item), item_class=p.item_class,
+                                                             released_only=p.released_only))
+    out = [fmt.drop_none({
+        "area": r["area_name"], "rack_number": r["rack_number"], "location": r["location_name"],
+        "item_code": r["item_code"], "item_name": r["item_name"], "product": r["product_name"], "package": r["package_name"],
+        "lot_number": r["lot_number"], "batch_number": r["batch_number"], "quality_status": r["quality_status"],
+        "stock_date": r["stock_date"], "use_by": r["use_by"], "fifo_rank": r["fifo_rank"],
+        "on_hand": _qty(r, "qty_on_hand"), "available": _qty(r, "qty_available")}) for r in rows]
+    return page(out, p, resolved=echo(area=area, product=product, item=item))

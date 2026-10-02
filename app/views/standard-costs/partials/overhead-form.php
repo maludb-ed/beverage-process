@@ -6,7 +6,7 @@ $p = 'standard-cost-overhead-form';
     <form id="standard-cost-overhead-form" method="post" action="/standard-costs/overhead" hx-post="/standard-costs/overhead" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="standard-cost-overhead-form-card">
+            <div class="card" id="standard-cost-overhead-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Overhead rate</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Cost added per <?= e(display_unit('L')) ?> of batch volume when a recipe version is activated.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'standard-cost-overhead-form-errors']) ?>

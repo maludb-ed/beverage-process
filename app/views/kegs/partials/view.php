@@ -13,7 +13,7 @@ if ($canEdit) {
 <div class="main-content" id="keg-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="keg-view-summary">
+            <div class="card" id="keg-view-summary">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0"><?= e($keg['serial']) ?></h5></div>
                     <ul class="list-unstyled mb-0">

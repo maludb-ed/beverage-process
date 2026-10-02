@@ -11,7 +11,7 @@ $actions = '<a id="lot-release-form-cancel-btn" class="btn btn-light-brand" ' . 
         <?= csrf_field() ?>
         <div class="row">
             <div class="col-xxl-4 col-xl-6">
-                <div class="card stretch stretch-full" id="lot-release-form-evidence">
+                <div class="card" id="lot-release-form-evidence">
                     <div class="card-header"><h5 class="card-title">Evidence</h5></div>
                     <div class="card-body">
                         <?= detail_row('lot-release-form-current-status', 'Current status', status_badge($lot['quality_status'])) ?>
@@ -24,7 +24,7 @@ $actions = '<a id="lot-release-form-cancel-btn" class="btn btn-light-brand" ' . 
                 </div>
             </div>
             <div class="col-xxl-8 col-xl-6">
-                <div class="card stretch stretch-full" id="lot-release-form-card">
+                <div class="card" id="lot-release-form-card">
                     <div class="card-header"><h5 class="card-title">Decision</h5></div>
                     <div class="card-body">
                         <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'lot-release-form-errors']) ?>

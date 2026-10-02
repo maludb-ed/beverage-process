@@ -9,7 +9,7 @@ $actions = nav_button('lot-view-edit-btn', '/lots/' . $id . '/edit', 'Edit', 'fe
 <div class="main-content" id="lot-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="lot-view-summary">
+            <div class="card" id="lot-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <div><h5 class="fw-bold mb-1"><?= e($lot['lot_number']) ?></h5><div class="fs-12 text-muted"><?= e($lot['item_code'] . ' — ' . $lot['item_name']) ?></div></div>

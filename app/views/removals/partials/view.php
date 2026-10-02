@@ -24,7 +24,7 @@ $taxState = static fn(?string $s): string => $s === null ? '' : ' ' . badge(huma
 <div class="main-content" id="removal-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="removal-view-summary">
+            <div class="card" id="removal-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <div><h5 class="fw-bold mb-1"><?= e($removal['number']) ?></h5><div class="fs-12 text-muted"><?= $isReturn ? 'Return (in)' : 'Removal (out)' ?></div></div>

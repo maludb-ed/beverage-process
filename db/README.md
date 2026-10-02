@@ -16,7 +16,7 @@ An operator registry database `cidery_host` (see `host/000_host.sql`) lists the 
 1. `000_roles.sql` once per cluster (superuser, idempotent).
 2. `createdb cidery_<slug>` owned by `cidery_app`, then `001_extensions.sql` (superuser: installs `maludb_core`, creates the schemas).
 3. `SELECT maludb_core.enable_memory_schema('memory')` as `cidery_app`.
-4. `002_common.sql` through the highest numbered file (`014_...` today) in numeric order as `cidery_app`.
+4. `002_common.sql` through the highest numbered file (`015_...` today) in numeric order as `cidery_app`.
 5. `020_grants.sql` (superuser).
 6. Seed `app.client_settings` and mark the client active in `cidery_host`.
 
@@ -32,4 +32,4 @@ An operator registry database `cidery_host` (see `host/000_host.sql`) lists the 
 
 ## Changing the schema after Phase 1
 
-Schema changes during Phase 3 are exceptional and need owner sign-off. Add a new numbered file (`014_...sql`) rather than editing an applied one, and record it in `clients.schema_version`.
+Schema changes during Phase 3 are exceptional and need owner sign-off. Add a new numbered file (`016_...sql`) rather than editing an applied one, and record it in `clients.schema_version`.

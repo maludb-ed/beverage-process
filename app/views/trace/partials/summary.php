@@ -9,7 +9,7 @@ $tiles = [
 <div class="row" id="trace-summary">
     <?php foreach ($tiles as $key => [$label, $icon, $value]): ?>
         <div class="col-6 col-xxl-3 col-md-6">
-            <div class="card stretch stretch-full" id="trace-summary-<?= e($key) ?>">
+            <div class="card" id="trace-summary-<?= e($key) ?>">
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3">
                         <div class="avatar-text avatar-lg bg-gray-200"><i class="<?= e($icon) ?>"></i></div>

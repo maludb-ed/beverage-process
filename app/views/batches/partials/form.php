@@ -7,7 +7,7 @@ $yeast = $yeastLots[(int) ($batch['yeast_lot_id'] ?? 0)] ?? null;
     <form id="batch-form" method="post" action="/batches/save" hx-post="/batches/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="batch-form-header-card">
+            <div class="card" id="batch-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Pitch</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Pitching consumes the juice lots and the yeast and starts the batch in its vessel.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'batch-form-errors']) ?>
@@ -25,7 +25,7 @@ $yeast = $yeastLots[(int) ($batch['yeast_lot_id'] ?? 0)] ?? null;
                     <?= form_textarea($p, 'notes', 'Notes', $batch['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="batch-form-juice-card">
+            <div class="card" id="batch-form-juice-card">
                 <div class="card-header">
                     <h5 class="card-title">Juice lots</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="batch-form-add-juice-btn"

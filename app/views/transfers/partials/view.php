@@ -15,7 +15,7 @@ if ($status === 'posted' && user_can($user, 'receiving')) {
 <div class="main-content" id="transfer-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="transfer-view-summary">
+            <div class="card" id="transfer-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <h5 class="fw-bold mb-0"><?= e($transfer['number']) ?></h5>

@@ -17,7 +17,7 @@ $appName = (string) config('app.name', 'Cidery');
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="/assets/css/app-overrides.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/app-overrides.css?v=20261001c" />
 </head>
 <body hx-boost="false">
     <nav class="nxl-navigation" id="left-sidenav">
@@ -146,6 +146,41 @@ $appName = (string) config('app.name', 'Cidery');
                 if (input) { input.setAttribute('data-screen', (document.getElementById('screen-context') || {}).dataset ? document.getElementById('screen-context').dataset.screen : ''); }
             }
         });
+        // Unsaved changes on a form page (shared/page-header.php marks its header .page-header-form
+        // with data-form = the form id). Editing the form flags the header; leaving the page
+        // (navigation into #page-content, a reload, closing the tab) asks first. A 422 re-render
+        // keeps the flag because the input is still unsaved.
+        function formHeader() { return document.querySelector('#page-content .page-header-form'); }
+        function isDirty() { var h = formHeader(); return !!(h && h.classList.contains('is-dirty')); }
+        function markDirty(evt) {
+            var h = formHeader(), form = evt.target && evt.target.form;
+            if (h && form && form.getAttribute('id') === h.dataset.form && evt.target.type !== 'hidden') { h.classList.add('is-dirty'); }
+        }
+        document.addEventListener('input', markDirty);
+        document.addEventListener('change', markDirty);
+        document.body.addEventListener('htmx:confirm', function (evt) {
+            var h = formHeader();
+            if (!isDirty() || evt.detail.target !== document.getElementById('page-content')) { return; }
+            var src = evt.detail.elt, form = src && (src.tagName === 'FORM' ? src : src.form || (src.closest && src.closest('form')));
+            if (form && form.getAttribute('id') === h.dataset.form) { return; }   // the form's own save
+            if (src && src.getAttribute && src.getAttribute('form') === h.dataset.form) { return; }
+            evt.preventDefault();
+            if (window.confirm('You have unsaved changes. Leave this page without saving?')) { h.classList.remove('is-dirty'); evt.detail.issueRequest(); }
+        });
+        // A successful save answers with HX-Location; clear the flag before that navigation starts.
+        document.body.addEventListener('htmx:beforeOnLoad', function (evt) {
+            var h = formHeader(), elt = evt.detail.elt, xhr = evt.detail.xhr;
+            if (!h || !xhr || xhr.status >= 400) { return; }
+            var form = elt && (elt.tagName === 'FORM' ? elt : elt.form || (elt.closest && elt.closest('form')));
+            if ((form && form.getAttribute('id') === h.dataset.form) || (elt && elt.getAttribute && elt.getAttribute('form') === h.dataset.form)) { h.classList.remove('is-dirty'); }
+        });
+        // (afterSettle, not afterSwap: htmx's settle step resets the header's class attribute.)
+        document.body.addEventListener('htmx:afterSettle', function (evt) {
+            if (evt.detail.target.id === 'page-content' && evt.detail.xhr && evt.detail.xhr.status === 422) {
+                var h = formHeader(); if (h) { h.classList.add('is-dirty'); }
+            }
+        });
+        window.addEventListener('beforeunload', function (e) { if (isDirty()) { e.preventDefault(); e.returnValue = ''; } });
         // Session expiry: a 401/403 on a swap means re-authenticate with a full navigation.
         document.body.addEventListener('htmx:responseError', function (evt) {
             if (evt.detail.xhr.status === 401) { window.location.href = '/login'; }

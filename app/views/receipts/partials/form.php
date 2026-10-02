@@ -13,7 +13,7 @@ $receivedAt = substr(str_replace(' ', 'T', (string) $receivedAt), 0, 16);
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="receipt-form-header-card">
+            <div class="card" id="receipt-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Delivery</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Save as a draft, then post to create lots and stock.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'receipt-form-errors']) ?>
@@ -29,7 +29,7 @@ $receivedAt = substr(str_replace(' ', 'T', (string) $receivedAt), 0, 16);
                     <?= form_textarea($p, 'notes', 'Notes', $receipt['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="receipt-form-lines-card">
+            <div class="card" id="receipt-form-lines-card">
                 <div class="card-header">
                     <h5 class="card-title">Lines</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="receipt-form-add-line-btn"

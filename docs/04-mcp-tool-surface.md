@@ -42,6 +42,7 @@ Endpoints: `https://{client}.{domain}/mcp/records` and `/mcp/activity` (domain p
 | Tool | Answers | Input | Returns | Backing |
 |---|---|---|---|---|
 | `inventory_on_hand` | R9 | `item?`, `item_class?`, `location?`, `lot_number?`, `include_zero=false` | On hand, allocated, available by item, lot, location with quality status and expiry | `app.v_lot_balances` |
+| `inventory_rack_stock` | R9 | `rack?`, `area?`, `product?`, `item?`, `item_class?`, `released_only=false` | What is on each rack: lot, batch, stock date, use-by, quality, on hand and available, and `fifo_rank` (1 = pick next) | `app.v_fifo_stock` |
 | `inventory_available_after_orders` | R10 | `item?` | On hand, allocated by open production orders, net available | `app.v_item_stock`, `allocations` |
 | `inventory_pick_order` | R11 | `item`, `qty_base?`, `expiring_within_days?` | Lots in FEFO order (expiry, then received date), released only, with on hand | `app.v_lot_balances`, `lots` |
 | `inventory_below_reorder` | R12 | `item_class?` | Items under reorder point with on hand, on order, shortfall | `app.v_item_stock` |

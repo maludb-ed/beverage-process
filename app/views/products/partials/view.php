@@ -17,7 +17,7 @@ $tabs = [
 <div class="main-content" id="product-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="product-view-summary">
+            <div class="card" id="product-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <div><h5 class="fw-bold mb-1"><?= e($product['name']) ?></h5><div class="fs-12 text-muted"><?= e($product['code']) ?></div></div>

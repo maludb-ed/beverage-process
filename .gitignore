@@ -11,3 +11,6 @@ storage/
 config/services.env
 services/.venv/
 __pycache__/
+
+# Session transcripts written under services/ as well
+services/docs/claude-log/

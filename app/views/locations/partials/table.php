@@ -11,6 +11,7 @@ echo view('shared/list-card.php', [
         ['key' => 'premises', 'label' => 'Premises'],
         ['key' => 'kind', 'label' => 'Kind', 'sort' => 'kind'],
         ['key' => 'tax-state', 'label' => 'Tax state', 'sort' => 'tax_state'],
+        ['key' => 'racks', 'label' => 'Racks'],
         ['key' => 'allow-negative', 'label' => 'Allow negative'],
         ['key' => 'actions', 'label' => 'Actions', 'class' => 'text-end'],
     ],

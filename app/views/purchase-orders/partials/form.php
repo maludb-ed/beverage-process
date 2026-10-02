@@ -11,7 +11,7 @@ $p = 'purchase-order-form';
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="purchase-order-form-header-card">
+            <div class="card" id="purchase-order-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Order</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Draft orders can change; approving opens the order for receiving.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'purchase-order-form-errors']) ?>
@@ -22,7 +22,7 @@ $p = 'purchase-order-form';
                     <?= form_textarea($p, 'notes', 'Notes', $order['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="purchase-order-form-lines-card">
+            <div class="card" id="purchase-order-form-lines-card">
                 <div class="card-header">
                     <h5 class="card-title">Lines</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="purchase-order-form-add-line-btn"

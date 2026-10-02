@@ -7,7 +7,7 @@ $exportUrl = '/trace/' . query_string(['lot_number' => $trace['lot_number'], 'ba
         <div class="alert alert-warning" id="trace-error"><?= e($trace['error']) ?></div>
     <?php endif; ?>
     <?php if ($trace['direction'] === null): ?>
-        <div class="card stretch stretch-full" id="trace-prompt">
+        <div class="card" id="trace-prompt">
             <div class="card-body text-center text-muted py-5">
                 <i class="feather-git-branch fs-1 d-block mb-3"></i>
                 Enter a lot number to trace it forward to batches, finished lots and customers, or a batch number (or a finished lot) to trace it back to its ingredients and fruit.
@@ -15,7 +15,7 @@ $exportUrl = '/trace/' . query_string(['lot_number' => $trace['lot_number'], 'ba
         </div>
     <?php else: ?>
         <?= view('trace/partials/summary.php', ['summary' => $trace['summary']]) ?>
-        <div class="card stretch stretch-full" id="trace-results-card">
+        <div class="card" id="trace-results-card">
             <div class="card-header">
                 <h5 class="card-title"><?= e(ucfirst($trace['direction'])) ?> from <?= e($trace['start']) ?></h5>
                 <a class="btn btn-sm btn-light-brand" id="trace-export-btn" href="<?= e($exportUrl) ?>" download><i class="feather-download me-1"></i>Export CSV</a>

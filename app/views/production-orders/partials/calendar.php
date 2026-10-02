@@ -13,7 +13,7 @@ foreach ($plans as $plan) { $plansByVessel[(int) $plan['vessel_id']][] = $plan; 
 $todayDate = new DateTimeImmutable($today);
 ?>
 <div class="col-lg-12" id="production-calendar-grid">
-    <div class="card stretch stretch-full" id="production-calendar-card">
+    <div class="card" id="production-calendar-card">
         <div class="card-header"><h5 class="card-title">Planned vessel use</h5></div>
         <div class="card-body custom-card-action p-0">
             <div class="table-responsive">

@@ -1,6 +1,6 @@
 <?php /** @var array $rows  @var int $page  @var bool $hasMore  @var string $q */ $qs = $q !== '' ? '&q=' . rawurlencode($q) : ''; ?>
 <div class="col-lg-12" id="activity-list-results">
-    <div class="card stretch stretch-full" id="activity-list-card">
+    <div class="card" id="activity-list-card">
         <div class="card-body custom-card-action p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0" id="activity-list-table">

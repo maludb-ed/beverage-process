@@ -8,6 +8,9 @@ $user = require_role();
 $id = request_integer('id');
 if ($id !== null) {
     $location = find_location(db(), $id) ?? not_found('That location does not exist.');
+    if ($location['parent_location_id'] !== null) {
+        redirect('/racks/' . $id . '/edit');
+    }
     $screen = 'location-edit';
 } else {
     $kind = request_string('kind');
@@ -15,4 +18,5 @@ if ($id !== null) {
     $screen = 'location-add';
 }
 log_screen_entered($screen, 'location', $id, $location['name'] ?? null);
-render_screen($id ? 'Edit Location' : 'Add Location', $screen, view('locations/partials/form.php', ['location' => $location, 'errors' => [], 'premisesOptions' => premises_options(db())]), 'location', $id);
+render_screen($id ? 'Edit Location' : 'Add Location', $screen, view('locations/partials/form.php', ['location' => $location, 'errors' => [], 'premisesOptions' => premises_options(db()),
+    'racks' => $id !== null ? find_area_racks(db(), $id) : []]), 'location', $id);

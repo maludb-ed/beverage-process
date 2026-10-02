@@ -9,7 +9,7 @@ $desktop = json_encode(['mcpServers' => [$server => [
 ]]], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 ?>
 <div class="col-lg-12">
-    <div class="card stretch stretch-full border-success" id="mcp-token-created-card">
+    <div class="card border-success" id="mcp-token-created-card">
         <div class="card-header"><h5 class="card-title">Token for <?= e($created['name']) ?></h5></div>
         <div class="card-body">
             <div class="alert alert-warning" id="mcp-token-created-warning">Copy this token now. It is stored only as a hash and will not be shown again; if it is lost, revoke it and create another.</div>

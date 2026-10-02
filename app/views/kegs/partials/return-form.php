@@ -6,7 +6,7 @@ $p = 'keg-return-form';
     <form id="keg-return-form" method="post" action="/kegs/return" hx-post="/kegs/return" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="keg-return-form-card">
+            <div class="card" id="keg-return-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Returned kegs</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">One serial per line. Each returned keg becomes dirty and goes back to the packaged goods location.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'keg-return-form-errors']) ?>
@@ -16,7 +16,7 @@ $p = 'keg-return-form';
                 </div>
             </div>
             <?php if ($results !== []): ?>
-            <div class="card stretch stretch-full" id="keg-return-results-card">
+            <div class="card" id="keg-return-results-card">
                 <div class="card-header"><h5 class="card-title">Result</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="keg-return-results-table">

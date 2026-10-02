@@ -18,7 +18,7 @@ $perGal = $version['standard_cost_per_l'] === null ? null : (float) $version['st
     <?php if ($alert): ?><div class="alert alert-danger" role="alert" id="recipe-view-alert"><?= e($alert) ?></div><?php endif; ?>
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="recipe-view-summary">
+            <div class="card" id="recipe-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <div><h5 class="fw-bold mb-1">Version <?= e($version['version_no']) ?></h5><div class="fs-12 text-muted"><a <?= nav_attrs('/products/' . (int) $version['product_id']) ?>><?= e($version['product_name']) ?></a></div></div>
@@ -38,7 +38,7 @@ $perGal = $version['standard_cost_per_l'] === null ? null : (float) $version['st
             </div>
         </div>
         <div class="col-xxl-8 col-xl-6">
-            <div class="card stretch stretch-full" id="recipe-view-stages-card">
+            <div class="card" id="recipe-view-stages-card">
                 <div class="card-header"><h5 class="card-title">Stages</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="recipe-view-stages-table">
@@ -58,7 +58,11 @@ $perGal = $version['standard_cost_per_l'] === null ? null : (float) $version['st
                     </table>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="recipe-view-lines-card">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12">
+            <div class="card" id="recipe-view-lines-card">
                 <div class="card-header">
                     <h5 class="card-title">Lines</h5>
                     <div class="input-group w-auto">
@@ -70,7 +74,7 @@ $perGal = $version['standard_cost_per_l'] === null ? null : (float) $version['st
                 </div>
                 <?= view('recipes/partials/lines-table.php', ['version' => $version, 'lines' => $lines, 'scaleL' => $scaleL, 'scaleDisplay' => $scaleDisplay]) ?>
             </div>
-            <div class="card stretch stretch-full" id="recipe-view-diff-card">
+            <div class="card" id="recipe-view-diff-card">
                 <div class="card-header">
                     <h5 class="card-title">Compare</h5>
                     <select class="form-select w-auto" name="other" id="recipe-view-diff-version" aria-label="Compare with version"

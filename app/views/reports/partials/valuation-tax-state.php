@@ -1,6 +1,6 @@
 <?php /** @var array $taxStates  bonded/tax_paid => value */ ?>
 <div class="col-lg-12" id="report-valuation-tax-state-card">
-    <div class="card stretch stretch-full">
+    <div class="card">
         <div class="card-header"><h5 class="card-title">Bonded and tax paid</h5></div>
         <div class="card-body p-0">
             <div class="table-responsive">

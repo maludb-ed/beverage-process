@@ -125,10 +125,14 @@ function find_item_balances(PDO $pdo, int $itemId): array
     return $statement->fetchAll();
 }
 
-/** Active locations keyed by id: [id, name, tax_state, premises_id, allow_negative]. */
+/** Active locations keyed by id: [id, name, tax_state, premises_id, allow_negative, area_name]; racks follow their area in rack-number order. */
 function inventory_locations(PDO $pdo): array
 {
-    $rows = $pdo->query('SELECT id, name, tax_state, premises_id, allow_negative FROM app.locations WHERE active ORDER BY name')->fetchAll();
+    $rows = $pdo->query(<<<'SQL'
+        SELECT l.id, l.name, l.tax_state, l.premises_id, l.allow_negative, a.name AS area_name
+        FROM app.locations l LEFT JOIN app.locations a ON a.id = l.parent_location_id
+        WHERE l.active ORDER BY COALESCE(a.name, l.name), l.parent_location_id IS NOT NULL, app.rack_sort_key(l.rack_number)
+    SQL)->fetchAll();
     $byId = [];
     foreach ($rows as $row) {
         $byId[(int) $row['id']] = $row;
@@ -136,14 +140,15 @@ function inventory_locations(PDO $pdo): array
     return $byId;
 }
 
-/** id => "Name (Bonded)" for a location list, optionally limited to one tax state. */
+/** id => "Name (Bonded)", or "Area · Rack 7 (Bonded)" for a rack, optionally limited to one tax state. */
 function inventory_location_options(array $locations, ?string $taxState = null, ?int $excludeId = null): array
 {
     $options = [];
     foreach ($locations as $id => $location) {
         if ($taxState !== null && $location['tax_state'] !== $taxState) { continue; }
         if ($excludeId !== null && $id === $excludeId) { continue; }
-        $options[$id] = $location['name'] . ' (' . humanize($location['tax_state']) . ')';
+        $name = ($location['area_name'] ?? null) !== null ? $location['area_name'] . ' · ' . $location['name'] : $location['name'];
+        $options[$id] = $name . ' (' . humanize($location['tax_state']) . ')';
     }
     return $options;
 }

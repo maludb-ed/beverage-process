@@ -12,6 +12,15 @@ $id = (int) $target['id']; $editUrl = '/users/' . $id . '/edit'; ?>
     <td id="user-row-<?= e($id) ?>-actions" class="text-end">
         <div class="hstack gap-2 justify-content-end">
             <?= row_edit_button('user-row-' . $id . '-edit-btn', $editUrl) ?>
+            <?php if ($target['status'] === 'invited'): ?>
+                <a id="user-row-<?= e($id) ?>-resend-btn" href="javascript:void(0);" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Resend invitation"
+                   hx-post="/users/<?= e($id) ?>/resend" hx-target="#page-content" hx-swap="innerHTML"
+                   hx-confirm="Send <?= e($target['display_name']) ?> a new invitation at <?= e($target['email']) ?>? Earlier invitation links will stop working."><i class="feather-mail"></i></a>
+            <?php endif; ?>
+            <?php if ($target['status'] === 'disabled'): ?>
+                <a id="user-row-<?= e($id) ?>-enable-btn" href="javascript:void(0);" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Enable"
+                   hx-post="/users/<?= e($id) ?>/enable" hx-target="#page-content" hx-swap="innerHTML"><i class="feather-user-check"></i></a>
+            <?php endif; ?>
             <?php if ($target['status'] !== 'disabled' && $id !== $currentUserId): ?>
                 <a id="user-row-<?= e($id) ?>-disable-btn" href="javascript:void(0);" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Disable"
                    hx-post="/users/<?= e($id) ?>/disable" hx-target="#page-content" hx-swap="innerHTML"

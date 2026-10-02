@@ -20,7 +20,7 @@ $from = $paging['total'] === 0 ? 0 : ($paging['page'] - 1) * $paging['page_size'
 $to = min($paging['total'], $paging['page'] * $paging['page_size']);
 ?>
 <div class="col-lg-12" id="<?= e($screen) ?>-results">
-    <div class="card stretch stretch-full" id="<?= e($screen) ?>-card">
+    <div class="card" id="<?= e($screen) ?>-card">
         <div class="card-header">
             <h5 class="card-title"><?= e($title) ?></h5>
             <div class="card-header-action">

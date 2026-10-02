@@ -10,7 +10,7 @@ foreach ($rows as $n => $row) {
     <form id="batch-blend-form" method="post" action="/batches/blend" hx-post="/batches/blend" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="batch-blend-form-card">
+            <div class="card" id="batch-blend-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Blend batches</span><span class="fs-12 fw-normal text-muted">The inputs become one new batch; its fruit share is the volume-weighted average.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'batch-blend-form-errors']) ?>

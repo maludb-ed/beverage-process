@@ -9,7 +9,7 @@ $cancelUrl = '/products/' . $productId;
         <?= csrf_field() ?>
         <input type="hidden" name="product_id" id="recipe-form-field-product" value="<?= e($productId) ?>" />
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="recipe-form-card">
+            <div class="card" id="recipe-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">New version of <?= e($product['name']) ?></span><span class="fs-12 fw-normal text-muted text-truncate-1-line">A draft you can edit. Activate it to make it the recipe production uses.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'recipe-form-errors']) ?>

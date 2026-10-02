@@ -10,7 +10,7 @@ foreach ($catalog as $itemId => $item) {
     <form id="standard-cost-form" method="post" action="/standard-costs/save" hx-post="/standard-costs/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="standard-cost-form-card">
+            <div class="card" id="standard-cost-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Standard cost</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Entered per display unit (pound, gallon or each); stored per base unit. History is kept, not edited.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'standard-cost-form-errors']) ?>
@@ -20,7 +20,7 @@ foreach ($catalog as $itemId => $item) {
                 </div>
             </div>
             <?php if ($history !== []): ?>
-            <div class="card stretch stretch-full" id="standard-cost-form-history-card">
+            <div class="card" id="standard-cost-form-history-card">
                 <div class="card-header"><h5 class="card-title">History</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="standard-cost-form-history-table">

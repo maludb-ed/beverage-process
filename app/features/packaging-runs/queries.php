@@ -198,7 +198,7 @@ function packaging_material_lot_options(PDO $pdo, int $itemId, ?int $premisesId)
         SELECT vb.lot_id, vb.lot_number, vb.location_name, vb.qty_available, vb.base_unit_code, vb.expires_on
         FROM app.v_lot_balances vb
         WHERE vb.item_id = :item AND vb.quality_status = 'released' AND vb.qty_available > 0 AND (:p::bigint IS NULL OR vb.premises_id = :p::bigint)
-        ORDER BY vb.expires_on NULLS LAST, vb.lot_number, vb.location_name
+        ORDER BY COALESCE(vb.produced_on, vb.received_on) NULLS LAST, vb.expires_on NULLS LAST, vb.lot_number, vb.location_name
     SQL);
     $statement->execute(['item' => $itemId, 'p' => $premisesId]);
     $options = [];

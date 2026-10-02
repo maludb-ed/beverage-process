@@ -38,7 +38,7 @@ $removalTable = static function (array $rows, string $key, string $empty): strin
 <div class="main-content" id="customer-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="customer-view-summary">
+            <div class="card" id="customer-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <div><h5 class="fw-bold mb-1"><?= e($customer['name']) ?></h5><div class="fs-12 text-muted"><?= e(CUSTOMER_KINDS[$customer['kind']] ?? humanize($customer['kind'])) ?></div></div>

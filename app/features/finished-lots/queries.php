@@ -20,7 +20,7 @@ function find_finished_lots(PDO $pdo, string $search = '', array $filters = [], 
     }
     if (!empty($filters['product_id'])) { $where[] = 'fs.product_id = :product'; $params['product'] = (int) $filters['product_id']; }
     if (!empty($filters['package_kind'])) { $where[] = 'fs.package_kind = :kind'; $params['kind'] = (string) $filters['package_kind']; }
-    if (!empty($filters['location_id'])) { $where[] = 'fs.location_id = :loc'; $params['loc'] = (int) $filters['location_id']; }
+    if (!empty($filters['location_id'])) { $where[] = '(fs.location_id = :loc OR fs.area_location_id = :loc)'; $params['loc'] = (int) $filters['location_id']; }
     $whereSql = $where === [] ? '' : ' WHERE ' . implode(' AND ', $where);
     return paged_query($pdo, 'SELECT fs.*, fs.lot_id AS id FROM app.v_finished_stock fs' . $whereSql . ' ORDER BY ' . order_by($sort, FINISHED_LOT_SORTS, '-packaged_on') . ', fs.lot_id DESC, fs.location_name',
         'SELECT count(*) FROM app.v_finished_stock fs' . $whereSql, $params, $page);
@@ -33,7 +33,7 @@ function finished_lot_product_options(PDO $pdo): array
 
 function finished_lot_location_options(PDO $pdo): array
 {
-    return array_column($pdo->query("SELECT id, name FROM app.locations WHERE active AND kind IN ('packaged_goods', 'cold_room', 'cellar', 'taproom') ORDER BY name")->fetchAll(), 'name', 'id');
+    return array_column($pdo->query("SELECT id, name FROM app.locations WHERE active AND kind IN ('packaged_goods', 'cold_room', 'cellar', 'taproom') ORDER BY parent_location_id IS NOT NULL, name")->fetchAll(), 'name', 'id');
 }
 
 function find_finished_lot(PDO $pdo, int $lotId): ?array

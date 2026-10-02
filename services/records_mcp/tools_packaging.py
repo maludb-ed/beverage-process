@@ -59,7 +59,7 @@ class FinishedStockInput(Paged):
 @records_tool("packaging_finished_stock", "Finished goods ready to sell",
               """Call for how many cases and kegs of a product are ready to sell (R36). Lists finished lots with stock by product
               and package: units on hand and available, cases (units / units per case), kegs, gallons, tax class, ABV, best before,
-              location and tax state. 'summary' totals released stock per product and package.""")
+              location (area and rack number when on a rack; an area filter includes its racks) and tax state. 'summary' totals released stock per product and package.""")
 async def packaging_finished_stock(p: FinishedStockInput) -> dict:
     product = await resolve_opt("product", p.product)
     location = await resolve_opt("location", p.location)
@@ -72,7 +72,8 @@ async def packaging_finished_stock(p: FinishedStockInput) -> dict:
         d = fmt.drop_none({
             "product": r["product_name"], "package": r["package_name"], "package_kind": r["package_kind"], "lot_number": r["lot_number"],
             "batch_number": r["batch_number"], "quality_status": r["quality_status"], "tax_class": r["tax_class"], "abv": r["abv"],
-            "packaged_on": r["packaged_on"], "best_before_on": r["best_before_on"], "location": r["location_name"], "tax_state": r["tax_state"],
+            "packaged_on": r["packaged_on"], "best_before_on": r["best_before_on"], "location": r["location_name"],
+            "area": r["area_name"] if r["rack_number"] else None, "rack_number": r["rack_number"], "tax_state": r["tax_state"],
             "units_on_hand": r["units_on_hand"], "units_available": r["units_available"],
             "cases_available": round(units / upc, 2) if upc else None, "volume_on_hand": vol(r["volume_on_hand_l"]), "unit_cost": r["unit_cost"]})
         out.append(d)

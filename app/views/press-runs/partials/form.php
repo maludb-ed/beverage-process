@@ -11,7 +11,7 @@ $p = 'press-run-form';
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="press-run-form-header-card">
+            <div class="card" id="press-run-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Press</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Save as a draft, then post to issue the fruit and create the juice and pomace lots.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'press-run-form-errors']) ?>
@@ -27,7 +27,7 @@ $p = 'press-run-form';
                     <?= form_textarea($p, 'notes', 'Notes', $run['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="press-run-form-inputs-card">
+            <div class="card" id="press-run-form-inputs-card">
                 <div class="card-header">
                     <h5 class="card-title">Fruit in</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="press-run-form-add-input-btn"
@@ -39,7 +39,7 @@ $p = 'press-run-form';
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="press-run-form-outputs-card">
+            <div class="card" id="press-run-form-outputs-card">
                 <div class="card-header">
                     <h5 class="card-title">Juice and pomace out</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="press-run-form-add-output-btn"

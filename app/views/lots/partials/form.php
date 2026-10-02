@@ -7,7 +7,7 @@ $p = 'lot-form';
     <form id="lot-form" method="post" action="/lots/<?= e($id) ?>/save" hx-post="/lots/<?= e($id) ?>/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="lot-form-card">
+            <div class="card" id="lot-form-card">
                 <div class="card-body">
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'lot-form-errors']) ?>
                     <?= form_static($p, 'item', 'Item', e($lot['item_code'] . ' — ' . $lot['item_name'])) ?>

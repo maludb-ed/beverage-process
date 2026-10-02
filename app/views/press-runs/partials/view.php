@@ -18,7 +18,7 @@ $li = static fn(string $key, string $icon, string $label, string $html, bool $la
 <div class="main-content" id="press-run-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="press-run-view-summary">
+            <div class="card" id="press-run-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <h5 class="fw-bold mb-0"><?= e($run['number']) ?></h5>

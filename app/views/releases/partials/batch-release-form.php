@@ -21,7 +21,7 @@ $sync = "var f=document.getElementById('batch-release-form');var o=document.getE
         <input type="hidden" name="id" value="<?= e($id) ?>" />
         <div class="row">
             <div class="col-xxl-4 col-xl-6">
-                <div class="card stretch stretch-full" id="batch-release-form-summary">
+                <div class="card" id="batch-release-form-summary">
                     <div class="card-header"><h5 class="card-title">Batch</h5></div>
                     <div class="card-body">
                         <?= detail_row('batch-release-form-batch', 'Batch', e($batch['number'])) ?>
@@ -34,7 +34,7 @@ $sync = "var f=document.getElementById('batch-release-form');var o=document.getE
                 </div>
             </div>
             <div class="col-xxl-8 col-xl-6">
-                <div class="card stretch stretch-full" id="batch-release-form-card">
+                <div class="card" id="batch-release-form-card">
                     <div class="card-header"><h5 class="card-title">Decision</h5></div>
                     <div class="card-body">
                         <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'batch-release-form-errors']) ?>
@@ -52,7 +52,7 @@ $sync = "var f=document.getElementById('batch-release-form');var o=document.getE
         </div>
         <div class="row mt-4">
             <div class="col-xxl-8 col-xl-7">
-                <div class="card stretch stretch-full" id="batch-release-form-readings-card">
+                <div class="card" id="batch-release-form-readings-card">
                     <div class="card-header"><h5 class="card-title">Readings since the stage began</h5></div>
                     <div class="card-body p-0"><div class="table-responsive">
                         <table class="table table-hover mb-0" id="batch-release-form-readings-table">
@@ -73,7 +73,7 @@ $sync = "var f=document.getElementById('batch-release-form');var o=document.getE
                 </div>
             </div>
             <div class="col-xxl-4 col-xl-5">
-                <div class="card stretch stretch-full" id="batch-release-form-targets-card">
+                <div class="card" id="batch-release-form-targets-card">
                     <div class="card-header"><h5 class="card-title">QC targets for <?= e($batch['stage_name']) ?></h5></div>
                     <div class="card-body">
                         <?php foreach ($qc_targets as $target): $tid = str_replace('_', '-', $target['measurement_type_code']); ?>
@@ -87,7 +87,7 @@ $sync = "var f=document.getElementById('batch-release-form');var o=document.getE
         </div>
         <div class="row mt-4">
             <div class="col-lg-12">
-                <div class="card stretch stretch-full" id="batch-release-form-sensory-card">
+                <div class="card" id="batch-release-form-sensory-card">
                     <div class="card-header"><h5 class="card-title">Sensory panels</h5></div>
                     <div class="card-body p-0"><div class="table-responsive">
                         <table class="table table-hover mb-0" id="batch-release-form-sensory-table">

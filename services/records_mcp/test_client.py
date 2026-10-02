@@ -28,6 +28,8 @@ SUITE: list[tuple[str, str, dict[str, Any]]] = [
     ("R6", "receiving_price_history", {"item_class": "fruit", "group_by": "year"}),
     ("R7", "receiving_supplier_performance", {}),
     ("R8", "receiving_fruit_intake", {"season_year": 2026}),
+    ("R9", "inventory_rack_stock", {"product": "Hill Dry Cider", "released_only": True}),
+    ("R9", "inventory_rack_stock", {"area": "Packaged goods"}),
     ("R9", "inventory_on_hand", {"item": "JCE-APL"}),
     ("R10", "inventory_available_after_orders", {}),
     ("R11", "inventory_pick_order", {"item": "EC-1118", "qty": 0.6, "unit": "kg"}),

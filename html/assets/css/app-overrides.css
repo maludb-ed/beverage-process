@@ -72,9 +72,40 @@ html.minimenu .assistant-bar { left: 100px; }
 }
 .assistant-bar .input-group .btn { min-height: 44px; }
 .assistant-bar .form-control { min-height: 44px; }
+/* Send shows only while the bar is in use (focused, or holding text), so it is
+   not mistaken for a page's Save button. Focus on the button itself keeps it
+   visible while it is being clicked. */
+.assistant-form #assistant-input:placeholder-shown ~ #assistant-send-btn { display: none; }
+.assistant-form:focus-within #assistant-input ~ #assistant-send-btn { display: inline-block; }
 html.app-skin-dark .assistant-bar { background: #0f172a; border-top-color: #19253f; }
 html.app-skin-dark .assistant-reply { background: #121a2d; border-color: #19253f; }
 @media (max-width: 575px) { .assistant-transcript { width: 100% !important; } }
+
+/* FORM HEADERS (shared/page-header.php): the header of an add/edit form, with its
+   Cancel and Save, stays pinned under the 80px top bar while the form scrolls, so
+   Save is always at the top and never next to the assistant's Send at the bottom. */
+.page-header.page-header-form { position: sticky; top: 80px; z-index: 1023; }
+.page-header-form .page-header-unsaved { display: none; }
+.page-header-form.is-dirty .page-header-unsaved { display: inline-flex; align-items: center; }
+.page-header-form.is-dirty [type="submit"] { box-shadow: 0 0 0 3px rgba(255, 166, 0, .45); }
+@media (max-width: 767.98px) {
+    /* Phones: buttons inline instead of in the theme's slide-out panel; no breadcrumbs. */
+    .page-header.page-header-form { padding: 8px 12px; min-height: 56px; gap: 8px; }
+    .page-header-form .breadcrumb { display: none; }
+    .page-header-form .page-header-title { border-right: 0 !important; margin-right: 0 !important; padding-right: 0 !important; min-width: 0; }
+    .page-header-form .page-header-title h5 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0; }
+    .page-header-form .page-header-left { min-width: 0; flex: 1 1 auto; }
+    .page-header-form .page-header-right-open-toggle, .page-header-form .page-header-right-close-toggle { display: none !important; }
+    .nxl-container .nxl-content .page-header.page-header-form .page-header-right .page-header-right-items {
+        position: static; opacity: 1; visibility: visible; transform: none; width: auto; height: auto;
+        border: 0; background: transparent; box-shadow: none; }
+    .nxl-container .nxl-content .page-header.page-header-form .page-header-right .page-header-right-items .page-header-right-items-wrapper {
+        padding: 0; flex-direction: row; flex-wrap: nowrap; }
+    .page-header-form .page-header-right-items-wrapper .btn:not([type="submit"]) span { display: none; }
+    .page-header-form .page-header-right-items-wrapper .btn:not([type="submit"]) i { margin-right: 0 !important; }
+    .page-header-form .page-header-unsaved { font-size: 0; padding: 6px; }
+    .page-header-form .page-header-unsaved i { font-size: 14px; margin-right: 0 !important; }
+}
 
 /* AUTH PAGES: a flash message inside the minimal card */
 .auth-minimal-wrapper .alert { text-align: left; }

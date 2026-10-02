@@ -8,7 +8,7 @@ $tabs = ['overview' => 'Overview', 'items' => 'Items', 'orders' => 'Orders', 'pe
 <div class="main-content" id="supplier-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="supplier-view-summary">
+            <div class="card" id="supplier-view-summary">
                 <div class="card-body">
                     <div class="mb-4">
                         <span class="fs-14 fw-bold d-block" id="supplier-view-name"><?= status_dot($supplier['active'] ? 'success' : 'secondary') ?><?= e($supplier['name']) ?></span>

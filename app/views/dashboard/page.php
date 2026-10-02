@@ -13,7 +13,7 @@
             $pct = $card['total'] ? (int) round(100 * $card['value'] / max(1, $card['total'])) : null;
         ?>
         <div class="col-xxl-3 col-md-6" id="dashboard-stat-<?= e($card['id']) ?>">
-            <div class="card stretch stretch-full">
+            <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between mb-4">
                         <div class="d-flex gap-4 align-items-center">
@@ -36,7 +36,7 @@
         </div>
         <?php endforeach; ?>
         <div class="col-lg-12" id="dashboard-recent">
-            <div class="card stretch stretch-full">
+            <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Recent activity</h5>
                     <div class="card-header-action">

@@ -22,7 +22,7 @@ $when = static fn(?string $name, ?string $at) => $name ? $name . ', ' . format_d
 <div class="main-content" id="production-order-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="production-order-view-summary">
+            <div class="card" id="production-order-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <h5 class="fw-bold mb-0"><?= e($order['number']) ?></h5>
@@ -44,7 +44,7 @@ $when = static fn(?string $name, ?string $at) => $name ? $name . ', ' . format_d
             </div>
         </div>
         <div class="col-xxl-8 col-xl-6">
-            <div class="card stretch stretch-full" id="production-order-view-vessels">
+            <div class="card" id="production-order-view-vessels">
                 <div class="card-header"><h5 class="card-title">Vessel plan</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="production-order-view-vessels-table">
@@ -72,24 +72,34 @@ $when = static fn(?string $name, ?string $at) => $name ? $name . ', ' . format_d
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="card stretch stretch-full" id="production-order-view-materials">
+            <div class="card" id="production-order-view-materials">
                 <div class="card-header"><h5 class="card-title">Material check</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="production-order-view-materials-table">
-                        <thead class="thead-light"><tr><th>Item</th><th>Purpose</th><th>Required</th><th>Available</th><th>Allocated to other orders</th><th>On order</th><th>Shortfall</th></tr></thead>
+                        <thead class="thead-light"><tr><th>Item</th><th>Purpose</th><th>Required</th><th>Pick from (oldest first)</th><th>Available</th><th>Allocated to other orders</th><th>On order</th><th>Shortfall</th></tr></thead>
                         <tbody>
                         <?php foreach ($materials as $m): $mid = (int) $m['id']; $short = (float) $m['shortfall_base'] > 0; ?>
                             <tr id="production-order-material-row-<?= e($mid) ?>">
                                 <td id="production-order-material-row-<?= e($mid) ?>-item"><?= status_dot($short ? 'danger' : 'success') ?><?= e($m['item_code']) ?> <small class="text-muted"><?= e($m['item_name']) ?></small></td>
                                 <td id="production-order-material-row-<?= e($mid) ?>-purpose"><?= e(humanize($m['purpose'])) ?></td>
                                 <td id="production-order-material-row-<?= e($mid) ?>-required"><?= fmt_qty_html($m['required_base'], $m['base_unit_code'], 2) ?> <small class="text-muted">(<?= e(format_qty($m['required_base'], 3) . ' ' . $m['base_unit_code']) ?>)</small></td>
+                                <td id="production-order-material-row-<?= e($mid) ?>-pick">
+                                    <?php foreach ($m['picks'] as $k => $pick): $pid = 'production-order-material-row-' . $mid . '-pick-' . $k; ?>
+                                        <div class="text-nowrap<?= $k > 0 ? ' mt-1' : '' ?>" id="<?= e($pid) ?>">
+                                            <span class="fw-semibold" id="<?= e($pid) ?>-where"><?= e($pick['where']) ?></span>
+                                            <small class="text-muted">· <a id="<?= e($pid) ?>-lot" <?= nav_attrs('/lots/' . $pick['lot_id']) ?>><?= e($pick['lot_number']) ?></a> · <?= e(fmt_qty($pick['qty_base'], $m['base_unit_code'], 2)) ?></small>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    <?php if ($m['picks'] !== [] && (float) $m['required_base'] - $m['pick_short_base'] > (float) $m['available_base'] + 1e-9): ?><div class="text-warning fs-12 mt-1" id="production-order-material-row-<?= e($mid) ?>-pick-reserved">Other orders have reserved some of this stock</div><?php endif; ?>
+                                    <?php if ($m['pick_short_base'] > 0): ?><div class="text-danger fs-12<?= $m['picks'] !== [] ? ' mt-1' : '' ?>" id="production-order-material-row-<?= e($mid) ?>-pick-short"><?= $m['picks'] === [] ? 'No released stock' : 'Still need ' . e(fmt_qty($m['pick_short_base'], $m['base_unit_code'], 2)) ?></div><?php endif; ?>
+                                </td>
                                 <td id="production-order-material-row-<?= e($mid) ?>-available"><?= fmt_qty_html($m['available_base'], $m['base_unit_code'], 2) ?></td>
                                 <td id="production-order-material-row-<?= e($mid) ?>-allocated-other"><?= (float) $m['allocated_other_base'] > 0 ? fmt_qty_html($m['allocated_other_base'], $m['base_unit_code'], 2) : '<span class="text-muted">None</span>' ?></td>
                                 <td id="production-order-material-row-<?= e($mid) ?>-on-order"><?= fmt_qty_html($m['on_order_base'], $m['base_unit_code'], 2) ?></td>
                                 <td id="production-order-material-row-<?= e($mid) ?>-shortfall" class="<?= $short ? 'text-danger fw-semibold' : '' ?>"><?= $short ? fmt_qty_html($m['shortfall_base'], $m['base_unit_code'], 2) : '<span class="text-muted">None</span>' ?></td>
                             </tr>
                         <?php endforeach; ?>
-                        <?php if ($materials === []): ?><tr><td colspan="7" class="text-center text-muted py-4">The recipe has no material lines.</td></tr><?php endif; ?>
+                        <?php if ($materials === []): ?><tr><td colspan="8" class="text-center text-muted py-4">The recipe has no material lines.</td></tr><?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -99,7 +109,7 @@ $when = static fn(?string $name, ?string $at) => $name ? $name . ', ' . format_d
     <?php if ($status !== 'planned'): ?>
     <div class="row">
         <div class="col-lg-12">
-            <div class="card stretch stretch-full" id="production-order-view-allocations">
+            <div class="card" id="production-order-view-allocations">
                 <div class="card-header"><h5 class="card-title">Allocations</h5></div>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" id="production-order-view-allocations-table">

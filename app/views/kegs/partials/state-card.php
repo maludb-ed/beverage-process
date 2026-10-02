@@ -8,7 +8,7 @@ $button = static fn(string $event, string $label, string $icon, string $class, ?
     '<button type="button" class="btn ' . e($class) . '" id="keg-view-' . e(str_replace('_', '-', $event)) . '-btn" hx-post="/kegs/' . e($id) . '/state" hx-vals=\'{"event":"' . e($event) . '"}\' hx-target="#keg-view-state-card" hx-swap="outerHTML"'
     . ($confirm !== null ? ' hx-confirm="' . e($confirm) . '"' : '') . '><i class="' . e($icon) . ' me-2"></i><span>' . e($label) . '</span></button>';
 ?>
-<div class="card stretch stretch-full" id="keg-view-state-card">
+<div class="card" id="keg-view-state-card">
     <div class="card-header"><h5 class="card-title">State</h5><div><?= status_badge($state, 'keg-view-state') ?></div></div>
     <div class="card-body">
         <?php if (!empty($notice)): ?><div class="alert alert-success" id="keg-view-notice"><?= e($notice) ?></div><?php endif; ?>

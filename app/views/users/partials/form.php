@@ -10,7 +10,7 @@ $p = 'user-form';
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="user-form-card">
+            <div class="card" id="user-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2"><?= $isEdit ? 'User' : 'Invite a user' ?></span><span class="fs-12 fw-normal text-muted text-truncate-1-line"><?= $isEdit ? 'Change the display name here. Roles are changed below.' : 'They receive an email with a link to set their password.' ?></span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => $errors, 'id' => 'user-form-errors']) ?>
@@ -25,7 +25,7 @@ $p = 'user-form';
     </form>
     <?php if ($isEdit): ?>
     <div class="row mt-4"><div class="col-lg-12">
-        <div class="card stretch stretch-full" id="user-role-card">
+        <div class="card" id="user-role-card">
             <div class="card-body">
                 <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Role</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Status: <?= e(humanize($target['status'] ?? '')) ?>. Changing a role takes effect on the user's next request.</span></h5></div>
                 <form id="user-role-form" method="post" action="/users/<?= e($id) ?>/role" hx-post="/users/<?= e($id) ?>/role" hx-target="#page-content" hx-swap="innerHTML" hx-confirm="Change this user's role?">

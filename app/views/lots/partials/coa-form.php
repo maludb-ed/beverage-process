@@ -11,7 +11,7 @@ for ($i = count($values); $i < 6; $i++) {
     <form id="lot-coa-form" method="post" action="/lots/<?= e($id) ?>/coa/save" enctype="multipart/form-data" hx-post="/lots/<?= e($id) ?>/coa/save" hx-encoding="multipart/form-data" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="lot-coa-form-card">
+            <div class="card" id="lot-coa-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Certificate of analysis</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">The values you enter are copied onto the lot so specs and recipes can use them.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'lot-coa-form-errors']) ?>

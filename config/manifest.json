@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-01T15:07:55+00:00",
+  "generated_at": "2026-10-01T20:49:41+00:00",
   "generated_by": "services/actions_mcp/build_manifest.py",
   "source": "docs/05-action-manifest.md",
   "screens": [
@@ -901,6 +901,77 @@
         "sample_path": "/inventory/reorder",
         "status": "ok"
       }
+    },
+    {
+      "id": "rack-board",
+      "url": "/racks/",
+      "title": "Rack board",
+      "when": "see which product, lot and batch is on each numbered rack; find where a product is stored",
+      "section": "Slice 3: inventory",
+      "prefill": [],
+      "record_kind": null,
+      "search": true,
+      "navigable": true,
+      "route": {
+        "controller": "html/racks/index.php",
+        "http": 200,
+        "sample_path": "/racks/",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "rack-fifo",
+      "url": "/racks/fifo",
+      "title": "FIFO pick order",
+      "when": "see which lot to pick or use next, oldest first, and the rack it is on",
+      "section": "Slice 3: inventory",
+      "prefill": [],
+      "record_kind": null,
+      "search": true,
+      "navigable": true,
+      "route": {
+        "controller": "html/racks/fifo.php",
+        "http": 200,
+        "sample_path": "/racks/fifo",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "rack-add",
+      "url": "/racks/new",
+      "title": "Rack",
+      "when": "add or change a numbered rack in a storage area — the empty form for a new one",
+      "section": "Slice 3: inventory",
+      "prefill": [
+        "rack_number"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/racks/form.php",
+        "http": 200,
+        "sample_path": "/racks/new",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "rack-edit",
+      "url": "/racks/{id}/edit",
+      "title": "Rack",
+      "when": "add or change a numbered rack in a storage area — the form for an existing record",
+      "section": "Slice 3: inventory",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": false,
+      "route": {
+        "controller": "html/racks/form.php",
+        "http": 404,
+        "sample_path": "/racks/5/edit",
+        "status": "missing"
+      },
+      "not_navigable_reason": "the screen is not built yet (missing)"
     },
     {
       "id": "transfers-list",
@@ -2496,6 +2567,28 @@
       "exposed": false
     },
     {
+      "name": "rack_create",
+      "section": "Foundation",
+      "endpoint": "POST /racks/save",
+      "params": "area, rack_number",
+      "undo": "delete_row",
+      "confirm": "no",
+      "role": "owner",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "rack_update",
+      "section": "Foundation",
+      "endpoint": "POST /racks/save",
+      "params": "area, rack_number",
+      "undo": "restore_prior",
+      "confirm": "no",
+      "role": "owner",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
       "name": "vessel_create",
       "section": "Foundation",
       "endpoint": "POST /vessels/save",
@@ -2606,6 +2699,17 @@
       "exposed": false
     },
     {
+      "name": "user_invite_resend",
+      "section": "Foundation",
+      "endpoint": "POST /users/{id}/resend",
+      "params": "— (new 3-day link; earlier links stop working; emails the invitee)",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "owner",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
       "name": "user_set_role",
       "section": "Foundation",
       "endpoint": "POST /users/{id}/role",
@@ -2623,6 +2727,17 @@
       "params": "—",
       "undo": "restore_prior",
       "confirm": "yes",
+      "role": "owner",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "user_enable",
+      "section": "Foundation",
+      "endpoint": "POST /users/{id}/enable",
+      "params": "— (back to active if they have signed in before, otherwise to invited)",
+      "undo": "restore_prior",
+      "confirm": "no",
       "role": "owner",
       "exposed_by": null,
       "exposed": false
@@ -3644,7 +3759,7 @@
     {
       "name": "navigate",
       "title": "Navigate",
-      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class]\n  item-edit — Item [record]\n  item-view — Item [record]\n  units-list — Units\n  suppliers-list — Suppliers [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-list — Inventory [q]\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]",
+      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class]\n  item-edit — Item [record]\n  item-view — Item [record]\n  units-list — Units\n  suppliers-list — Suppliers [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-list — Inventory [q]\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  rack-add — Rack [prefill rack_number]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]",
       "input_schema": {
         "properties": {
           "screen": {
@@ -6325,6 +6440,7 @@
   ],
   "flagged": [
     "login-2fa /login/2fa: error (HTTP 303, controller html/auth/2fa.php) — not navigable",
+    "rack-edit /racks/{id}/edit: missing (HTTP 404, controller html/racks/form.php) — not navigable",
     "recipe-edit: the controller stamps data-screen=\"recipe-view\" (doc id differs)"
   ]
 }

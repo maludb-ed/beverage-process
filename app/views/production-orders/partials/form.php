@@ -13,7 +13,7 @@ $volumeL = is_numeric($gal) ? from_display((float) $gal, 'L') : null;
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="production-order-form-header-card">
+            <div class="card" id="production-order-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Order</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Planned orders can change; releasing allocates materials. Volumes are in <?= e(display_unit('L')) ?>.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'production-order-form-errors']) ?>
@@ -33,7 +33,7 @@ $volumeL = is_numeric($gal) ? from_display((float) $gal, 'L') : null;
                     <?= form_textarea($p, 'notes', 'Notes', $order['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="production-order-form-vessels-card">
+            <div class="card" id="production-order-form-vessels-card">
                 <div class="card-header">
                     <h5 class="card-title">Vessel plan</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="production-order-form-vessel-add-btn"

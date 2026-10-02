@@ -23,6 +23,7 @@ function navigation_groups(): array
             ['screen' => 'inventory-list', 'label' => 'On hand', 'url' => '/inventory/', 'slice' => 3],
             ['screen' => 'inventory-movements', 'label' => 'Movements', 'url' => '/inventory/movements', 'slice' => 3],
             ['screen' => 'reorder-list', 'label' => 'Reorder', 'url' => '/inventory/reorder', 'slice' => 3],
+            ['screen' => 'rack-board', 'label' => 'Rack board', 'url' => '/racks/', 'slice' => 3],
             ['screen' => 'transfers-list', 'label' => 'Transfers', 'url' => '/transfers/', 'slice' => 3],
             ['screen' => 'adjustments-list', 'label' => 'Adjustments', 'url' => '/adjustments/', 'slice' => 3],
             ['screen' => 'counts-list', 'label' => 'Counts', 'url' => '/counts/', 'slice' => 3],

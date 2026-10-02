@@ -9,7 +9,7 @@ $fruit = $lot['fruit_share_pct'] === null ? null : (float) $lot['fruit_share_pct
 $margin = static fn(?float $value, float $limit, bool $under): string => $value === null ? '<span class="text-muted">not recorded</span>'
     : (($under ? $limit - $value : $value - $limit) >= 0 ? '<span class="text-success">' . e(number_format(abs($under ? $limit - $value : $value - $limit), 3)) . ' inside</span>' : '<span class="text-danger">' . e(number_format(abs($under ? $limit - $value : $value - $limit), 3)) . ' outside</span>');
 ?>
-<div class="card stretch stretch-full" id="finished-lot-view-tax-class-card">
+<div class="card" id="finished-lot-view-tax-class-card">
     <div class="card-header"><h5 class="card-title">Tax class check</h5><div><?= badge(humanize($lot['tax_class']), $lot['tax_class'] === 'hard_cider' ? 'success' : 'warning', 'finished-lot-view-tax-class-badge') ?> <small class="text-muted" id="finished-lot-view-tax-class-source"><?= e($lot['tax_class_source'] === 'override' ? 'Override: ' . ($lot['override_reason_name'] ?? '') . ($lot['override_by_name'] ? ', ' . $lot['override_by_name'] : '') : 'Derived') ?></small></div></div>
     <div class="card-body">
         <?php if (!empty($notice)): ?><div class="alert alert-success" id="finished-lot-view-tax-class-notice"><?= e($notice) ?></div><?php endif; ?>

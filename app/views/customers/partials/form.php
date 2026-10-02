@@ -11,7 +11,7 @@ $p = 'customer-form';
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="customer-form-card">
+            <div class="card" id="customer-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Customer</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Where finished goods go. The default destination preselects the removal kind.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'customer-form-errors']) ?>

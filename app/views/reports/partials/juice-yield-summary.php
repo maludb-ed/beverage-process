@@ -6,7 +6,7 @@ $tonClass = static function ($v): string {
 };
 ?>
 <div class="col-lg-12" id="report-juice-yield-summary-card">
-    <div class="card stretch stretch-full">
+    <div class="card">
         <div class="card-header"><h5 class="card-title">Yield by variety</h5></div>
         <div class="card-body p-0">
             <div class="table-responsive">

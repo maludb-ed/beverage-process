@@ -21,6 +21,9 @@ $input = [
     'active' => post_bool('active'),
 ];
 $before = $id !== null ? (find_location($pdo, $id) ?? not_found('That location does not exist.')) : null;
+if ($before !== null && $before['parent_location_id'] !== null) {
+    not_found('That location is a rack; edit it from the rack board.');
+}
 
 $errors = [];
 if ($input['premises_id'] === null || (!array_key_exists($input['premises_id'], $premisesOptions) && (int) ($before['premises_id'] ?? 0) !== $input['premises_id'])) { $errors['premises_id'] = 'Choose a premises.'; }
@@ -51,4 +54,4 @@ if ($errors === []) {
     }
 }
 http_response_code(422);
-render_screen($id ? 'Edit Location' : 'Add Location', $id ? 'location-edit' : 'location-add', view('locations/partials/form.php', ['location' => $input, 'errors' => $errors, 'premisesOptions' => $premisesOptions]), 'location', $id);
+render_screen($id ? 'Edit Location' : 'Add Location', $id ? 'location-edit' : 'location-add', view('locations/partials/form.php', ['location' => $input, 'errors' => $errors, 'premisesOptions' => $premisesOptions, 'racks' => $id !== null ? find_area_racks($pdo, $id) : []]), 'location', $id);

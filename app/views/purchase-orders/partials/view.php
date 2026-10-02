@@ -20,7 +20,7 @@ if (in_array($status, ['draft', 'open'], true) && $can('receiving') && (float) a
 <div class="main-content" id="purchase-order-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="purchase-order-view-summary">
+            <div class="card" id="purchase-order-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <h5 class="fw-bold mb-0"><?= e($order['number']) ?></h5>

@@ -24,7 +24,7 @@ $tabs = ['materials' => 'Materials', 'loss' => 'Loss and yield', 'lot' => 'Finis
 <div class="main-content" id="packaging-run-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="packaging-run-view-summary">
+            <div class="card" id="packaging-run-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <h5 class="fw-bold mb-0"><?= e($run['number']) ?></h5>

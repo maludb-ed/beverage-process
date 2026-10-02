@@ -9,7 +9,7 @@ $p = 'mcp-token-form';
     <?php endif; ?>
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="mcp-token-form-card">
+            <div class="card" id="mcp-token-form-card">
                 <div class="card-header"><h5 class="card-title">New token</h5></div>
                 <div class="card-body">
                     <form id="mcp-token-form" method="post" action="/settings/mcp-tokens/save" hx-post="/settings/mcp-tokens/save" hx-target="#page-content" hx-swap="innerHTML">
@@ -22,7 +22,7 @@ $p = 'mcp-token-form';
             </div>
         </div>
         <div class="col-xxl-8 col-xl-6">
-            <div class="card stretch stretch-full" id="settings-mcp-tokens-endpoints-card">
+            <div class="card" id="settings-mcp-tokens-endpoints-card">
                 <div class="card-header"><h5 class="card-title">Connect your own AI tools</h5></div>
                 <div class="card-body">
                     <p class="text-muted">Claude Desktop, Claude Code and other MCP clients can read the cidery's memory through two read-only servers. Each call needs a token in the <code>Authorization</code> header.</p>

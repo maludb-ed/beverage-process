@@ -10,7 +10,7 @@ $refresh = ' hx-get="/ttb-reports/new" hx-trigger="change" hx-target="#page-cont
     <form id="ttb-report-form" method="post" action="/ttb-reports/save" hx-post="/ttb-reports/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="ttb-report-form-card">
+            <div class="card" id="ttb-report-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Report of Wine Premises Operations (5120.17)</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Generated from the ledger, losses, removals and receipts. Generating a period that exists opens that report.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'ttb-report-form-errors']) ?>

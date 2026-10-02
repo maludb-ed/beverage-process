@@ -12,7 +12,7 @@ $actions = list_search('approvals-list', '/approvals/', $query['q'], 'Search pro
     <?php if ($missing !== []): ?>
     <div class="row">
         <div class="col-lg-12">
-            <div class="card stretch stretch-full" id="approvals-missing-card">
+            <div class="card" id="approvals-missing-card">
                 <div class="card-header"><h5 class="card-title">Missing approvals</h5></div>
                 <div class="card-body p-0">
                     <div class="table-responsive">

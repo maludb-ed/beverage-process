@@ -6,7 +6,7 @@ $id = (int) $receipt['id'];
     <form id="putaway-form" method="post" action="/receipts/<?= e($id) ?>/putaway" hx-post="/receipts/<?= e($id) ?>/putaway" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="putaway-form-card">
+            <div class="card" id="putaway-form-card">
                 <div class="card-header"><h5 class="card-title">Move from <?= e($receipt['receiving_location_name']) ?></h5></div>
                 <div class="card-body">
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'putaway-form-errors']) ?>

@@ -22,7 +22,7 @@ $lineInclude = '#removal-form-field-direction, #removal-form-field-from-location
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
         <input type="hidden" name="direction" id="removal-form-field-direction" value="<?= e($direction) ?>" />
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="removal-form-header-card">
+            <div class="card" id="removal-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2"><?= $isReturn ? 'Goods coming back' : 'Goods leaving' ?></span><span class="fs-12 fw-normal text-muted text-truncate-1-line"><?= $isReturn ? 'Save as a draft, then post to return the units to bond.' : 'Save as a draft, then post to move the stock and determine tax.' ?></span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'removal-form-errors']) ?>
@@ -49,7 +49,7 @@ $lineInclude = '#removal-form-field-direction, #removal-form-field-from-location
                     <?= form_textarea($p, 'notes', 'Notes', $removal['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full border-top-0" id="removal-form-lines-card">
+            <div class="card border-top-0" id="removal-form-lines-card">
                 <div class="card-header p-0">
                     <ul class="nav nav-tabs flex-wrap w-100 text-center customers-nav-tabs" id="removal-form-tabs" role="tablist">
                         <li class="nav-item flex-fill border-top" role="presentation"><a href="javascript:void(0);" id="removal-form-tab-lines" class="nav-link active" data-bs-toggle="tab" data-bs-target="#removal-form-pane-lines" role="tab">Lines</a></li>

@@ -9,7 +9,7 @@ $refresh = '/tank-board/' . query_string(['premises_id' => $query['premises_id']
         $avatarIcon = $v['vessel_kind'] === 'barrel' ? 'feather-circle' : 'feather-database';
         $url = $empty ? null : ($v['occupant_kind'] === 'batch' ? '/batches/' . (int) $v['occupant_id'] : '/lots/' . (int) $v['occupant_id']); ?>
     <div class="col-12 col-md-6 col-xl-4" id="<?= e($c) ?>">
-        <div class="card stretch stretch-full mb-0">
+        <div class="card mb-0">
             <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between mb-3">
                     <div class="d-flex gap-3 align-items-center">

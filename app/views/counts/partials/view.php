@@ -21,7 +21,7 @@ if ($status === 'approved' && user_can($user)) {
 <div class="main-content" id="count-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="count-view-summary">
+            <div class="card" id="count-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <h5 class="fw-bold mb-0"><?= e($count['number']) ?></h5>

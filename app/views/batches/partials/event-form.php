@@ -18,7 +18,7 @@ if (!empty($confirm)) {
     <form id="<?= e($formId) ?>" method="post" action="<?= e($action) ?>" hx-post="<?= e($action) ?>" hx-target="#page-content" hx-swap="innerHTML"<?= !empty($confirm) ? ' hx-confirm="' . e($confirm) . '"' : '' ?>>
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="<?= e($formId) ?>-card">
+            <div class="card" id="<?= e($formId) ?>-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2"><?= e($batch['number']) ?> · <?= e($batch['product_name']) ?></span><span class="fs-12 fw-normal text-muted"><?= e($batch['stage_name']) ?> · <?= e(fmt_qty($batch['current_volume_l'], 'L')) ?><?= $intro !== '' ? ' · ' . e($intro) : '' ?></span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => $formId . '-errors']) ?>

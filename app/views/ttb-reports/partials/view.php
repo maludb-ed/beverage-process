@@ -51,7 +51,7 @@ foreach ($totals['reconciliation'] ?? [] as $section => $byClass) {
     <?php endif; ?>
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="ttb-report-view-summary">
+            <div class="card" id="ttb-report-view-summary">
                 <div class="card-body">
                     <div class="mb-4 d-flex align-items-center justify-content-between">
                         <div><h5 class="fw-bold mb-1"><?= e($report['number']) ?></h5><div class="fs-12 text-muted">TTB F <?= e($report['form_code']) ?></div></div>
@@ -66,7 +66,7 @@ foreach ($totals['reconciliation'] ?? [] as $section => $byClass) {
                     </ul>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="ttb-report-view-totals">
+            <div class="card" id="ttb-report-view-totals">
                 <div class="card-header"><h5 class="card-title">Tax totals</h5></div>
                 <div class="card-body p-0">
                     <div class="table-responsive">

@@ -13,7 +13,7 @@ $nextSeq = 'Math.max(0, ...Array.from(document.querySelectorAll("%s")).map(e => 
         <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= e($id) ?>" />
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="recipe-form-header-card">
+            <div class="card" id="recipe-form-header-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2"><?= e($version['product_name']) ?>, version <?= e($version['version_no']) ?> <?= status_badge($version['status'], 'recipe-form-status') ?></span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Only drafts can be edited. Activating makes the version permanent.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'recipe-form-errors']) ?>
@@ -21,7 +21,7 @@ $nextSeq = 'Math.max(0, ...Array.from(document.querySelectorAll("%s")).map(e => 
                     <?= form_textarea($p, 'change_note', 'Change note', $version['change_note'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="recipe-form-stages-card">
+            <div class="card" id="recipe-form-stages-card">
                 <div class="card-header">
                     <h5 class="card-title">Stages</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="recipe-form-add-stage-btn"
@@ -34,7 +34,7 @@ $nextSeq = 'Math.max(0, ...Array.from(document.querySelectorAll("%s")).map(e => 
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="card stretch stretch-full" id="recipe-form-lines-card">
+            <div class="card" id="recipe-form-lines-card">
                 <div class="card-header">
                     <h5 class="card-title">Lines</h5>
                     <button type="button" class="btn btn-sm btn-light-brand" id="recipe-form-add-line-btn"

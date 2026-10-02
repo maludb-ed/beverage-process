@@ -10,7 +10,7 @@ $tabs = ['overview' => 'Overview', 'units' => 'Alternate units', 'suppliers' => 
 <div class="main-content" id="item-view-content">
     <div class="row">
         <div class="col-xxl-4 col-xl-6">
-            <div class="card stretch stretch-full" id="item-view-summary">
+            <div class="card" id="item-view-summary">
                 <div class="card-body">
                     <div class="mb-4">
                         <span class="fs-14 fw-bold d-block" id="item-view-code"><?= status_dot($item['active'] ? 'success' : 'secondary') ?><?= e($item['code']) ?></span>

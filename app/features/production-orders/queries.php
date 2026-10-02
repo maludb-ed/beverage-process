@@ -174,6 +174,60 @@ function find_material_check(PDO $pdo, int $id): array
         $row['available_base'] = max(0.0, $availability[(int) $row['item_id']]['available_base']);
         $row['shortfall_base'] = max(0.0, (float) $row['required_base'] - (float) $row['available_base']);
     }
+    unset($row);
+    return production_pick_plan($pdo, $id, $rows);
+}
+
+/**
+ * Where to pick each material line from, first in first out: released stock on the order's
+ * premises (app.v_fifo_stock), oldest lot first, then by area and rack number, taken until the
+ * line's required quantity is covered. Recipe lines that share an item draw down the same lots
+ * in recipe order. Adds to each row: picks (list of [lot_id, lot_number, where, qty_base,
+ * fifo_rank]) and pick_short_base (required quantity no released stock covers).
+ */
+function production_pick_plan(PDO $pdo, int $orderId, array $rows): array
+{
+    if ($rows === []) {
+        return $rows;
+    }
+    $itemIds = array_values(array_unique(array_map('intval', array_column($rows, 'item_id'))));
+    $in = implode(', ', array_map(static fn($i) => ':i' . $i, array_keys($itemIds)));
+    $statement = $pdo->prepare(<<<SQL
+        SELECT fs.item_id, fs.lot_id, fs.lot_number, fs.location_name, fs.area_name, fs.rack_number, fs.qty_available, fs.fifo_rank
+        FROM app.v_fifo_stock fs
+        WHERE fs.premises_id = (SELECT premises_id FROM app.production_orders WHERE id = :o)
+          AND fs.fifo_rank IS NOT NULL AND fs.qty_available > 0 AND fs.item_id IN ({$in})
+        ORDER BY fs.item_id, fs.fifo_rank, fs.area_name, fs.rack_sort NULLS FIRST
+    SQL);
+    $statement->bindValue('o', $orderId, PDO::PARAM_INT);
+    foreach ($itemIds as $i => $itemId) {
+        $statement->bindValue('i' . $i, $itemId, PDO::PARAM_INT);
+    }
+    $statement->execute();
+    $stock = [];
+    foreach ($statement->fetchAll() as $s) {
+        $s['left'] = (float) $s['qty_available'];
+        $s['where'] = $s['rack_number'] !== null ? $s['area_name'] . ' · Rack ' . $s['rack_number'] : $s['location_name'];
+        $stock[(int) $s['item_id']][] = $s;
+    }
+    foreach ($rows as &$row) {
+        $need = (float) $row['required_base'];
+        $row['picks'] = [];
+        foreach ($stock[(int) $row['item_id']] ?? [] as $k => $s) {
+            if ($need <= 0.0) {
+                break;
+            }
+            if ($s['left'] <= 0.0) {
+                continue;
+            }
+            $take = min($need, $s['left']);
+            $stock[(int) $row['item_id']][$k]['left'] -= $take;
+            $need -= $take;
+            $row['picks'][] = ['lot_id' => (int) $s['lot_id'], 'lot_number' => $s['lot_number'], 'where' => $s['where'], 'qty_base' => $take, 'fifo_rank' => (int) $s['fifo_rank']];
+        }
+        $row['pick_short_base'] = max(0.0, $need);
+    }
+    unset($row);
     return $rows;
 }
 

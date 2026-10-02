@@ -11,7 +11,7 @@ $actions = '<a id="batch-form-cancel-btn" class="btn btn-light-brand" ' . nav_at
         <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= e($id) ?>" />
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="batch-form-card">
+            <div class="card" id="batch-form-card">
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2"><?= e($batch['number']) ?> · <?= e($batch['product_name']) ?></span><span class="fs-12 fw-normal text-muted">Derived tax class: <?= e($batch['tax_class_derived'] ? humanize($batch['tax_class_derived']) : 'unknown') ?></span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'batch-form-errors']) ?>

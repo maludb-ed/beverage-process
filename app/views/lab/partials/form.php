@@ -10,7 +10,7 @@ $step = $type ? number_format(10 ** -((int) $type['decimals']), (int) $type['dec
     <form id="lab-reading-form" method="post" action="/lab/save" hx-post="/lab/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <div class="row"><div class="col-lg-12">
-            <div class="card stretch stretch-full" id="lab-reading-form-card">
+            <div class="card" id="lab-reading-form-card">
                 <div class="card-body">
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'lab-reading-form-errors']) ?>
                     <?= view('lab/partials/target-kind.php', ['prefix' => $p, 'kind' => $kind]) ?>

@@ -5,7 +5,7 @@ $title = 'Two-factor authentication';
 <?= view('shared/page-header.php', ['title' => $title, 'screen' => 'settings-2fa', 'crumbs' => ['Settings' => null, $title => null]]) ?>
 <div class="main-content" id="settings-2fa-content">
     <div class="row"><div class="col-lg-12">
-        <div class="card stretch stretch-full" id="settings-2fa-card">
+        <div class="card" id="settings-2fa-card">
             <div class="card-header"><h5 class="card-title">Authenticator app</h5></div>
             <div class="card-body">
                 <?= view('shared/validation-errors.php', ['errors' => $errors, 'id' => 'settings-2fa-errors']) ?>
