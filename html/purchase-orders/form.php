@@ -3,6 +3,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/purchase-orders/queries.php';
 require_once dirname(__DIR__, 2) . '/app/features/premises/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/suppliers/queries.php';
 
 $user = require_role('receiving');
 $pdo = db();

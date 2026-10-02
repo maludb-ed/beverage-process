@@ -15,7 +15,7 @@ $p = 'purchase-order-form';
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Order</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">Draft orders can change; approving opens the order for receiving.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'purchase-order-form-errors']) ?>
-                    <?= form_select($p, 'supplier_id', 'Supplier', $suppliers, $order['supplier_id'] ?? '', $errors, ['required' => true, 'blank' => 'Choose a supplier']) ?>
+                    <?= view('purchase-orders/partials/supplier-block.php', ['suppliers' => $suppliers, 'selected' => $order['supplier_id'] ?? '', 'errors' => $errors]) ?>
                     <?= form_select($p, 'premises_id', 'Premises', $premises, $order['premises_id'] ?? '', $errors, ['required' => true, 'blank' => count($premises) === 1 ? null : 'Choose a premises']) ?>
                     <?= form_input($p, 'ordered_on', 'Ordered on', $order['ordered_on'] ?? today(), $errors, ['type' => 'date', 'icon' => 'feather-calendar']) ?>
                     <?= form_input($p, 'expected_on', 'Expected on', $order['expected_on'] ?? '', $errors, ['type' => 'date', 'icon' => 'feather-calendar']) ?>

@@ -367,6 +367,7 @@ Role column: the minimum role; `owner` can do everything.
 | Action | Endpoint | Parameters | Undo | Confirm | Role |
 |---|---|---|---|---|---|
 | `order_create` | `POST /orders/save` then `POST /orders/{id}/confirm` | customer, due_on, lines[] (product, format, units, unit_price?), reference?, ordered_on?, confirm? | delete_row (cancels the order) | no | sales |
+| `po_supplier_quick` | `POST /purchase-orders/supplier-quick` | new_supplier[name, kind, contact_name?, email?, phone?] (screen only: the New supplier panel of the purchase order form) | none | no | receiving |
 | `order_customer_quick` | `POST /orders/customer-quick` | new_customer[name, kind, default_destination, contact_name?, email?, phone?, permit_number?] (screen only: the New customer panel of the order and standing order forms) | none | no | sales |
 | `order_add_line` | `POST /orders/save` (all lines) | order, product, format, units, unit_price? | none | yes | sales |
 | `order_confirm` | `POST /orders/{id}/confirm` | — | none | no | sales |

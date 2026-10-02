@@ -94,6 +94,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 
 - **New customer from the order form (2026-10-02):** the customer field of the order and standing order forms has a **New customer** button that opens an inline panel (name, kind, usual destination, contact, email, phone, TTB permit). **Add customer** saves it on its own through `POST /orders/customer-quick` (sales or compliance; same rules as the customer form, plus a check for an existing customer with the same name), logs `customer_created`, and returns the field with the new customer selected and, on orders, their usual destination. Checked over HTTP (blank name, duplicate, in-bond without permit, success, viewer 403) and in a browser at 375px.
 
+- **New supplier from the purchase order form (2026-10-02):** the same pattern on `/purchase-orders/new` and edit: **New supplier** opens an inline panel (name, kind, contact, email, phone); **Add supplier** saves through `POST /purchase-orders/supplier-quick` (receiving, the supplier form's role; refuses a name that already exists), logs `supplier_created`, and returns the field with the new supplier selected. Checked over HTTP and in a browser at 375px; the test suppliers were removed afterwards (there is no supplier delete in the app, so by SQL).
+
 ## Not built, or waiting on data
 
 - **Packaging plan on production orders:** the `app.production_order_packages` table exists (an optional split of a production order across formats, linked to order lines) but has no screen yet, so the projections treat planned production as bulk and the older `packaging_material_needs` tool still shows one scenario per format.
