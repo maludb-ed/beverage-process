@@ -1,4 +1,4 @@
-<?php /** @var array $config  @var array $lines  @var array $errors  @var array $lineErrors  @var array $catalog  @var array $products  @var array $finishedItems  @var array $fillUnits */
+<?php /** @var array $config  @var array $lines  @var array $errors  @var array $lineErrors  @var array $catalog  @var array $products  @var array $finishedItems  @var array $fillUnits  @var bool $canPrice */
 $id = $config['id'] ?? null;
 $isEdit = $id !== null;
 $title = $isEdit ? 'Edit ' . ($config['name'] ?? 'Packaging Configuration') : 'Add Packaging Configuration';
@@ -22,6 +22,9 @@ $p = 'packaging-config-form';
                     <?= form_select($p, 'fill_unit', 'Fill volume unit', $fillUnits, $config['fill_unit'] ?? display_unit('L'), $errors, ['required' => true, 'help' => 'Cans are usually entered in fl oz.']) ?>
                     <?= form_input($p, 'units_per_case', 'Units per case', $config['units_per_case'] ?? '', $errors, ['type' => 'number', 'min' => 1, 'step' => '1', 'icon' => 'feather-grid', 'help' => 'Required for cans and bottles.']) ?>
                     <?= form_input($p, 'expected_loss', 'Expected loss (%)', $config['expected_loss_pct'] ?? '2', $errors, ['type' => 'number', 'min' => 0, 'max' => 100, 'step' => '0.01', 'required' => true, 'icon' => 'feather-percent', 'name' => 'expected_loss_pct']) ?>
+                    <?php if (!empty($canPrice)): ?>
+                    <?= form_input($p, 'default_unit_price', 'List price per unit', $config['default_unit_price'] ?? '', $errors, ['type' => 'number', 'min' => 0, 'step' => '0.01', 'icon' => 'feather-dollar-sign', 'help' => 'Prefilled on customer order lines; each line can change it.']) ?>
+                    <?php endif; ?>
                     <?= form_checkbox($p, 'active', 'Active', (bool) ($config['active'] ?? true), ['last' => true]) ?>
                 </div>
             </div>

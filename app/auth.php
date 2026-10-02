@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/features/auth/queries.php';
 
-const ROLE_RANK = ['viewer' => 0, 'compliance' => 1, 'quality' => 1, 'receiving' => 1, 'production' => 1, 'owner' => 9];
+const ROLE_RANK = ['viewer' => 0, 'compliance' => 1, 'quality' => 1, 'receiving' => 1, 'production' => 1, 'sales' => 1, 'owner' => 9];
 
 /** The signed-in user for this request, or null. Cached per request. */
 function current_user(): ?array

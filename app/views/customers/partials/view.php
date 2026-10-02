@@ -1,4 +1,4 @@
-<?php /** @var array $customer  @var array $removals  @var array $kegs  @var array $user */
+<?php /** @var array $customer  @var array $removals  @var array $kegs  @var array $user  @var array $orders */
 $id = (int) $customer['id'];
 $canEdit = user_can($user, 'compliance');
 $out = array_values(array_filter($removals, static fn($r) => $r['direction'] === 'out'));
@@ -63,6 +63,7 @@ $removalTable = static function (array $rows, string $key, string $empty): strin
                     <ul class="nav nav-tabs flex-wrap w-100 text-center customers-nav-tabs" id="customer-view-tabs" role="tablist">
                         <li class="nav-item flex-fill border-top" role="presentation"><a href="javascript:void(0);" id="customer-view-tab-removals" class="nav-link active" data-bs-toggle="tab" data-bs-target="#customer-view-pane-removals" role="tab">Removals (<?= e(count($out)) ?>)</a></li>
                         <li class="nav-item flex-fill border-top" role="presentation"><a href="javascript:void(0);" id="customer-view-tab-kegs" class="nav-link" data-bs-toggle="tab" data-bs-target="#customer-view-pane-kegs" role="tab">Kegs out (<?= e(count($kegs)) ?>)</a></li>
+                        <li class="nav-item flex-fill border-top" role="presentation"><a href="javascript:void(0);" id="customer-view-tab-orders" class="nav-link" data-bs-toggle="tab" data-bs-target="#customer-view-pane-orders" role="tab">Orders (<?= e($orders['total']) ?>)</a></li>
                         <li class="nav-item flex-fill border-top" role="presentation"><a href="javascript:void(0);" id="customer-view-tab-returns" class="nav-link" data-bs-toggle="tab" data-bs-target="#customer-view-pane-returns" role="tab">Returns (<?= e(count($returns)) ?>)</a></li>
                     </ul>
                 </div>
@@ -87,6 +88,10 @@ $removalTable = static function (array $rows, string $key, string $empty): strin
                             </table>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="customer-view-pane-orders" role="tabpanel"><?= view('orders/partials/embedded-table.php', [
+                        'prefix' => 'customer-view', 'result' => $orders, 'canPrice' => user_can($user, 'sales'), 'empty' => 'No orders from this customer yet.',
+                        'newUrl' => user_can($user, 'sales') && $customer['active'] ? '/orders/new?customer=' . rawurlencode($customer['name']) : null,
+                    ]) ?></div>
                     <div class="tab-pane fade" id="customer-view-pane-returns" role="tabpanel"><?= $removalTable($returns, 'returns', 'No returns from this customer.') ?></div>
                 </div>
             </div>

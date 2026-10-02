@@ -4,7 +4,7 @@ declare(strict_types=1);
 // Users admin. find_user, find_user_by_email, insert_user, update_user_profile, insert_one_time_token
 // and expire_tokens_for_user live in features/auth/queries.php (always loaded).
 
-const USER_ROLES = ['owner' => 'Owner', 'production' => 'Production', 'receiving' => 'Receiving', 'quality' => 'Quality', 'compliance' => 'Compliance', 'viewer' => 'Viewer'];
+const USER_ROLES = ['owner' => 'Owner', 'production' => 'Production', 'receiving' => 'Receiving', 'quality' => 'Quality', 'compliance' => 'Compliance', 'sales' => 'Sales', 'viewer' => 'Viewer'];
 const USER_SORTS = ['display_name' => 'u.display_name', 'email' => 'lower(u.email)', 'role' => 'u.role', 'status' => 'u.status', 'last_login_at' => 'u.last_login_at'];
 const USERS_LIST_COLUMNS = 'u.id, u.email, u.display_name, u.role, u.status, u.last_login_at, u.totp_enabled_at, u.created_at';
 

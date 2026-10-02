@@ -1,4 +1,4 @@
-<?php /** @var array $product  @var array $user  @var string $activeTab */
+<?php /** @var array $product  @var array $user  @var string $activeTab  @var array $orders */
 $id = (int) $product['id'];
 $can = static fn(string ...$roles) => user_can($user, ...$roles);
 $canProduction = $can('production');
@@ -11,6 +11,7 @@ if ($canProduction && $product['status'] !== 'retired') {
 $tabs = [
     'recipes' => 'Recipes (' . count($product['recipes']) . ')', 'packaging' => 'Packaging (' . count($product['packaging']) . ')',
     'specs' => 'Specs (' . count($product['specs']) . ')', 'approvals' => 'Approvals (' . count($product['approvals']) . ')', 'batches' => 'Batches (' . count($product['batches']) . ')',
+    'orders' => 'Orders (' . $orders['total'] . ')',
 ];
 ?>
 <?= view('shared/page-header.php', ['title' => $product['name'], 'screen' => 'product-view', 'crumbs' => ['Products' => null, 'Products and recipes' => '/products/', $product['name'] => null], 'actionsHtml' => $actions]) ?>
@@ -152,6 +153,9 @@ $tabs = [
                             </table>
                         </div>
                     </div>
+                    <div class="tab-pane fade<?= $activeTab === 'orders' ? ' show active' : '' ?>" id="product-view-pane-orders" role="tabpanel"><?= view('orders/partials/embedded-table.php', [
+                        'prefix' => 'product-view', 'result' => $orders, 'canPrice' => $can('sales'), 'empty' => 'No customer orders for this product yet.', 'newUrl' => null,
+                    ]) ?></div>
                 </div>
             </div>
         </div>

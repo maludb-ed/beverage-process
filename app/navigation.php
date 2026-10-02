@@ -57,6 +57,9 @@ function navigation_groups(): array
             ['screen' => 'report-batch-costs', 'label' => 'Batch costs', 'url' => '/reports/batch-costs', 'slice' => 9],
             ['screen' => 'report-valuation', 'label' => 'Valuation', 'url' => '/reports/valuation', 'slice' => 9],
         ]],
+        ['label' => 'Sales', 'icon' => 'feather-shopping-cart', 'items' => [
+            ['screen' => 'orders-list', 'label' => 'Customer orders', 'url' => '/orders/', 'slice' => 12],
+        ]],
         ['label' => 'Compliance', 'icon' => 'feather-shield', 'items' => [
             ['screen' => 'customers-list', 'label' => 'Customers', 'url' => '/customers/', 'slice' => 10],
             ['screen' => 'removals-list', 'label' => 'Removals', 'url' => '/removals/', 'slice' => 10],

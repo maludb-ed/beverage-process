@@ -31,5 +31,5 @@ if ($id !== null) {
 log_screen_entered($screen, 'packaging_configuration', $id, $config['name'] ?? null);
 render_screen($id ? 'Edit ' . $config['name'] : 'Add Packaging Configuration', $screen, view('packaging-configs/partials/form.php', [
     'config' => $config, 'lines' => $lines, 'errors' => [], 'lineErrors' => [], 'catalog' => $catalog,
-    'products' => products_options($pdo), 'finishedItems' => packaging_finished_item_options($pdo), 'fillUnits' => packaging_fill_unit_options(),
+    'canPrice' => user_can($user, 'sales'), 'products' => products_options($pdo), 'finishedItems' => packaging_finished_item_options($pdo), 'fillUnits' => packaging_fill_unit_options(),
 ]), 'packaging_configuration', $id);

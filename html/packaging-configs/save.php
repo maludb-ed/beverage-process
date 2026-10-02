@@ -18,6 +18,9 @@ $fillUnits = packaging_fill_unit_options();
 $fill = post_decimal('fill_volume');
 $loss = post_decimal('expected_loss_pct');
 $upcRaw = request_string('units_per_case', 6);
+// Only owner and sales see and set the list price; anyone else's save leaves it as it is.
+$canPrice = user_can($user, 'sales');
+$price = $canPrice ? post_decimal('default_unit_price') : null;
 $config = [
     'id' => $id,
     'product_id' => request_integer('product_id'),
@@ -29,6 +32,7 @@ $config = [
     'units_per_case' => $upcRaw,
     'expected_loss_pct' => $loss === false ? request_string('expected_loss_pct', 10) : $loss,
     'active' => post_bool('active'),
+    'default_unit_price' => $price === false ? request_string('default_unit_price', 20) : $price,
 ];
 $errors = [];
 $before = null;
@@ -52,6 +56,7 @@ if ($upcRaw !== '') {
 } elseif ($config['package_kind'] !== 'keg' && in_options($config['package_kind'], PACKAGE_KINDS)) {
     $errors['units_per_case'] = 'Units per case is required for cans and bottles.';
 }
+if ($canPrice && ($price === false || ($price !== null && $price < 0))) { $errors['default_unit_price'] = 'Enter a price of zero or more, or leave it blank.'; }
 if ($loss === null || $loss === false || $loss < 0 || $loss > 100) { $errors['expected_loss'] = 'Expected loss must be between 0 and 100.'; }
 
 [$lines, $lineErrors] = validate_bom_lines(is_array($_POST['bom'] ?? null) ? $_POST['bom'] : [], $catalog);
@@ -64,6 +69,9 @@ if ($errors === []) {
         $bomLines = array_values(array_map(static fn(array $l) => ['item_id' => (int) $l['item_id'], 'qty_per_unit_base' => $l['qty_per_unit_base']], $lines));
         $args = [(int) $config['product_id'], (int) $config['finished_item_id'], $config['name'], $config['package_kind'], $fillL, $unitsPerCase, (float) $loss, $config['active'], $bomLines];
         $saved = $id === null ? insert_packaging_configuration($pdo, ...$args) : update_packaging_configuration($pdo, $id, ...$args);
+        if ($canPrice) {
+            $saved['default_unit_price'] = set_packaging_configuration_price($pdo, (int) $saved['id'], $price);
+        }
         log_activity($pdo, $id === null ? 'packaging_config_created' : 'packaging_config_updated', 'packaging_configuration', (int) $saved['id'], $saved['name'],
             $before, $saved, [], $id === null ? 'packaging-config-add' : 'packaging-config-edit');
         $pdo->commit();
@@ -82,6 +90,6 @@ if ($errors === []) {
 }
 http_response_code(422);
 render_screen($id ? 'Edit ' . $config['name'] : 'Add Packaging Configuration', $id ? 'packaging-config-edit' : 'packaging-config-add', view('packaging-configs/partials/form.php', [
-    'config' => $config, 'lines' => $lines === [] ? ['n1' => []] : $lines, 'errors' => $errors, 'lineErrors' => $lineErrors, 'catalog' => $catalog,
+    'config' => $config, 'lines' => $lines === [] ? ['n1' => []] : $lines, 'errors' => $errors, 'lineErrors' => $lineErrors, 'catalog' => $catalog, 'canPrice' => $canPrice,
     'products' => $products, 'finishedItems' => $finishedItems, 'fillUnits' => $fillUnits,
 ]), 'packaging_configuration', $id);

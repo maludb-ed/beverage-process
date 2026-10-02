@@ -33,7 +33,7 @@ function find_packaging_configurations(PDO $pdo, string $search = '', array $fil
 function find_packaging_configuration(PDO $pdo, int $id): ?array
 {
     $statement = $pdo->prepare(<<<'SQL'
-        SELECT pc.id, pc.product_id, pc.finished_item_id, pc.name, pc.package_kind, pc.fill_volume_l, pc.units_per_case, pc.expected_loss_pct, pc.active
+        SELECT pc.id, pc.product_id, pc.finished_item_id, pc.name, pc.package_kind, pc.fill_volume_l, pc.units_per_case, pc.expected_loss_pct, pc.active, pc.default_unit_price
         FROM app.packaging_configurations pc WHERE pc.id = :id
     SQL);
     $statement->execute(['id' => $id]);
@@ -119,4 +119,13 @@ function update_packaging_configuration(PDO $pdo, int $id, int $productId, int $
     replace_packaging_bom_lines($pdo, $id, $bomLines);
     $config['bom'] = array_values($bomLines);
     return $config;
+}
+
+/** The list price per unit, prefilled on customer order lines (owner and sales only). */
+function set_packaging_configuration_price(PDO $pdo, int $id, ?float $price): ?string
+{
+    $statement = $pdo->prepare('UPDATE app.packaging_configurations SET default_unit_price = :price WHERE id = :id RETURNING default_unit_price');
+    $statement->execute(['id' => $id, 'price' => $price]);
+    $value = $statement->fetchColumn();
+    return $value === false ? null : $value;
 }
