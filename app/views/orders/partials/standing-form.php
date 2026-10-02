@@ -16,7 +16,7 @@ $days = array_combine(range(1, 28), array_map('standing_ordinal', range(1, 28)))
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Standing order</span><span class="fs-12 fw-normal text-muted">Recurring deliveries. Each date counts as standing demand in planning until you turn it into an order.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'standing-order-form-errors']) ?>
-                    <?= form_select($p, 'customer_id', 'Customer', array_map(static fn($c) => $c['name'], $customers), $standing['customer_id'] ?? '', $errors, ['required' => true, 'blank' => 'Choose a customer']) ?>
+                    <?= view('orders/partials/customer-block.php', ['prefix' => $p, 'customers' => $customers, 'selected' => $standing['customer_id'] ?? '', 'destination' => null, 'errors' => $errors]) ?>
                     <?= form_select($p, 'premises_id', 'Premises', $premises, $standing['premises_id'] ?? '', $errors, ['required' => true, 'blank' => count($premises) === 1 ? null : 'Choose a premises']) ?>
                     <?= form_select($p, 'frequency', 'How often', STANDING_FREQUENCIES, $standing['frequency'] ?? 'weekly', $errors, ['required' => true]) ?>
                     <?= form_input($p, 'interval_weeks', 'Every how many weeks', $standing['interval_weeks'] ?? 2, $errors, ['type' => 'number', 'min' => 2, 'max' => 52, 'step' => 1, 'icon' => 'feather-repeat', 'help' => 'Used with "Every few weeks".']) ?>

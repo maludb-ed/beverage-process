@@ -90,6 +90,10 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - Earlier steps covered order, package, ship, edit, delete and (in a rolled-back transaction) post, reverse and full shipment.
 - **PHP error log:** no warnings or fatals from this work.
 
+## After the build
+
+- **New customer from the order form (2026-10-02):** the customer field of the order and standing order forms has a **New customer** button that opens an inline panel (name, kind, usual destination, contact, email, phone, TTB permit). **Add customer** saves it on its own through `POST /orders/customer-quick` (sales or compliance; same rules as the customer form, plus a check for an existing customer with the same name), logs `customer_created`, and returns the field with the new customer selected and, on orders, their usual destination. Checked over HTTP (blank name, duplicate, in-bond without permit, success, viewer 403) and in a browser at 375px.
+
 ## Not built, or waiting on data
 
 - **Packaging plan on production orders:** the `app.production_order_packages` table exists (an optional split of a production order across formats, linked to order lines) but has no screen yet, so the projections treat planned production as bulk and the older `packaging_material_needs` tool still shows one scenario per format.

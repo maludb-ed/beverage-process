@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/orders/standing.php';
 require_once dirname(__DIR__, 2) . '/app/features/purchase-orders/queries.php';
 require_once dirname(__DIR__, 2) . '/app/features/premises/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/customers/queries.php';
 
 // /orders/standing/new (?customer= prefills) and, through standing-edit.php, /orders/standing/{n}/edit.
 $user = require_role('sales');

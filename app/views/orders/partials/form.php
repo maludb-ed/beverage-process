@@ -4,7 +4,6 @@ $isEdit = $id !== null;
 $title = $isEdit ? 'Edit ' . ($order['number'] ?? 'Order') : 'New Order';
 $cancelUrl = $isEdit ? '/orders/' . $id : '/orders/';
 $p = 'order-form';
-$customerOptions = array_map(static fn(array $c) => $c['name'], $customers);
 $isDraft = ($order['status'] ?? 'draft') === 'draft';
 ?>
 <?= view('shared/page-header.php', ['title' => $title, 'screen' => 'order-form', 'crumbs' => ['Sales' => null, 'Customer orders' => '/orders/', $isEdit ? 'Edit' : 'New' => null], 'actionsHtml' => form_actions('order-form', $cancelUrl, 'Save Order')]) ?>
@@ -17,8 +16,8 @@ $isDraft = ($order['status'] ?? 'draft') === 'draft';
                 <div class="card-body">
                     <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Order</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">A draft is not demand yet; confirming it counts it in packaging and planning.</span></h5></div>
                     <?= view('shared/validation-errors.php', ['errors' => array_values($errors), 'id' => 'order-form-errors']) ?>
-                    <?= form_select($p, 'customer_id', 'Customer', $customerOptions, $order['customer_id'] ?? '', $errors, ['required' => true, 'blank' => 'Choose a customer']) ?>
-                    <?= form_select($p, 'destination_kind', 'Destination', ORDER_DESTINATIONS, $order['destination_kind'] ?? 'tax_paid_sale', $errors, ['required' => true, 'help' => 'Carried to the shipment. Starting an order from a customer page sets their usual destination.']) ?>
+                    <?= view('orders/partials/customer-block.php', ['prefix' => $p, 'customers' => $customers, 'selected' => $order['customer_id'] ?? '',
+                        'destination' => $order['destination_kind'] ?? 'tax_paid_sale', 'errors' => $errors]) ?>
                     <?= form_select($p, 'premises_id', 'Premises', $premises, $order['premises_id'] ?? '', $errors, ['required' => true, 'blank' => count($premises) === 1 ? null : 'Choose a premises']) ?>
                     <?= form_input($p, 'ordered_on', 'Ordered on', $order['ordered_on'] ?? today(), $errors, ['type' => 'date', 'icon' => 'feather-calendar', 'required' => true]) ?>
                     <?= form_input($p, 'requested_on', 'Due on', $order['requested_on'] ?? '', $errors, ['type' => 'date', 'icon' => 'feather-clock', 'required' => true, 'help' => 'The date the customer wants it shipped.']) ?>

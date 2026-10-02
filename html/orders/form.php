@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/orders/queries.php';
 require_once dirname(__DIR__, 2) . '/app/features/purchase-orders/queries.php';
 require_once dirname(__DIR__, 2) . '/app/features/premises/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/customers/queries.php';
 
 $user = require_role('sales');
 $pdo = db();

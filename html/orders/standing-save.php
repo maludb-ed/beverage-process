@@ -4,6 +4,7 @@ require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/orders/standing.php';
 require_once dirname(__DIR__, 2) . '/app/features/orders/validation.php';
 require_once dirname(__DIR__, 2) . '/app/features/premises/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/customers/queries.php';
 
 require_post();
 verify_csrf();
