@@ -78,6 +78,7 @@ Also new tabs: Orders on `customer-view` and `product-view`. New navigation grou
 | `orders_import_preview` | `POST /orders/import/preview` | file, mapping | none (preview only) | — | sales (screen only) |
 | `orders_import_commit` | `POST /orders/import/{id}/commit` | create_customers?, future_status | `orders_import_undo` | yes | sales (screen only) |
 | `orders_import_undo` | `POST /orders/import/{id}/undo` | — (refused once any order is fulfilled) | none | yes | sales |
+| `orders_import_discard` | `POST /orders/import/{id}/discard` | — (previews only) | none | yes | sales (screen only) |
 | `forecast_generate` | `POST /planning/forecast/generate` | history_weeks, horizon_weeks | restore_prior | no | sales |
 | `forecast_set` | `POST /planning/forecast/save` | format, week_start, units | restore_prior | no | sales |
 | `format_price_update` | `POST /packaging-configs/save` (existing) | default_unit_price | restore_prior | no | owner |
@@ -86,7 +87,7 @@ Creating production and purchase orders from suggestions reuses `production_orde
 
 ## 5. Activity log event names (new)
 
-`order_created`, `order_updated`, `order_confirmed`, `order_cancelled`, `order_closed`, `order_packaging_runs_created`, `order_shipment_created`, `order_status_changed` (system roll-up to in_fulfillment or shipped), `standing_order_created`, `standing_order_updated`, `standing_order_deactivated`, `order_created_from_standing`, `orders_import_previewed`, `orders_imported`, `orders_import_undone`, `forecast_generated`, `forecast_set`. One `orders_imported` event per import, not per order.
+`order_created`, `order_updated`, `order_confirmed`, `order_cancelled`, `order_closed`, `order_packaging_runs_created`, `order_shipment_created`, `order_status_changed` (system roll-up to in_fulfillment or shipped), `standing_order_created`, `standing_order_updated`, `standing_order_deactivated`, `order_created_from_standing`, `orders_import_previewed`, `orders_imported`, `orders_import_undone`, `orders_import_discarded`, `forecast_generated`, `forecast_set`. One `orders_imported` event per import, not per order.
 
 ## 6. Records MCP tools (new)
 

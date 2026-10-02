@@ -8,8 +8,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 | 1 | Schema `016`, design | Done 2026-10-02 | Applied to `cidery_dev`; `5fab7df` |
 | 2 | Orders screens | Done 2026-10-02 | See below |
 | 3 | Packaging runs and shipping from orders | Done 2026-10-02 | See below |
-| 4 | Spreadsheet import | Next | |
-| 5 | Standing orders and forecasts | | |
+| 4 | Spreadsheet import | Done 2026-10-02 | See below |
+| 5 | Standing orders and forecasts | Next | |
 | 6 | Projections | | |
 | 7 | Order history report, dashboard tiles | | |
 | 8 | Assistant tools and actions | | Manifest, `prompts.py` roles (add `sales`), records tools |
@@ -36,5 +36,14 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - **Status roll-up** (`order_status_changed`, logged): shipped when every open line has shipped in full; in fulfillment once anything is shipped, in a packaging run or drafted for shipping; confirmed otherwise. Refreshed on package, ship, and on removal save, post, reverse and delete, and packaging run delete and reverse.
 - **Checked:** draft runs created and linked (48 cans for a 46 need, 1 keg), vessel capacity refused with 422, queue and per-format page, ship (54 cans; refused while a draft exists), removal edit keeps links, deleting drafts returns the order to confirmed. Posting and reversing a shipment, and a full shipment, were tested inside a rolled-back transaction: 54/100 shipped after posting, 0 after reversal, `shipped` when complete. Conformance (`orders`, `removals`, `packaging-runs`) and the 375px sweep pass.
 - **Noticed:** finished keg lots L-261001-017 and L-261001-018 have units on hand but no keg recorded as filled with them, so Ship cannot pick kegs for them.
+
+## Step 4: spreadsheet import
+
+- **Library:** `phpoffice/phpspreadsheet` 3.10.8 (Composer reported no advisories). CSV, XLSX and XLS, first sheet, up to 5 MB and 5,000 rows; Excel date cells are read as dates.
+- **Screens:** `/orders/import` (upload, CSV template download, past imports; also Import on the orders list and Import orders in the Sales menu for owner and sales) and `/orders/import/{n}` (preview, columns, result).
+- **Mapping:** columns are matched by header name (many common names: "Order #", "Ship Date", "Qty", "SKU", ...) or by the last import's mapping; the Columns card changes any of them and re-runs the preview.
+- **Rows:** grouped into orders by customer and order reference (or, without a reference, customer and dates). Formats match by configuration name or finished item code, narrowed by a Product column. Dates in Y-m-d, m/d/Y, d-Mon-Y and "May 1, 2026" forms. A blank status means history when due before today, otherwise the chosen upcoming status; a Status column can say history/closed/shipped, confirmed/open, draft, or cancelled (skipped). An order whose customer reference already exists is skipped, so re-uploading a file imports nothing twice.
+- **Commit:** one transaction and one `orders_imported` event; new customers are created (kind "other") when allowed; rows with errors block the import unless the user chooses to skip them, and are kept on the import with their reasons. **Undo** deletes the import's orders while none has packaging runs, shipments or a production plan; customers it created stay. **Discard** sets a preview aside.
+- **Checked:** a CSV with history, upcoming, draft, new-customer, cancelled, duplicate and invalid rows (preview, refusal without skip, commit with skip, re-upload skips everything); an XLSX with date cells and unrecognised headers fixed through the Columns card; undo; viewer gets 403; conformance and the 375px sweep pass. Test imports were undone or discarded and the test customer deleted.
 
 **Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003 and SO-00004 (cancelled), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.
