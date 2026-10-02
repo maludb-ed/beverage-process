@@ -433,3 +433,15 @@ function planning_projection(PDO $pdo, string $level, int $weeks = PLANNING_DEFA
     $result['products'] = array_column(array_map(static fn($c) => ['id' => (int) $c['product_id'], 'name' => $c['product_name']], $inputs['configs']), 'name', 'id');
     return $result;
 }
+
+/** Dashboard figures from the firm-and-standing projection: batches to pitch and items to order by the end of next week. */
+function planning_dashboard_stats(PDO $pdo): array
+{
+    $p = planning_projection($pdo, 'standing');
+    $cutoff = date('Y-m-d', strtotime(forecast_week_start() . ' +13 days'));
+    $batches = array_filter($p['production'], static fn($x) => $x['pitch_by'] <= $cutoff);
+    $items = array_filter($p['purchasing'], static fn($x) => ($x['order_by'] ?? $x['needed_by']) <= $cutoff);
+    return ['batches' => array_sum(array_column($batches, 'batches')), 'batches_late' => count(array_filter($batches, static fn($x) => $x['late'])),
+            'items' => count($items), 'items_late' => count(array_filter($items, static fn($x) => $x['late'])),
+            'items_no_lead' => count(array_filter($items, static fn($x) => $x['order_by'] === null))];
+}

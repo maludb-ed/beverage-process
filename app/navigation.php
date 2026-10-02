@@ -56,6 +56,7 @@ function navigation_groups(): array
             ['screen' => 'report-juice-yield', 'label' => 'Juice yield', 'url' => '/reports/juice-yield', 'slice' => 9],
             ['screen' => 'report-batch-costs', 'label' => 'Batch costs', 'url' => '/reports/batch-costs', 'slice' => 9],
             ['screen' => 'report-valuation', 'label' => 'Valuation', 'url' => '/reports/valuation', 'slice' => 9],
+            ['screen' => 'report-orders', 'label' => 'Order history', 'url' => '/reports/orders', 'slice' => 12],
         ]],
         ['label' => 'Sales', 'icon' => 'feather-shopping-cart', 'items' => [
             ['screen' => 'orders-list', 'label' => 'Customer orders', 'url' => '/orders/', 'slice' => 12],

@@ -425,3 +425,26 @@ function orders_refresh_statuses(PDO $pdo, array $orderIds, string $screen): voi
         order_refresh_status($pdo, $orderId, $screen);
     }
 }
+
+/**
+ * Dashboard figures: confirmed orders due by the end of this week (and overdue), and orders due in the next
+ * 14 days with units still to package (not covered by stock on hand or draft runs).
+ */
+function orders_dashboard_stats(PDO $pdo): array
+{
+    $row = $pdo->query(<<<'SQL'
+        SELECT count(*) FILTER (WHERE requested_on <= date_trunc('week', current_date)::date + 6) AS due_this_week,
+               count(*) FILTER (WHERE requested_on < current_date) AS overdue
+        FROM app.sales_orders WHERE status IN ('confirmed', 'in_fulfillment')
+    SQL)->fetch();
+    $atRisk = [];
+    $horizon = date('Y-m-d', strtotime('+14 days'));
+    foreach (array_keys(orders_formats_with_open_lines($pdo)) as $configId) {
+        foreach (orders_format_needs($pdo, $configId) as $line) {
+            if ($line['need'] > 0 && $line['requested_on'] <= $horizon) {
+                $atRisk[(int) $line['sales_order_id']] = true;
+            }
+        }
+    }
+    return ['due_this_week' => (int) $row['due_this_week'], 'overdue' => (int) $row['overdue'], 'at_risk' => count($atRisk)];
+}

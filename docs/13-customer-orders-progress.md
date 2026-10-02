@@ -11,8 +11,8 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 | 4 | Spreadsheet import | Done 2026-10-02 | See below |
 | 5 | Standing orders and forecasts | Done 2026-10-02 | See below |
 | 6 | Projections | Done 2026-10-02 | See below |
-| 7 | Order history report, dashboard tiles | Next | |
-| 8 | Assistant tools and actions | | Manifest, `prompts.py` roles (add `sales`), records tools |
+| 7 | Order history report, dashboard tiles | Done 2026-10-02 | See below |
+| 8 | Assistant tools and actions | Next | Manifest, `prompts.py` roles (add `sales`), records tools |
 | 9 | Full test pass | | |
 
 ## Step 2: orders screens
@@ -63,5 +63,11 @@ Plan: [11-customer-orders-plan.md](11-customer-orders-plan.md). Design: [12-cust
 - **Screens** (Planning menu): Projections (`/planning/`: batches to start, items to buy, data notes, week-by-week demand by type with value, units to package per format, bulk short per product), Suggested production (`/planning/production`, with **Create production order** prefilled with product, volume and pitch date, and the bulk counted as supply), Suggested purchases (`/planning/purchasing`, with **Create purchase order** prefilled with item, supplier, quantity and expected date; the purchase order form now accepts `?qty=`). A demand switch on each.
 - **Data notes** list what weakens the numbers: batches without a recipe to time them, stages without durations, production orders past their pitch date without a batch, items without a supplier or lead time.
 - **Checked:** a rolled-back scenario (2,400 cans and 30 kegs due in three weeks, a weekly standing order, a manual keg forecast): 2,346 cans and 27 kegs to package, one batch suggested and flagged late, juice short converted to 1,751 gal, standing and forecast levels adding their weeks; the screens with live data; prefills; conformance and the 375px sweep.
+
+## Step 7: order history report and dashboard tiles
+
+- **Order history** (`/reports/orders`, Reports menu): orders due in a period (default the last 12 months to 3 months ahead) by customer, product, format or month, optionally for one customer: orders, units ordered, units shipped, share of units and, for owner and sales, value (flagging groups with unpriced lines). Counts confirmed, in-fulfillment, shipped and closed orders, history included. Sortable; **Export CSV** (`/reports/orders/csv`, logged as `report_exported`; the value column only for owner and sales).
+- **Dashboard:** four more tiles, each linking to its screen: orders due this week (with overdue), orders at risk (due in 14 days with units still to package after stock and draft runs), batches to start (pitch by the end of next week, late ones noted) and items to order (order by the end of next week, late and no-lead-time ones noted), the last two from the firm-and-standing projection. The dashboard renders in about 0.19 s.
+- **Checked:** report by customer, month and format with totals and CSV; dashboard figures against the data; conformance and the 375px sweep.
 
 **Test data left in the dev database:** user 10 "Sales Test" (role sales, no password, cannot sign in; used with action tokens), orders SO-00001 (closed), SO-00002 (history), SO-00003, SO-00004 and SO-00009 (cancelled), standing orders STO-0001 and STO-0002 (paused), and list prices $1.85 per can and $165 per half barrel on the two Hill Dry formats.

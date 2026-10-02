@@ -1,4 +1,4 @@
-<?php /** @var array $stats  @var array $recent */ ?>
+<?php /** @var array $stats  @var array $recent  @var array $orders  @var array $planning */ ?>
 <?= view('shared/page-header.php', ['title' => 'Dashboard', 'screen' => 'dashboard', 'crumbs' => ['Dashboard' => null]]) ?>
 <div class="main-content" id="dashboard-content">
     <div class="row">
@@ -8,6 +8,10 @@
             ['id' => 'batches-active', 'icon' => 'feather-activity', 'label' => 'Active batches', 'value' => $stats['batches_active'], 'total' => null, 'sub' => 'in fermentation or maturation', 'color' => 'info'],
             ['id' => 'lots-quarantine', 'icon' => 'feather-alert-circle', 'label' => 'Lots in quarantine', 'value' => $stats['lots_quarantine'], 'total' => null, 'sub' => 'awaiting release', 'color' => 'warning'],
             ['id' => 'orders-open', 'icon' => 'feather-truck', 'label' => 'Open purchase orders', 'value' => $stats['po_open'], 'total' => null, 'sub' => $stats['po_overdue'] . ' overdue', 'color' => 'success'],
+            ['id' => 'customer-orders-due', 'icon' => 'feather-shopping-cart', 'label' => 'Orders due this week', 'value' => $orders['due_this_week'], 'total' => null, 'sub' => $orders['overdue'] . ' overdue', 'color' => 'info', 'url' => '/orders/'],
+            ['id' => 'customer-orders-at-risk', 'icon' => 'feather-alert-triangle', 'label' => 'Orders at risk', 'value' => $orders['at_risk'], 'total' => null, 'sub' => 'due in 14 days, still to package', 'color' => 'danger', 'url' => '/orders/to-package'],
+            ['id' => 'batches-to-start', 'icon' => 'feather-calendar', 'label' => 'Batches to start', 'value' => $planning['batches'], 'total' => null, 'sub' => 'pitch by next week' . ($planning['batches_late'] ? ', ' . $planning['batches_late'] . ' late' : ''), 'color' => 'primary', 'url' => '/planning/production'],
+            ['id' => 'items-to-order', 'icon' => 'feather-shopping-bag', 'label' => 'Items to order', 'value' => $planning['items'], 'total' => null, 'sub' => 'order by next week' . ($planning['items_late'] ? ', ' . $planning['items_late'] . ' late' : '') . ($planning['items_no_lead'] ? ', ' . $planning['items_no_lead'] . ' without lead time' : ''), 'color' => 'warning', 'url' => '/planning/purchasing'],
         ];
         foreach ($cards as $card):
             $pct = $card['total'] ? (int) round(100 * $card['value'] / max(1, $card['total'])) : null;
@@ -20,7 +24,7 @@
                             <div class="avatar-text avatar-lg bg-gray-200"><i class="<?= e($card['icon']) ?>"></i></div>
                             <div>
                                 <div class="fs-4 fw-bold text-dark"><span class="counter"><?= e($card['value']) ?></span></div>
-                                <h3 class="fs-13 fw-semibold text-truncate-1-line"><?= e($card['label']) ?></h3>
+                                <h3 class="fs-13 fw-semibold text-truncate-1-line"><?php if (isset($card['url'])): ?><a <?= nav_attrs($card['url']) ?> id="dashboard-stat-<?= e($card['id']) ?>-link"><?= e($card['label']) ?></a><?php else: ?><?= e($card['label']) ?><?php endif; ?></h3>
                             </div>
                         </div>
                     </div>
