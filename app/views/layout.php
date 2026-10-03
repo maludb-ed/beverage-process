@@ -127,6 +127,17 @@ $appName = (string) config('app.name', 'Cidery');
         </footer>
     </main>
     <?= view('assistant/bar.php', ['screen' => $screen]) ?>
+    <script>
+        // Keep --assistant-bar-height equal to the bar's real height (it grows when a reply
+        // shows), so body padding and the pinned footer always clear it (app-overrides.css).
+        (function () {
+            var bar = document.getElementById('assistant-bar');
+            if (!bar) { return; }
+            var apply = function () { document.documentElement.style.setProperty('--assistant-bar-height', bar.offsetHeight + 'px'); };
+            apply();
+            if (window.ResizeObserver) { new ResizeObserver(apply).observe(bar); } else { window.addEventListener('resize', apply); }
+        })();
+    </script>
     <script src="/assets/vendors/js/htmx.min.js"></script>
     <script>
         // CSRF for every non-GET HTMX request (php-session-auth wiring).
