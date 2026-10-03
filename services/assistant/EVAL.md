@@ -78,7 +78,7 @@ Login, two-factor challenge and password reset are full-page auth screens, not n
 | S043 | lot-view:lot:2 | attach a certificate of analysis to this lot | navigate lot-coa-add |
 | S044 | lot-view:lot:2 | I want to release this lot | navigate lot-release |
 | S045 | receipt-view:receipt:1 | put this receipt away | navigate putaway |
-| S046 | - | show me inventory | navigate inventory-list |
+| S046 | - | show me inventory | navigate inventory-materials |
 | S047 | - | inventory movements for mcintosh apples | navigate inventory-movements |
 | S048 | - | what needs reordering go to reorder | navigate reorder-list |
 | S049 | - | stock transfers | navigate transfers-list |

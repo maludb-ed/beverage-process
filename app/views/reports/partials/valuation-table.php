@@ -7,8 +7,8 @@ foreach ($rows as $i => $row) {
     $rid = 'report-valuation-row-' . $i;
     $label = (string) $row['group_label'];
     $url = match ($groupBy) {
-        'item_class' => '/inventory/' . query_string(['item_class' => $label]),
-        'location' => $row['location_id'] !== null ? '/inventory/' . query_string(['location_id' => (int) $row['location_id']]) : null,
+        'item_class' => '/inventory/' . ($label === 'finished_good' ? 'finished' : 'materials') . query_string(['item_class' => $label]),
+        'location' => $row['location_id'] !== null ? '/inventory/materials' . query_string(['location_id' => (int) $row['location_id']]) : null,
         default => null,
     };
     $text = $groupBy === 'tax_state' ? badge(humanize($label), $label === 'bonded' ? 'info' : 'success') : e($groupBy === 'location' ? $label : humanize($label));
