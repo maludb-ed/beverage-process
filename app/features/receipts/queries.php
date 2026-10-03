@@ -288,3 +288,36 @@ function putaway_rows(PDO $pdo, array $receipt): array
     }
     return $rows;
 }
+
+/**
+ * Open purchase order lines expected in a calendar window (app.v_open_po_lines, so
+ * only open and partial orders), plus the overdue and undated lines that would
+ * otherwise fall off the calendar. Dates use the line's expected date or the order's.
+ */
+function find_projected_receipts(PDO $pdo, string $from, string $to): array
+{
+    $statement = $pdo->prepare(<<<'SQL'
+        SELECT purchase_order_id, number, supplier_id, supplier_name, po_status, line_id, line_no, item_id, item_name, base_unit_code,
+               qty_outstanding_base, expected_on, overdue
+        FROM app.v_open_po_lines
+        WHERE expected_on IS NULL OR expected_on < current_date OR expected_on BETWEEN :from::date AND :to::date
+        ORDER BY expected_on NULLS LAST, number, line_no
+    SQL);
+    $statement->execute(['from' => $from, 'to' => $to]);
+    $inWindow = [];
+    $overdue = [];
+    $undated = [];
+    foreach ($statement->fetchAll() as $row) {
+        if ($row['expected_on'] === null) {
+            $undated[] = $row;
+        } elseif ($row['overdue']) {
+            $overdue[] = $row;
+            if ($row['expected_on'] >= $from && $row['expected_on'] <= $to) {
+                $inWindow[$row['expected_on']][] = $row;
+            }
+        } else {
+            $inWindow[$row['expected_on']][] = $row;
+        }
+    }
+    return ['by_date' => $inWindow, 'overdue' => $overdue, 'undated' => $undated];
+}
