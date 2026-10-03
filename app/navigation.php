@@ -21,9 +21,11 @@ function navigation_groups(): array
         ['label' => 'Receiving', 'icon' => 'feather-truck', 'items' => [
             ['screen' => 'receipts-list', 'label' => 'Receipts', 'url' => '/receipts/', 'slice' => 2],
             ['screen' => 'lots-list', 'label' => 'Lots', 'url' => '/lots/', 'slice' => 2],
+            ['screen' => 'receipts-projected', 'label' => 'Projected', 'url' => '/receipts/projected', 'slice' => 2],
         ]],
         ['label' => 'Inventory', 'icon' => 'feather-package', 'items' => [
-            ['screen' => 'inventory-list', 'label' => 'On hand', 'url' => '/inventory/', 'slice' => 3],
+            ['screen' => 'inventory-materials', 'label' => 'Materials', 'url' => '/inventory/materials', 'slice' => 3],
+            ['screen' => 'inventory-finished', 'label' => 'Finished product', 'url' => '/inventory/finished', 'slice' => 3],
             ['screen' => 'inventory-movements', 'label' => 'Movements', 'url' => '/inventory/movements', 'slice' => 3],
             ['screen' => 'reorder-list', 'label' => 'Reorder', 'url' => '/inventory/reorder', 'slice' => 3],
             ['screen' => 'rack-board', 'label' => 'Rack board', 'url' => '/racks/', 'slice' => 3],
@@ -84,6 +86,7 @@ function navigation_groups(): array
             ['screen' => 'locations-list', 'label' => 'Locations', 'url' => '/locations/', 'slice' => 1],
             ['screen' => 'vessels-list', 'label' => 'Vessels', 'url' => '/vessels/', 'slice' => 1],
             ['screen' => 'items-list', 'label' => 'Items', 'url' => '/items/', 'slice' => 1],
+            ['screen' => 'item-classes-list', 'label' => 'Item classes', 'url' => '/item-classes/', 'slice' => 1],
             ['screen' => 'units-list', 'label' => 'Units', 'url' => '/units/', 'slice' => 1],
             ['screen' => 'reason-codes-list', 'label' => 'Reason codes', 'url' => '/reason-codes/', 'slice' => 1],
             ['screen' => 'users-list', 'label' => 'Users', 'url' => '/users/', 'slice' => 1, 'roles' => ['owner']],

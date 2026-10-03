@@ -10,7 +10,7 @@ $pdo = db();
 $item = find_item($pdo, $id) ?? not_found('That item does not exist.');
 log_screen_entered('item-view', 'item', $id, $item['code']);
 render_screen('Item ' . $item['code'], 'item-view', view('items/view.php', [
-    'item' => $item, 'units' => find_item_units($pdo, $id), 'suppliers' => find_item_suppliers($pdo, $id),
+    'item' => $item, 'classes' => item_class_options($pdo, null, false), 'units' => find_item_units($pdo, $id), 'suppliers' => find_item_suppliers($pdo, $id),
     'stock' => find_item_stock($pdo, $id), 'balances' => find_item_balances($pdo, $id),
     'unitInput' => [], 'unitErrors' => [], 'canEdit' => user_can($user, 'receiving'),
 ]), 'item', $id);

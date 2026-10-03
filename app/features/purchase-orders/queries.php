@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 const PO_STATUSES = ['draft' => 'Draft', 'open' => 'Open', 'partial' => 'Partial', 'closed' => 'Closed', 'closed_short' => 'Closed short', 'cancelled' => 'Cancelled'];
 const PO_SORTS = ['number' => 'po.number', 'expected_on' => 'po.expected_on', 'status' => 'po.status', 'supplier' => 's.name', 'ordered_on' => 'po.ordered_on'];
-const PURCHASABLE_CLASSES = ['fruit', 'juice', 'yeast', 'additive', 'packaging', 'consumable', 'returnable_asset'];
 
 function find_purchase_orders(PDO $pdo, string $search = '', string $sort = '-number', int $page = 1, ?string $status = null, ?int $supplierId = null): array
 {
@@ -196,8 +195,11 @@ function purchasing_supplier_options(PDO $pdo): array
  *        default_receipt_status, units => [code => [label, factor]]].
  * Units are the base unit, other units of the same dimension, and the item's own units.
  */
-function purchasing_item_catalog(PDO $pdo, ?array $classes = PURCHASABLE_CLASSES): array
+function purchasing_item_catalog(PDO $pdo, ?array $classes = null): array
 {
+    // Default: the classes flagged purchasable in app.item_classes.
+    require_once __DIR__ . '/../items/queries.php';
+    $classes ??= item_classes_where($pdo, 'purchasable');
     $sql = 'SELECT id, code, name, item_class, base_unit_code, catch_weight, shelf_life_days, default_receipt_status FROM app.items WHERE active';
     $params = [];
     if ($classes !== null) {

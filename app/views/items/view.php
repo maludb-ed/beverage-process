@@ -1,4 +1,4 @@
-<?php /** @var array $item  @var array $units  @var array $suppliers  @var ?array $stock  @var array $balances  @var array $unitInput  @var array $unitErrors  @var bool $canEdit */
+<?php /** @var array $item  @var array $classes  @var array $units  @var array $suppliers  @var ?array $stock  @var array $balances  @var array $unitInput  @var array $unitErrors  @var bool $canEdit */
 $id = (int) $item['id'];
 $base = $item['base_unit_code'];
 $kind = items_unit_kind($item['item_class']);
@@ -17,7 +17,7 @@ $tabs = ['overview' => 'Overview', 'units' => 'Alternate units', 'suppliers' => 
                         <span class="fs-12 fw-normal text-muted d-block" id="item-view-name"><?= e($item['name']) ?></span>
                     </div>
                     <ul class="list-unstyled mb-0">
-                        <li class="hstack justify-content-between mb-4" id="item-view-class"><span class="text-muted fw-medium hstack gap-3"><i class="feather-tag"></i>Class</span><?= badge(ITEM_CLASSES[$item['item_class']] ?? $item['item_class'], 'info') ?></li>
+                        <li class="hstack justify-content-between mb-4" id="item-view-class"><span class="text-muted fw-medium hstack gap-3"><i class="feather-tag"></i>Class</span><?= badge($classes[$item['item_class']] ?? $item['item_class'], 'info') ?></li>
                         <li class="hstack justify-content-between mb-4" id="item-view-base-unit"><span class="text-muted fw-medium hstack gap-3"><i class="feather-layers"></i>Base unit</span><span><?= e($base) ?></span></li>
                         <li class="hstack justify-content-between mb-4" id="item-view-receipt-status"><span class="text-muted fw-medium hstack gap-3"><i class="feather-inbox"></i>Receipt status</span><?= status_badge($item['default_receipt_status']) ?></li>
                         <li class="hstack justify-content-between mb-0" id="item-view-status"><span class="text-muted fw-medium hstack gap-3"><i class="feather-activity"></i>Status</span><?= status_badge($item['active'] ? 'active' : 'inactive') ?></li>

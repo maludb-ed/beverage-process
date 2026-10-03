@@ -4,6 +4,11 @@ declare(strict_types=1);
 require_once __DIR__ . '/ledger.php';
 
 const INVENTORY_PAGE_SIZE = 50;
+/** The two On hand screens: finished product is item_class finished_good; materials is everything else. */
+const INVENTORY_KINDS = [
+    'materials' => ['screen' => 'inventory-materials', 'title' => 'Materials', 'crumb' => 'Materials', 'empty' => 'No materials match.'],
+    'finished' => ['screen' => 'inventory-finished', 'title' => 'Finished product', 'crumb' => 'Finished product', 'empty' => 'No finished product matches.'],
+];
 const INVENTORY_BALANCE_SORTS = ['item_name' => 'item_name', 'lot_number' => 'lot_number', 'location_name' => 'location_name', 'qty_on_hand' => 'qty_on_hand', 'expires_on' => 'expires_on'];
 const INVENTORY_MOVEMENT_SORTS = ['occurred_at' => 't.occurred_at', 'item_name' => 'i.name', 'qty_base' => 't.qty_base'];
 const INVENTORY_REORDER_SORTS = ['name' => 'name', 'qty_available' => 'qty_available', 'shortfall' => '(reorder_point_base - qty_available - qty_on_order)'];
@@ -27,7 +32,7 @@ function inventory_unit_kind(?string $itemClass): string
     return $itemClass === 'fruit' ? 'fruit' : 'default';
 }
 
-/** On hand by item, lot and location (app.v_lot_balances). Filters: item_class, location_id. */
+/** On hand by item, lot and location (app.v_lot_balances). Filters: item_class, item_classes (allowed set), location_id, item_id. */
 function find_inventory_balances(PDO $pdo, string $search = '', array $filters = [], string $sort = 'item_name', int $page = 1): array
 {
     $where = [];
@@ -37,6 +42,7 @@ function find_inventory_balances(PDO $pdo, string $search = '', array $filters =
         $params['s'] = '%' . $search . '%';
     }
     if (!empty($filters['item_class'])) { $where[] = 'item_class = :ic'; $params['ic'] = $filters['item_class']; }
+    if (!empty($filters['item_classes'])) { $where[] = 'item_class = ANY(:ics::text[])'; $params['ics'] = '{' . implode(',', $filters['item_classes']) . '}'; }
     if (!empty($filters['location_id'])) { $where[] = 'location_id = :loc'; $params['loc'] = (int) $filters['location_id']; }
     if (!empty($filters['item_id'])) { $where[] = 'item_id = :item'; $params['item'] = (int) $filters['item_id']; }
     $whereSql = $where === [] ? '' : ' WHERE ' . implode(' AND ', $where);

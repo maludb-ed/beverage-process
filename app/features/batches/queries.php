@@ -16,7 +16,7 @@ const BATCH_SORTS = ['number' => 'b.number', 'started_at' => 'b.started_at', 'st
 const BATCH_TAX_CLASSES = ['hard_cider' => 'Hard cider', 'still_wine' => 'Still wine', 'artificially_carbonated_wine' => 'Artificially carbonated wine', 'sparkling_wine' => 'Sparkling wine'];
 const BATCH_ADDITION_PURPOSES = ['nutrient' => 'Nutrient', 'sulfite' => 'Sulfite', 'enzyme' => 'Enzyme', 'sweetener' => 'Sweetener', 'acid' => 'Acid', 'fining' => 'Fining', 'base_juice' => 'Base juice', 'other' => 'Other'];
 const BATCH_CONSUMPTION_PURPOSES = BATCH_ADDITION_PURPOSES + ['yeast' => 'Yeast', 'fruit' => 'Fruit'];
-const BATCH_ADDITION_CLASSES = ['additive', 'yeast', 'juice', 'intermediate'];
+const BATCH_ADDITION_CLASSES = ['additive', 'yeast', 'juice', 'intermediate'];  // plus custom classes flagged recipe_ingredient
 /** Expected loss reason when a stage move leaves volume behind (spec: rack → RACK, primary → LEES, otherwise RACK). */
 const BATCH_STAGE_LOSS_REASONS = ['rack' => 'RACK', 'primary' => 'LEES'];
 
@@ -302,7 +302,7 @@ function find_yeast_lot_options(PDO $pdo): array
 function batches_addition_item_catalog(PDO $pdo): array
 {
     $items = [];
-    foreach ($pdo->query("SELECT id, code, name, item_class, base_unit_code, lot_controlled, consumption_mode FROM app.items WHERE active AND item_class IN ('additive', 'yeast', 'juice', 'intermediate') ORDER BY code") as $row) {
+    foreach ($pdo->query("SELECT id, code, name, item_class, base_unit_code, lot_controlled, consumption_mode FROM app.items WHERE active AND (item_class IN ('additive', 'yeast', 'juice', 'intermediate') OR item_class IN (SELECT code FROM app.item_classes WHERE recipe_ingredient AND active AND NOT is_builtin)) ORDER BY code") as $row) {
         $row['units'] = [$row['base_unit_code'] => ['label' => $row['base_unit_code'], 'factor' => 1.0]];
         $items[(int) $row['id']] = $row;
     }

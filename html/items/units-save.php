@@ -44,4 +44,4 @@ if ($errors !== []) {
     http_response_code(422);
 }
 header('Vary: HX-Request');
-echo view('items/units-tab.php', ['item' => $item, 'units' => find_item_units($pdo, $id), 'unitInput' => $input, 'unitErrors' => $errors, 'canEdit' => true]);
+echo view('items/units-tab.php', ['item' => $item, 'classes' => item_class_options($pdo, null, false), 'units' => find_item_units($pdo, $id), 'unitInput' => $input, 'unitErrors' => $errors, 'canEdit' => true]);

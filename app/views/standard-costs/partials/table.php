@@ -1,7 +1,7 @@
-<?php /** @var array $result  @var array $query  @var bool $canEdit */
+<?php /** @var array $result  @var array $query  @var array $classes  @var bool $canEdit */
 $rowsHtml = '';
 foreach ($result['rows'] as $row) {
-    $rowsHtml .= view('standard-costs/partials/row.php', ['item' => $row, 'canEdit' => $canEdit]);
+    $rowsHtml .= view('standard-costs/partials/row.php', ['item' => $row, 'classes' => $classes, 'canEdit' => $canEdit]);
 }
 echo view('shared/list-card.php', [
     'screen' => 'standard-costs-list', 'title' => 'Item standard costs', 'url' => '/standard-costs/', 'query' => $query, 'paging' => $result, 'rowsHtml' => $rowsHtml,

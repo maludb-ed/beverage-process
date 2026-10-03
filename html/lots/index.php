@@ -8,10 +8,12 @@ $query = list_params('-lot_number');
 $qualityStatus = request_string('quality_status', 20);
 $qualityStatus = in_options($qualityStatus, LOT_STATUSES) ? $qualityStatus : '';
 $itemClass = request_string('item_class', 30);
-$itemClass = in_options($itemClass, lot_item_class_options()) ? $itemClass : '';
+$pdo = db();
+$classes = lot_item_class_options($pdo);
+$itemClass = in_options($itemClass, $classes) ? $itemClass : '';
 $expiring = request_string('expiring', 1) === '1' ? '1' : '';
-$result = find_lots(db(), $query['q'], $query['sort'], $query['page'], $qualityStatus ?: null, $itemClass ?: null, $expiring === '1');
-$data = ['result' => $result, 'query' => ['q' => $query['q'], 'sort' => $query['sort'], 'quality_status' => $qualityStatus, 'item_class' => $itemClass, 'expiring' => $expiring]];
+$result = find_lots($pdo, $query['q'], $query['sort'], $query['page'], $qualityStatus ?: null, $itemClass ?: null, $expiring === '1');
+$data = ['result' => $result, 'classes' => $classes, 'query' => ['q' => $query['q'], 'sort' => $query['sort'], 'quality_status' => $qualityStatus, 'item_class' => $itemClass, 'expiring' => $expiring]];
 
 if (is_results_request('lots-list-results')) {
     header('Vary: HX-Request');

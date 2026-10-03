@@ -1,7 +1,10 @@
-<?php /** @var array $item  @var array $errors */
+<?php /** @var array $item  @var array $classes  @var array $errors */
 $id = $item['id'] ?? null;
 $isEdit = $id !== null;
-$title = $isEdit ? 'Edit Item' : 'Add Item';
+$fromMaterials = ($item['return_to'] ?? '') === 'materials';
+$title = $isEdit ? 'Edit Item' : ($fromMaterials ? 'Add Material' : 'Add Item');
+$crumbs = $fromMaterials ? ['Inventory' => null, 'Materials' => '/inventory/materials', 'Add' => null] : ['Setup' => null, 'Items' => '/items/', $isEdit ? 'Edit' : 'Add' => null];
+$cancelUrl = $fromMaterials ? '/inventory/materials' : ($isEdit ? '/items/' . $id : '/items/');
 $p = 'item-form';
 $base = (string) ($item['base_unit_code'] ?? '');
 $kind = items_unit_kind($item['item_class'] ?? null);
@@ -9,11 +12,12 @@ $qtySuffix = $base !== '' ? display_unit($base, $kind) : null;
 $costSuffix = $base !== '' ? '$ per ' . display_unit($base, $kind) : null;
 $tabs = ['basics' => 'Basics', 'control' => 'Control', 'planning' => 'Planning'];
 ?>
-<?= view('shared/page-header.php', ['title' => $title, 'screen' => 'item-form', 'crumbs' => ['Setup' => null, 'Items' => '/items/', $isEdit ? 'Edit' : 'Add' => null], 'actionsHtml' => form_actions('item-form', $isEdit ? '/items/' . $id : '/items/', 'Save Item')]) ?>
+<?= view('shared/page-header.php', ['title' => $title, 'screen' => 'item-form', 'crumbs' => $crumbs, 'actionsHtml' => form_actions('item-form', $cancelUrl, $fromMaterials ? 'Save Material' : 'Save Item')]) ?>
 <div class="main-content" id="item-form-content">
     <form id="item-form" method="post" action="/items/save" hx-post="/items/save" hx-target="#page-content" hx-swap="innerHTML">
         <?= csrf_field() ?>
         <?php if ($isEdit): ?><input type="hidden" name="id" value="<?= e($id) ?>" /><?php endif; ?>
+        <?php if ($fromMaterials): ?><input type="hidden" name="return_to" value="materials" /><?php endif; ?>
         <?= view('shared/validation-errors.php', ['errors' => $errors, 'id' => 'item-form-errors']) ?>
         <div class="row"><div class="col-lg-12">
             <div class="card border-top-0" id="item-form-card">
@@ -32,7 +36,7 @@ $tabs = ['basics' => 'Basics', 'control' => 'Control', 'planning' => 'Planning']
                             <div class="mb-4"><h5 class="fw-bold mb-0 me-4"><span class="d-block mb-2">Basics</span><span class="fs-12 fw-normal text-muted text-truncate-1-line">What the item is and how it is stocked.</span></h5></div>
                             <?= form_input($p, 'code', 'Code', $item['code'] ?? '', $errors, ['required' => true, 'maxlength' => 40, 'icon' => 'feather-hash', 'autofocus' => !$isEdit]) ?>
                             <?= form_input($p, 'name', 'Name', $item['name'] ?? '', $errors, ['required' => true, 'maxlength' => 160, 'icon' => 'feather-package']) ?>
-                            <?= form_select($p, 'item_class', 'Item class', ITEM_CLASSES, $item['item_class'] ?? '', $errors, ['required' => true, 'blank' => 'Choose a class']) ?>
+                            <?= form_select($p, 'item_class', 'Item class', $classes, $item['item_class'] ?? '', $errors, ['required' => true, 'blank' => 'Choose a class', 'help' => 'Classes are maintained under Setup, Item classes.']) ?>
                             <?= form_select($p, 'base_unit_code', 'Base unit', items_base_unit_options(), $base, $errors, ['required' => true, 'blank' => 'Choose a unit', 'help' => 'Stock is held in this unit.']) ?>
                             <?= form_input($p, 'units_per_case', 'Units per case', $item['units_per_case'] ?? '', $errors, ['type' => 'number', 'min' => 1, 'step' => 1, 'icon' => 'feather-box', 'help' => 'Finished goods only.']) ?>
                             <?= form_textarea($p, 'notes', 'Notes', $item['notes'] ?? '', $errors) ?>

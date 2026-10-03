@@ -2,10 +2,6 @@
 declare(strict_types=1);
 
 const STANDARD_COST_SORTS = ['name' => 'i.name', 'code' => 'i.code', 'item_class' => 'i.item_class'];
-const STANDARD_COST_CLASSES = [
-    'fruit' => 'Fruit', 'juice' => 'Juice', 'yeast' => 'Yeast', 'additive' => 'Additive', 'packaging' => 'Packaging', 'consumable' => 'Consumable',
-    'intermediate' => 'Intermediate', 'finished_good' => 'Finished good', 'co_product' => 'Co-product', 'returnable_asset' => 'Returnable asset',
-];
 const STANDARD_COST_METHODS = ['actual_lot' => 'Actual lot', 'standard' => 'Standard'];
 const STANDARD_COST_PAGE_SIZE = 50;
 

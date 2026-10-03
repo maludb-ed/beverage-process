@@ -5,9 +5,11 @@ require_once dirname(__DIR__, 2) . '/app/features/items/queries.php';
 
 $user = require_login();
 $query = list_params('code');
-$query['item_class'] = in_options(request_string('item_class'), ITEM_CLASSES) ? request_string('item_class') : '';
-$result = find_items(db(), $query['q'], $query['sort'], $query['page'], $query['item_class'] ?: null, false);
-$data = ['result' => $result, 'query' => $query, 'canEdit' => user_can($user, 'receiving')];
+$pdo = db();
+$classes = item_class_options($pdo, null, false);
+$query['item_class'] = in_options(request_string('item_class'), $classes) ? request_string('item_class') : '';
+$result = find_items($pdo, $query['q'], $query['sort'], $query['page'], $query['item_class'] ?: null, false);
+$data = ['result' => $result, 'query' => $query, 'classes' => $classes, 'canEdit' => user_can($user, 'receiving')];
 
 if (is_results_request('items-list-results')) {
     header('Vary: HX-Request');

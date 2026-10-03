@@ -6,7 +6,7 @@ require_once dirname(__DIR__, 2) . '/app/features/lots/queries.php';
 
 $user = require_login();
 $query = list_params('name');
-$classes = lot_item_class_options();
+$classes = lot_item_class_options(db());
 $itemClass = request_string('item_class', 30);
 $itemClass = in_options($itemClass, $classes) ? $itemClass : '';
 $result = find_reorder_items(db(), $itemClass ?: null, $query['sort'], $query['page']);

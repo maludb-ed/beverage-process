@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-const ITEM_CLASSES = [
-    'fruit' => 'Fruit', 'juice' => 'Juice', 'yeast' => 'Yeast', 'additive' => 'Additive', 'packaging' => 'Packaging',
-    'consumable' => 'Consumable', 'intermediate' => 'Intermediate', 'finished_good' => 'Finished good',
-    'co_product' => 'Co-product', 'returnable_asset' => 'Returnable asset',
-];
+// Item classes live in app.item_classes (017): see item_class_options(). Built-in codes keep
+// behaviour in PHP (fruit, finished_good, packaging...); custom classes behave by their flags.
+const ITEM_CLASS_KINDS = ['material' => 'Material', 'finished' => 'Finished product'];
+const ITEM_CLASS_CODE_PATTERN = '/^[a-z][a-z0-9_]{1,29}$/';
 const ITEM_QUARANTINE_CLASSES = ['fruit', 'juice', 'yeast', 'additive'];
 const ITEM_RECEIPT_STATUSES = ['quarantine' => 'Quarantine', 'released' => 'Released'];
 const ITEM_CONSUMPTION_MODES = ['explicit' => 'Explicit', 'backflush' => 'Backflush'];
@@ -16,6 +15,57 @@ const ITEM_SORTS = ['code' => 'i.code', 'name' => 'i.name', 'item_class' => 'i.i
 const ITEM_COLUMNS = 'i.id, i.code, i.name, i.item_class, i.base_unit_code, i.lot_controlled, i.catch_weight, i.shelf_life_days, i.default_receipt_status,
     i.consumption_mode, i.costing_method, i.standard_cost_per_base, i.reorder_point_base, i.min_qty_base, i.max_qty_base,
     i.ttb_material_category, i.units_per_case, i.active, i.notes, i.created_at, i.updated_at';
+
+/** Every item class row by code, in display order; cached for the request. */
+function item_class_rows(PDO $pdo): array
+{
+    if (!isset($GLOBALS['__item_class_rows'])) {
+        $rows = [];
+        foreach ($pdo->query('SELECT id, code, name, kind, purchasable, recipe_ingredient, display_order, is_builtin, active, notes FROM app.item_classes ORDER BY display_order, name') as $row) {
+            $rows[$row['code']] = $row;
+        }
+        $GLOBALS['__item_class_rows'] = $rows;
+    }
+    return $GLOBALS['__item_class_rows'];
+}
+
+/** Forget the cached rows after a class is saved. */
+function item_class_cache_reset(): void
+{
+    unset($GLOBALS['__item_class_rows']);
+}
+
+/**
+ * Item classes as code => name for selects and filters. $kind limits to 'material' or 'finished';
+ * inactive classes are left out unless $activeOnly is false or the code is in $keepCodes (an
+ * existing record's class stays selectable).
+ */
+function item_class_options(PDO $pdo, ?string $kind = null, bool $activeOnly = true, array $keepCodes = []): array
+{
+    $options = [];
+    foreach (item_class_rows($pdo) as $code => $row) {
+        if ($kind !== null && $row['kind'] !== $kind) { continue; }
+        if ($activeOnly && !$row['active'] && !in_array($code, $keepCodes, true)) { continue; }
+        $options[$code] = $row['name'];
+    }
+    return $options;
+}
+
+/** The display name of a class, or the code when it is unknown. */
+function item_class_name(PDO $pdo, ?string $code): string
+{
+    return item_class_rows($pdo)[$code]['name'] ?? (string) $code;
+}
+
+/** Active class codes with a behaviour flag set: 'purchasable' or 'recipe_ingredient'. */
+function item_classes_where(PDO $pdo, string $flag): array
+{
+    $codes = [];
+    foreach (item_class_rows($pdo) as $code => $row) {
+        if ($row['active'] && !empty($row[$flag])) { $codes[] = $code; }
+    }
+    return $codes;
+}
 
 /** Default receipt status for a class: quarantine for fruit, juice, yeast, additive; released otherwise. */
 function items_default_receipt_status(string $itemClass): string

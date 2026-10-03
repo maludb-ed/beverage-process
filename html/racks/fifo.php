@@ -11,12 +11,13 @@ $premises = premises_options($pdo);
 $premisesId = request_integer('premises_id');
 $premisesId = $premisesId !== null && isset($premises[$premisesId]) ? $premisesId : null;
 $itemClass = request_string('item_class', 30);
-$itemClass = in_options($itemClass, ITEM_CLASSES) ? $itemClass : '';
+$classes = item_class_options($pdo, null, false);
+$itemClass = in_options($itemClass, $classes) ? $itemClass : '';
 $q = request_string('q', 100);
 $data = [
     'groups' => find_fifo_picks($pdo, $premisesId, $q, $itemClass ?: null),
     'query' => ['q' => $q, 'premises_id' => $premisesId, 'item_class' => $itemClass],
-    'premises' => $premises,
+    'premises' => $premises, 'classes' => $classes,
 ];
 
 if (is_results_request('rack-fifo-results')) {

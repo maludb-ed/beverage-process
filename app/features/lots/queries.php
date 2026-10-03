@@ -199,10 +199,10 @@ function override_reason_options(PDO $pdo): array
 }
 
 /** Item classes for the lots filter. */
-function lot_item_class_options(): array
+function lot_item_class_options(PDO $pdo): array
 {
-    return ['fruit' => 'Fruit', 'juice' => 'Juice', 'yeast' => 'Yeast', 'additive' => 'Additive', 'packaging' => 'Packaging', 'consumable' => 'Consumable',
-        'intermediate' => 'Intermediate', 'finished_good' => 'Finished good', 'co_product' => 'Co-product', 'returnable_asset' => 'Returnable asset'];
+    require_once __DIR__ . '/../items/queries.php';
+    return item_class_options($pdo, null, false);
 }
 
 /** The receipt behind a receipt-line lot: [id, number] or [null, null]. */

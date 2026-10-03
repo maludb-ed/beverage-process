@@ -160,7 +160,7 @@ async def batch_addition_record(
 
     <<terminal>>"""
     b = await active_batch(batch)
-    it = await resolve.resolve("item", item, where="item_class IN ('additive', 'yeast', 'juice', 'intermediate')", what="additive, yeast or juice item")
+    it = await resolve.resolve("item", item, where="(item_class IN ('additive', 'yeast', 'juice', 'intermediate') OR item_class IN (SELECT code FROM app.item_classes WHERE recipe_ingredient AND active AND NOT is_builtin))", what="additive, yeast or juice item")
     row = await item_row(it["id"])
     own = await item_units(row["id"])
     unit_code = units.normalize(unit) or row["base_unit_code"]
@@ -471,7 +471,7 @@ async def po_create(
                                      ("expected_on", expected_on.isoformat() if expected_on else ""), ("notes", notes or "")]
     described = []
     for n, line in enumerate(lines, start=1):
-        it = await resolve.resolve("item", line.item, where="item_class IN ('fruit', 'juice', 'yeast', 'additive', 'packaging', 'consumable', 'returnable_asset')", what="purchasable item")
+        it = await resolve.resolve("item", line.item, where="item_class IN (SELECT code FROM app.item_classes WHERE purchasable AND active)", what="purchasable item")
         row = await item_row(it["id"])
         unit, _ = await _line_unit(row, line.unit, sup["id"])
         fields += [(f"lines[n{n}][item_id]", row["id"]), (f"lines[n{n}][qty_ordered]", f"{line.qty:g}"), (f"lines[n{n}][purchase_unit_code]", unit),
@@ -549,7 +549,7 @@ async def receipt_create(
                                      ("delivery_note_ref", delivery_note_ref or ""), ("notes", notes or "")]
     described = []
     for n, line in enumerate(lines, start=1):
-        it = await resolve.resolve("item", line.item, where="item_class IN ('fruit', 'juice', 'yeast', 'additive', 'packaging', 'consumable', 'returnable_asset')", what="purchasable item")
+        it = await resolve.resolve("item", line.item, where="item_class IN (SELECT code FROM app.item_classes WHERE purchasable AND active)", what="purchasable item")
         row = await item_row(it["id"])
         unit, _ = await _line_unit(row, line.unit, sup["id"])
         p = f"lines[n{n}]"

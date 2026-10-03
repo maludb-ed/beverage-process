@@ -7,7 +7,6 @@ const RECIPE_PURPOSES = [
 ];
 const RECIPE_BASES = ['per_batch' => 'Fixed per batch', 'per_volume' => 'Per volume'];
 const RECIPE_MODES = ['explicit' => 'Explicit', 'backflush' => 'Backflush'];
-const RECIPE_ITEM_CLASSES = ['fruit', 'juice', 'yeast', 'additive', 'consumable', 'intermediate'];
 const RECIPE_BEVERAGE_PREMISES = ['cider' => 'bonded_winery', 'wine' => 'bonded_winery', 'beer' => 'brewery'];
 
 const RECIPE_HEADER_SQL = <<<'SQL'
@@ -56,7 +55,8 @@ function recipe_item_catalog(PDO $pdo, array $includeIds = []): array
     $ids = '{' . implode(',', array_map('intval', $includeIds)) . '}';
     $statement = $pdo->prepare('SELECT id, code, name, base_unit_code, item_class, consumption_mode FROM app.items
         WHERE item_class = ANY(:classes::text[]) AND (active OR id = ANY(:ids::bigint[])) ORDER BY code');
-    $statement->execute(['classes' => '{' . implode(',', RECIPE_ITEM_CLASSES) . '}', 'ids' => $ids]);
+    require_once __DIR__ . '/../items/queries.php';
+    $statement->execute(['classes' => '{' . implode(',', item_classes_where($pdo, 'recipe_ingredient')) . '}', 'ids' => $ids]);
     $catalog = [];
     foreach ($statement->fetchAll() as $row) {
         $catalog[(int) $row['id']] = $row;

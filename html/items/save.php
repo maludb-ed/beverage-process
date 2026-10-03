@@ -7,14 +7,19 @@ require_post();
 verify_csrf();
 $user = require_role('receiving');
 
+$pdo = db();
 $id = request_integer('id');
-$class = request_string('item_class', 20);
+$class = request_string('item_class', 30);
+$returnTo = request_string('return_to', 10) === 'materials' ? 'materials' : '';
+$before = $id !== null ? (find_item($pdo, $id) ?? not_found('That item does not exist.')) : null;
+$classes = $id !== null ? item_class_options($pdo, null, true, [$before['item_class']]) : item_class_options($pdo, $returnTo === 'materials' ? 'material' : null);
 $receiptStatus = request_string('default_receipt_status', 20);
-if ($receiptStatus === '' && in_options($class, ITEM_CLASSES)) {
+if ($receiptStatus === '' && in_options($class, $classes)) {
     $receiptStatus = items_default_receipt_status($class);
 }
 $input = [
     'id' => $id,
+    'return_to' => $returnTo,
     'code' => request_string('code', 40),
     'name' => request_string('name', 160),
     'item_class' => $class,
@@ -38,7 +43,7 @@ $baseUnits = items_base_unit_options();
 $errors = [];
 if ($input['code'] === '') { $errors['code'] = 'Code is required.'; }
 if ($input['name'] === '') { $errors['name'] = 'Name is required.'; }
-if (!in_options($class, ITEM_CLASSES)) { $errors['item_class'] = 'Choose an item class.'; }
+if (!in_options($class, $classes)) { $errors['item_class'] = 'Choose an item class.'; }
 if (!in_options($input['base_unit_code'], $baseUnits)) { $errors['base_unit_code'] = 'Choose a base unit.'; }
 if (!in_options($receiptStatus, ITEM_RECEIPT_STATUSES)) { $errors['default_receipt_status'] = 'Choose a default receipt status.'; }
 if (!in_options($input['consumption_mode'], ITEM_CONSUMPTION_MODES)) { $errors['consumption_mode'] = 'Choose a consumption mode.'; }
@@ -63,9 +68,6 @@ foreach (['standard_cost_per_base' => 'Standard cost', 'reorder_point' => 'Reord
     $decimals[$field] = $value;
 }
 
-$pdo = db();
-$before = $id !== null ? (find_item($pdo, $id) ?? not_found('That item does not exist.')) : null;
-
 if ($errors === []) {
     $base = $input['base_unit_code'];
     $kind = items_unit_kind($class);
@@ -82,7 +84,7 @@ if ($errors === []) {
         $pdo->commit();
         flash('success', 'Item "' . $item['code'] . '" saved.');
         hx_trigger('itemChanged');
-        hx_location('/items/' . $item['id']);
+        hx_location($returnTo === 'materials' ? '/inventory/materials' : '/items/' . $item['id']);
     } catch (PDOException $exception) {
         if ($pdo->inTransaction()) { $pdo->rollBack(); }
         if (is_unique_violation($exception)) {
@@ -94,4 +96,4 @@ if ($errors === []) {
     }
 }
 http_response_code(422);
-render_screen($id ? 'Edit Item' : 'Add Item', $id ? 'item-edit' : 'item-add', view('items/partials/form.php', ['item' => $input, 'errors' => $errors]), 'item', $id);
+render_screen($id ? 'Edit Item' : ($returnTo === 'materials' ? 'Add Material' : 'Add Item'), $id ? 'item-edit' : 'item-add', view('items/partials/form.php', ['item' => $input, 'classes' => $classes, 'errors' => $errors]), 'item', $id);

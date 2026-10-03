@@ -49,8 +49,10 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | `vessels-list` | `/vessels/` | Vessels | see tanks, totes and barrels and their status |  |
 | `vessel-add` / `vessel-edit` | `/vessels/new`, `/vessels/{id}/edit` | Vessel | add or change a vessel | `name`, `kind`, `capacity_gal` |
 | `items-list` | `/items/` | Items | browse everything that can be stocked |  |
-| `item-add` / `item-edit` | `/items/new`, `/items/{id}/edit` | Item | add or change an item (class, unit, lot control, quarantine default, reorder point) | `name`, `item_class` |
+| `item-add` / `item-edit` | `/items/new`, `/items/{id}/edit` | Item | add or change an item (class, unit, lot control, quarantine default, reorder point); `kind=material` adds a material from Inventory, Materials | `name`, `item_class`, `kind` |
 | `item-view` | `/items/{id}` | Item | see an item's stock, lots, alternate units, suppliers |  |
+| `item-classes-list` | `/item-classes/` | Item classes | see or manage the item classes (material types): material or finished product, purchasable, recipe ingredient | `kind` |
+| `item-class-add` / `item-class-edit` | `/item-classes/new`, `/item-classes/{id}/edit` | Item class | add a material type or change a class's name, flags or order | `kind` |
 | `units-list` | `/units/` | Units | see the unit conversions (read only) |  |
 | `suppliers-list` | `/suppliers/` | Vendors | see vendors (suppliers) and orchards, under Purchasing |  |
 | `supplier-add` / `supplier-edit` | `/suppliers/new`, `/suppliers/{id}/edit` | Supplier | add or change a supplier | `name`, `kind` |
@@ -70,6 +72,7 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | `receipts-list` | `/receipts/` | Receipts | see deliveries received or in progress |  |
 | `receipt-add` / `receipt-edit` | `/receipts/new`, `/receipts/{id}/edit` | Receipt | record a delivery: lines, quantities, lot numbers, weigh tags, discrepancies | `supplier`, `po_number` |
 | `receipt-view` | `/receipts/{id}` | Receipt | see a posted receipt and the lots it created |  |
+| `receipts-projected` | `/receipts/projected` | Projected | see a calendar of when shipments are expected, from the expected dates on open purchase orders |  |
 | `lots-list` | `/lots/` | Lots | find lots by item, status, expiry |  |
 | `lot-view` | `/lots/{id}` | Lot | see a lot: balances by location, attributes, CoA values, release history |  |
 | `lot-edit` | `/lots/{id}/edit` | Lot | change a lot's expiry, supplier lot number, attributes |  |
@@ -81,7 +84,8 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 
 | Screen id | URL | Title | When the user wants to… | Prefill |
 |---|---|---|---|---|
-| `inventory-list` | `/inventory/` | Inventory | see what is on hand by item, lot, location, with available and allocated |  |
+| `inventory-materials` | `/inventory/materials` | Materials | see what materials are on hand (fruit, juice, yeast, additives, packaging, intermediates) by item, lot, location, with available and allocated |  |
+| `inventory-finished` | `/inventory/finished` | Finished product | see what finished product is on hand by item, lot, location, with available and allocated |  |
 | `inventory-movements` | `/inventory/movements` | Movements | see the ledger history for an item, lot, or location | `item`, `lot_number`, `location` |
 | `reorder-list` | `/inventory/reorder` | Reorder | see what is below reorder point and on order |  |
 | `rack-board` | `/racks/` | Rack board | see which product, lot and batch is on each numbered rack; find where a product is stored |  |
@@ -236,6 +240,8 @@ Role column: the minimum role; `owner` can do everything.
 | `vessel_create` / `vessel_update` | `POST /vessels/save` | name, kind, capacity_gal, location | delete_row / restore_prior | no | production |
 | `vessel_set_status` | `POST /vessels/{id}/status` | status (empty, cleaning, out_of_service) | restore_prior | no | production |
 | `item_create` / `item_update` | `POST /items/save` | name, item_class, base_unit, lot_controlled, quarantine_default, reorder_point | delete_row / restore_prior | no | receiving |
+| `item_class_create` / `item_class_update` | `POST /item-classes/save` | code, name, kind, purchasable, recipe_ingredient, display_order | delete_row / restore_prior | no | receiving |
+| `item_class_delete` | `POST /item-classes/{id}/delete` | — (custom classes with no items only; built-in classes cannot be deleted) | none | yes | receiving |
 | `item_unit_add` | `POST /items/{id}/units/save` | unit_name, to_base_factor | delete_row | no | receiving |
 | `supplier_create` / `supplier_update` | `POST /suppliers/save` | name, kind, contact | delete_row / restore_prior | no | receiving |
 | `supplier_delete` | `POST /suppliers/{id}/delete` | — (deleted with no purchase orders, receipts or lots; otherwise deactivated) | none | yes | receiving |
