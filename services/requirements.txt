@@ -1,0 +1,13 @@
+# Python services (records MCP, activity MCP, actions MCP, assistant).
+# Install into one venv: python3 -m venv services/.venv && services/.venv/bin/pip install -r services/requirements.txt
+# Versions are the ones the services were built and tested against (Python 3.12).
+claude-agent-sdk==0.2.163
+fastapi==0.142.2
+httpx==0.28.1
+httpx2==2.13.1
+mcp==2.2.0
+mcp-types==2.2.0
+psycopg[binary,pool]==3.3.6
+pydantic==2.13.5
+starlette==1.7.0
+uvicorn==0.54.0
