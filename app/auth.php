@@ -244,6 +244,7 @@ function verify_action_token(?string $token): ?int
     }
     $parts = explode('.', $token);
     if (count($parts) === 3 || count($parts) === 4) {
+        $cache[$token] = null;                 // re-entrancy: a log row written while deciding must not ask again
         return $cache[$token] = os_enabled() ? os_action_token_user($token) : null;
     }
     if (count($parts) !== 2) {

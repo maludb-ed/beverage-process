@@ -6,7 +6,7 @@ import contextlib
 import uvicorn
 from mcp.server.transport_security import TransportSecuritySettings
 
-from . import db
+from . import db, os_kernel
 from .auth import BearerTokenMiddleware
 
 
@@ -17,6 +17,8 @@ def build_app(server, *, scope: str | None, server_name: str, allowed_hosts: lis
         allowed_hosts=allowed_hosts or [],
         allowed_origins=[],
     )
+    if scope:
+        os_kernel.install_gate(server)          # the kernel sees app_roles alone; an agent sees what it was granted (os_kernel)
     app = server.streamable_http_app(streamable_http_path="/mcp", json_response=True, stateless_http=True,
                                      transport_security=security, host="0.0.0.0")
     return BearerTokenMiddleware(app, scope, server_name) if scope else app

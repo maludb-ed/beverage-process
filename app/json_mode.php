@@ -83,6 +83,23 @@ function json_mode_finish(): void
         if (preg_match('/data-record-id="(\d+)"/', $html, $m)) {
             $out['record_id'] = (int) $m[1];
         }
+        // Cidery's handlers navigate to the LIST after a save; the kernel wants the record. The handler logged the
+        // record it touched under this request id (every write does) — that row names it.
+        if (!isset($out['record_id']) && (!is_string($location) || !preg_match('~/(\d+)/?(?:[?#].*)?$~', $location))) {
+            try {
+                $st = db()->prepare('SELECT entity_type, entity_id FROM app.activity_log WHERE request_id = :r AND entity_id IS NOT NULL AND action <> \'screen_entered\' ORDER BY id DESC LIMIT 1');
+                $st->execute(['r' => request_id()]);
+                if (($row = $st->fetch()) !== false) {
+                    $out['record_id'] = (int) $row['entity_id'];
+                    $out['entity_type'] = (string) $row['entity_type'];
+                    if (is_string($location) && $location !== '') {
+                        $out['location'] = rtrim($location, '/') . '/' . $row['entity_id'];
+                    }
+                }
+            } catch (Throwable $e) {
+                error_log('json mode record lookup: ' . $e->getMessage());
+            }
+        }
         echo json_encode($out, JSON_UNESCAPED_SLASHES);
         return;
     }
@@ -126,14 +143,17 @@ function json_mode_errors(string $html): array
             }
         }
     }
+    // The summary block repeats the field messages; keep only what the fields did not already say.
+    $seen = array_map(static fn (array $e): string => $e['message'], $errors);
     if (preg_match_all('/<div class="alert alert-danger[^"]*"[^>]*>(.*?)<\/div>/s', $html, $blocks)) {
         foreach ($blocks[1] as $block) {
-            if (preg_match_all('/<li[^>]*>(.*?)<\/li>/s', $block, $items)) {
-                foreach ($items[1] as $item) {
-                    $errors[] = ['field' => null, 'message' => $text($item)];
+            $items = preg_match_all('/<li[^>]*>(.*?)<\/li>/s', $block, $li) ? $li[1] : [$block];
+            foreach ($items as $item) {
+                $msg = $text($item);
+                if ($msg !== '' && !in_array($msg, $seen, true)) {
+                    $errors[] = ['field' => null, 'message' => $msg];
+                    $seen[] = $msg;
                 }
-            } elseif (($msg = $text($block)) !== '') {
-                $errors[] = ['field' => null, 'message' => $msg];
             }
         }
     }

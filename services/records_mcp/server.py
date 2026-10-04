@@ -9,7 +9,7 @@ from mcp.server.mcpserver import MCPServer
 from common import config, serve
 
 from . import fmt, schema_summary
-from . import tools_compliance, tools_inventory, tools_orders, tools_packaging, tools_production, tools_quality_cost, tools_receiving, tools_recipes  # noqa: F401 (register tools)
+from . import tools_compliance, tools_inventory, tools_orders, tools_os, tools_packaging, tools_production, tools_quality_cost, tools_receiving, tools_recipes  # noqa: F401 (register tools)
 from .registry import REGISTRY, register_all
 
 INSTRUCTIONS = """Records memory of the cidery: inventory, receiving, recipes, production and batches, packaging and kegs, quality,
