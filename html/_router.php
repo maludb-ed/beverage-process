@@ -19,7 +19,7 @@ $root = __DIR__;
 
 $fixed = [
     '/sso'              => 'sso.php',              // the Business OS kernel's hand-off (os-adoption)
-    '/sso/logout'       => 'sso/logout.php',
+    '/sso/logout'       => 'sso-logout.php',
     '/api/v1/health'    => 'api/v1/health.php',
     '/login'            => 'login.php',
     '/logout'           => 'logout.php',

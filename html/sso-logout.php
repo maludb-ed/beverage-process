@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /** /sso/logout — the kernel's sign-out notice: end every session of the member; 204 whether or not it verified. */
-require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
+require_once dirname(__DIR__) . '/app/bootstrap.php';
 if (!os_enabled()) {
     not_found();
 }
