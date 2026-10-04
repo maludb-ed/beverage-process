@@ -2,6 +2,10 @@
 # real file or directory goes to the router, which maps it onto the page controllers.
 RewriteEngine On
 RewriteBase /
+# /sso is the kernel's hand-off (os-adoption) and also a real directory (sso/logout.php): route it before the
+# directory check, or mod_dir answers the launch with a slash redirect and a 403.
+RewriteRule ^sso/?$ sso.php [L,QSA]
+RewriteRule ^sso/logout/?$ sso/logout.php [L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ _router.php [L,QSA]
