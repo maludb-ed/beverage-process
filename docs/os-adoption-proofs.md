@@ -34,3 +34,24 @@ Owed to the owner: `sudo php /var/www/bin/app_install.php apply /srv/apps/cidery
 fresh one with the tenant's keys), DNS/TLS for `cidery.subello.com`, grants, and hiring the expert
 (`bin/hire_application_agent.php --app cidery --agent expert`). The real-kernel proofs (a launch from the launcher, a
 revocation through the real feed, an agent's run through the kernel's actions server) run then.
+
+## The real install (2026-10-04, the owner's apply)
+
+Three applies. The first stopped at the vhost (`Header` needs mod_headers, not loaded here → the template now guards it; the
+kernel installer now restores or disables a vhost that fails configtest before stopping). The second stopped at `answers`:
+the two MCP units exited 200/CHDIR — their `WorkingDirectory` carried a stray `}}` from the way the templates were generated
+(fixed). The third ran through: database `subello_cidery`, `config/.env`, ports 8104/8105/8106, vhost, six units, four
+endpoints answering, **application 58**, the application token, `mcp/registries/cidery.json` on the kernel's actions server,
+three skills at application scope, the `ttb_report.finalize` approval policy, the sign-on proof. The owner hired the expert:
+**member 63, Cidery Expert**, on `claude-opus-5-5@max`, 95 tool grants.
+
+Two things the proofs under `php -S` had not caught, found on the first launch from the kernel's launcher:
+- `/sso` was also a directory (`html/sso/logout.php`), so Apache's mod_dir answered the launch with a slash redirect and a 403
+  before the router ran. The sign-out receiver moved to `html/sso-logout.php`; `/sso` and `/sso/logout` keep their paths. Through
+  Apache by name: `/sso?token=x` → 403 with cidery's own refusal page, `/sso/logout` GET → 405, POST bad notice → 204.
+- The roles were read while the MCP units were still restarting, so the kernel held none and the expert's grant carried no role
+  (cidery would have read it as viewer). `application_roles_refresh` run as the super-admin: 7 roles; the expert's grant changed
+  to receiving, production, quality, compliance and sales at write (grant 84; 83 revoked).
+
+Remaining for the owner: open Cidery from the launcher (the proof of the real hand-off), try the command bar (the proof of the
+chat endpoint and the expert), DNS/TLS at the proxy for `cidery.subello.com`.
