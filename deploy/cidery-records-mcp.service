@@ -1,0 +1,19 @@
+[Unit]
+Description=Cidery records MCP server (loopback :{{MCP_RECORDS_PORT}})
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory={{APP_DIR}}/services}}
+Environment=PYTHONUNBUFFERED=1
+ExecStart={{APP_DIR}}/services/.venv/bin/python -m records_mcp.server
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

@@ -14,3 +14,9 @@ __pycache__/
 
 # Session transcripts written under services/ as well
 services/docs/claude-log/
+
+# Business OS: the kernel installer's config (os-adoption)
+config/.env
+config/.env.*
+!config/.env.example
+.devrouter.php

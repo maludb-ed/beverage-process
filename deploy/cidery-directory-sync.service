@@ -1,0 +1,17 @@
+[Unit]
+Description=Cidery directory mirror: the Business OS change feed
+After=network.target postgresql.service
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory={{APP_DIR}}
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/php {{APP_DIR}}/bin/directory_sync.php
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

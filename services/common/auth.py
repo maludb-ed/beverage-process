@@ -7,7 +7,7 @@ import hashlib
 import json
 from typing import Any
 
-from . import db
+from . import config, db, os_kernel
 from .activity import current_server, current_show_prices, current_token_name
 
 
@@ -34,10 +34,12 @@ class BearerTokenMiddleware:
     """ASGI middleware: requires 'Authorization: Bearer <token>' valid for `scope`.
     Sets the token name and server name for activity logging of the tool calls."""
 
-    def __init__(self, app: Any, scope: str, server_name: str) -> None:
+    def __init__(self, app: Any, scope: str, server_name: str, endpoint_name: str = "") -> None:
         self.app = app
         self.scope = scope
         self.server_name = server_name
+        # The name the kernel registered this server under (maludb-os.json endpoints[].name): run-facts names grants per endpoint.
+        self.endpoint_name = endpoint_name or {"records": "Records MCP", "activity": "Activity MCP"}.get(scope, server_name)
 
     async def __call__(self, scope: dict, receive: Any, send: Any) -> None:
         if scope["type"] != "http":
@@ -50,7 +52,18 @@ class BearerTokenMiddleware:
         auth = headers.get("authorization", "")
         token = auth[7:].strip() if auth.lower().startswith("bearer ") else ""
         name = await check_token(token, self.scope)
+        kernel_var = os_kernel.request_is_kernel.set(False)
+        grants_var = os_kernel.request_grants.set(None)
+        if name is None and token and config.os_enabled():
+            # Beside the Business OS kernel: the kernel's own token, an agent's run token, a person's action token (os_kernel).
+            who = await os_kernel.classify(token, self.endpoint_name)
+            if who is not None:
+                kind, name, grants = who
+                os_kernel.request_is_kernel.set(kind == "kernel")
+                os_kernel.request_grants.set(grants if kind == "agent" else None)
         if name is None:
+            os_kernel.request_is_kernel.reset(kernel_var)
+            os_kernel.request_grants.reset(grants_var)
             await _respond(send, 401, {"error": "invalid_token", "error_description": f"A valid {self.scope} access token is required. Create one under Setup > AI access tokens."},
                            extra=[(b"www-authenticate", b'Bearer realm="cidery"')])
             return
@@ -63,6 +76,8 @@ class BearerTokenMiddleware:
             current_token_name.reset(token_var)
             current_server.reset(server_var)
             current_show_prices.reset(prices_var)
+            os_kernel.request_is_kernel.reset(kernel_var)
+            os_kernel.request_grants.reset(grants_var)
 
 
 async def _respond(send: Any, status: int, body: dict, extra: list | None = None) -> None:

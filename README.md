@@ -2,6 +2,16 @@
 
 A memory-first, ask-me-anything inventory and production application for small cideries (beer and wine later), built on the htmx-php-builder plugin stack: PostgreSQL 17 + MaluDB, Apache, vanilla PHP 8.3, Bootstrap 5.3 (nxl theme), HTMX, and a set of Python services (MCP servers and a Claude-powered assistant).
 
+## Beside the MaluDB Business OS (since 2026-10-04)
+
+Cidery is one of the applications of the Business OS suite. On a server that runs the kernel it is installed by the
+kernel's installer — `sudo php /var/www/bin/app_install.php apply https://github.com/maludb/maludb-os-cidery.git --by <super-admin> --domain <domain>` —
+which reads `maludb-os.json`, puts the code at `/srv/apps/cidery`, provisions `<tenant>_cidery` with `deploy/os-provision.sh`,
+writes `config/.env`, renders the vhost and units in `deploy/`, registers the application, mints its token and proves the
+sign-on. People then open Cidery from the kernel's launcher (no password here), their roles come from the kernel's grants,
+and the command bar runs Cidery's expert agent in the kernel. Everything below describes the **standalone** product, which
+is unchanged and is what runs when `OS_ENABLED` is not set. The adoption record: `docs/os-adoption.md`.
+
 ## Layout
 
 The repository root is the deployment root. Everything below assumes it is checked out at `/var/www`; the systemd units, Apache include and scripts use that path.

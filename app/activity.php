@@ -46,7 +46,8 @@ function log_activity(
     $statement->execute([
         'actor_id'     => $actorId ?? ($user['id'] ?? null),
         'actor_label'  => $actorLabel ?? actor_label(),
-        'source'       => $source === 'screen' && function_exists('is_action_token_request') && is_action_token_request() ? 'command_bar' : $source,
+        'source'       => $source === 'screen' && function_exists('is_action_token_request') && is_action_token_request()
+                              ? (function_exists('current_agent_run_id') && current_agent_run_id() !== null ? 'agent' : 'command_bar') : $source,
         'session_hash' => session_hash(),
         'request_id'   => request_id(),
         'action'       => $action,
@@ -59,7 +60,11 @@ function log_activity(
         'details'      => json_encode($details, JSON_THROW_ON_ERROR),
         'ip'           => client_ip(),
     ]);
-    return (int) $statement->fetchColumn();
+    $id = (int) $statement->fetchColumn();
+    if (function_exists('current_agent_run_id') && current_agent_run_id() !== null) {
+        $pdo->prepare('UPDATE app.activity_log SET agent_run_id = :r WHERE id = :id')->execute(['r' => current_agent_run_id(), 'id' => $id]);
+    }
+    return $id;
 }
 
 /** Every screen render logs its entry; also remembers the screen for later log rows in this request. */

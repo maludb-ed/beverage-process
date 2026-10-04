@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once dirname(__DIR__) . '/app/bootstrap.php';
+os_close_local_signin();            // os-adoption: the kernel signs people in while OS_ENABLED is on
 
 no_store_headers();
 if (current_user() !== null) {

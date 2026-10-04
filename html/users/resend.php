@@ -6,6 +6,7 @@ require_once dirname(__DIR__, 2) . '/app/mail.php';
 
 // Resend an invitation: a fresh 3-day link replaces any earlier one (earlier links stop working).
 require_post();
+os_refuse_if_managed();           // os-adoption: people are granted in the kernel
 verify_csrf();
 $user = require_role();
 

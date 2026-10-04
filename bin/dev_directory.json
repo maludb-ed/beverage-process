@@ -1,0 +1,20 @@
+{
+  "claims": {
+    "1":  {"display_name": "Owner", "email": "owner@example.invalid", "business_role": "super_admin", "is_external": false,
+           "status": "active", "departments": [], "capability": "admin", "role": "owner", "roles": ["owner"], "rights": [], "scopes": []},
+    "26": {"display_name": "Priya", "email": "priya@example.invalid", "business_role": "user", "is_external": false,
+           "status": "active", "departments": [], "capability": "write", "role": "production", "roles": ["production", "quality"], "rights": [], "scopes": []}
+  },
+  "feed": {
+    "schema": "os.directory-changes/1", "since": null, "next": "2026-01-01T00:00:00.000000Z", "full": true,
+    "members": [
+      {"id": 1, "display_name": "Owner", "email": "owner@example.invalid", "member_kind": "human", "business_role": "super_admin", "is_external": false, "status": "active", "departments": []},
+      {"id": 26, "display_name": "Priya Natarajan", "email": "priya@example.invalid", "member_kind": "human", "business_role": "user", "is_external": false, "status": "active", "departments": []}
+    ],
+    "departments": [], "memberships": [], "deleted_departments": [], "scopes": [],
+    "access": [
+      {"member_id": 1, "role": "owner", "roles": ["owner"], "capability": "admin", "scopes": []},
+      {"member_id": 26, "role": "production", "roles": ["production", "quality"], "capability": "write", "scopes": []}
+    ]
+  }
+}

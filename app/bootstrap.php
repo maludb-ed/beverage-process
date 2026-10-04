@@ -33,6 +33,8 @@ require_once __DIR__ . '/csrf.php';
 require_once __DIR__ . '/units.php';
 require_once __DIR__ . '/activity.php';
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/os.php';
+require_once __DIR__ . '/json_mode.php';
 require_once __DIR__ . '/mail.php';
 require_once __DIR__ . '/totp.php';
 require_once __DIR__ . '/navigation.php';
@@ -67,3 +69,14 @@ header('X-Frame-Options: DENY');
 header('Referrer-Policy: same-origin');
 
 $GLOBALS['__request_id'] = bin2hex(random_bytes(8));
+if (isset($_SERVER['HTTP_X_REQUEST_ID']) && preg_match('/^[A-Za-z0-9._:-]{4,80}$/', (string) $_SERVER['HTTP_X_REQUEST_ID'])) {
+    $GLOBALS['__request_id'] = (string) $_SERVER['HTTP_X_REQUEST_ID'];      // honoured: the kernel's trail joins ours
+}
+
+// JSON mode (mcp-and-api.md §3): the kernel's actions server POSTs to the handlers with Accept: application/json and a
+// tenant token; the handler's HTMX answer (HX-Location, a re-rendered form, an error page) is translated at shutdown
+// into {ok, location} / {error}. Never for a browser.
+if (os_enabled() && !is_htmx_request() && isset($_SERVER['HTTP_X_ACTION_TOKEN'])
+    && str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')) {
+    json_mode_begin();
+}
