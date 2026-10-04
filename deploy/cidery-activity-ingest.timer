@@ -1,6 +1,5 @@
-# /etc/systemd/system/cidery-activity-ingest.timer
 [Unit]
-Description=Run cidery activity ingestion every minute
+Description=Cidery activity-ingest, every minute
 
 [Timer]
 OnBootSec=1min

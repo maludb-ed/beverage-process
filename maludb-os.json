@@ -1,0 +1,271 @@
+{
+  "schema": "maludb-os.application/1",
+  "catalog_key": "cidery",
+  "name": "Cidery",
+  "description": "Memory-first inventory, receiving and production for a cidery (beer and wine later): fruit and materials in, press runs, batches in tanks, packaging and kegs, quality and release, TTB compliance, customer orders and planning — every question answerable by an agent, every action a tool.",
+  "business_area": "Operations",
+  "category": "other",
+  "icon": "feather-droplet",
+  "version": "1.0.0",
+  "criticality": "normal",
+  "vhost": {
+    "label": "cidery",
+    "document_root": "html",
+    "internal_port_env": "APP_INTERNAL_PORT"
+  },
+  "database": {
+    "suffix": "cidery",
+    "migrations": "db",
+    "provision": "deploy/os-provision.sh",
+    "roles": {
+      "rw": "cidery_app",
+      "records_ro": "cidery_records_ro",
+      "activity_ro": "cidery_activity_ro"
+    }
+  },
+  "runtime": {
+    "python": {
+      "dir": "services",
+      "venv": "services/.venv",
+      "requirements": "services/requirements.txt"
+    }
+  },
+  "env": {
+    "required": [
+      "APP_NAME",
+      "APP_URL",
+      "APP_KEY",
+      "DB_HOST",
+      "DB_PORT",
+      "DB_NAME",
+      "DB_USER",
+      "DB_PASSWORD",
+      "MCP_RECORDS_DB_USER",
+      "MCP_RECORDS_DB_PASSWORD",
+      "MCP_ACTIVITY_DB_USER",
+      "MCP_ACTIVITY_DB_PASSWORD",
+      "APP_INTERNAL_PORT",
+      "MCP_RECORDS_PORT",
+      "MCP_ACTIVITY_PORT",
+      "ACTION_TOKEN_KEY",
+      "ACTIONS_RELAY_KEY",
+      "OS_ENABLED",
+      "OS_APPLICATION_TOKEN",
+      "OS_INTERNAL_URL",
+      "OS_LAUNCHER_URL",
+      "MALUDB_API_URL",
+      "MALUDB_API_TOKEN"
+    ],
+    "optional": [
+      "APP_TIMEZONE",
+      "MALUMAIL_API_KEY",
+      "MAIL_FROM",
+      "MAIL_FROM_NAME",
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "TOTP_KEY",
+      "DUMMY_PASSWORD_HASH"
+    ]
+  },
+  "services": [
+    "deploy/cidery-records-mcp.service",
+    "deploy/cidery-activity-mcp.service",
+    "deploy/cidery-activity-ingest.service",
+    "deploy/cidery-activity-ingest.timer",
+    "deploy/cidery-directory-sync.service",
+    "deploy/cidery-directory-sync.timer"
+  ],
+  "endpoints": [
+    {
+      "name": "Records MCP",
+      "kind": "mcp",
+      "path": "/mcp/records",
+      "port_env": "MCP_RECORDS_PORT",
+      "auth_kind": "bearer",
+      "agent_reachable": true,
+      "mcp_surface_version": "1.0"
+    },
+    {
+      "name": "Activity MCP",
+      "kind": "mcp",
+      "path": "/mcp/activity",
+      "port_env": "MCP_ACTIVITY_PORT",
+      "auth_kind": "bearer",
+      "agent_reachable": true,
+      "mcp_surface_version": "1.0"
+    },
+    {
+      "name": "Web UI",
+      "kind": "ui",
+      "path": "/",
+      "auth_kind": "none",
+      "agent_reachable": false
+    },
+    {
+      "name": "Health",
+      "kind": "http_api",
+      "path": "/api/v1/health",
+      "auth_kind": "none",
+      "agent_reachable": false
+    }
+  ],
+  "actions": {
+    "manifest": "docs/05-action-manifest.md",
+    "registry": "mcp/action_registry.json",
+    "base_url_env": "APP_INTERNAL_PORT"
+  },
+  "skills": [
+    "skills/cidery-basics",
+    "skills/cidery-receiving-day",
+    "skills/cidery-month-end-ttb"
+  ],
+  "sso": {
+    "path": "/sso",
+    "logout_path": "/sso/logout"
+  },
+  "directory": {
+    "reads": true,
+    "writes": false
+  },
+  "assistant": {
+    "command_bar": true,
+    "agent": "expert"
+  },
+  "identity": {
+    "profile": "adopted",
+    "enabled_env": "OS_ENABLED"
+  },
+  "agents": [
+    {
+      "key": "expert",
+      "job_description": "os/expert.md",
+      "access_capability": "write",
+      "tool_grants": {
+        "Records MCP": [
+          "batch_find",
+          "product_find",
+          "orders_find",
+          "standing_orders_find",
+          "inventory_on_hand",
+          "inventory_available_after_orders",
+          "inventory_below_reorder",
+          "inventory_movements",
+          "receiving_open_orders",
+          "receiving_receipt_vs_order",
+          "receiving_lot_status",
+          "receiving_supplier_performance",
+          "production_tank_board",
+          "production_batches_in_progress",
+          "production_orders_by_status",
+          "production_order_shortages",
+          "batch_readings",
+          "batch_genealogy",
+          "packaging_finished_stock",
+          "keg_fleet",
+          "quality_release_queue",
+          "quality_out_of_spec",
+          "compliance_period_summary",
+          "compliance_report",
+          "trace_forward",
+          "trace_backward",
+          "cost_batch",
+          "recipe_current",
+          "recipe_can_make",
+          "demand_projection",
+          "production_projection",
+          "purchase_projection",
+          "records_search",
+          "find_batch",
+          "find_customer",
+          "find_item",
+          "find_keg",
+          "find_lot",
+          "find_order",
+          "find_packaging_run",
+          "find_po",
+          "find_product",
+          "find_receipt",
+          "find_report",
+          "find_sales_order",
+          "find_supplier",
+          "find_vessel"
+        ],
+        "Activity MCP": [
+          "activity_record_history",
+          "activity_actor_timeline",
+          "activity_who_did",
+          "activity_before_and_after",
+          "activity_day_replay",
+          "activity_search"
+        ],
+        "Actions MCP": [
+          "adjustment_post",
+          "batch_addition_record",
+          "batch_loss_record",
+          "batch_reading_record",
+          "batch_stage_move",
+          "batch_update",
+          "count_cancel",
+          "count_line_record",
+          "count_start",
+          "count_submit",
+          "customer_create",
+          "keg_clean",
+          "keg_fill",
+          "keg_found",
+          "keg_mark_lost",
+          "keg_register",
+          "keg_retire",
+          "keg_return",
+          "lab_reading_record",
+          "lot_attribute_set",
+          "lot_release",
+          "order_add_line",
+          "order_cancel",
+          "order_close",
+          "order_confirm",
+          "order_create",
+          "order_from_standing",
+          "order_package",
+          "order_ship",
+          "packaging_run_post",
+          "po_approve",
+          "po_cancel",
+          "po_create",
+          "press_run_post",
+          "receipt_create",
+          "receipt_post",
+          "removal_create",
+          "removal_post",
+          "standing_order_deactivate",
+          "transfer_create",
+          "transfer_post",
+          "vessel_set_status"
+        ]
+      },
+      "skills": [
+        "skills/cidery-basics",
+        "skills/cidery-receiving-day",
+        "skills/cidery-month-end-ttb"
+      ]
+    }
+  ],
+  "approvals": [
+    {
+      "action": "customer_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "item_class_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "supplier_delete",
+      "category": "deletion"
+    },
+    {
+      "action": "ttb_report_finalize",
+      "category": "other"
+    }
+  ]
+}

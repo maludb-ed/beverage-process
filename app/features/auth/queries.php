@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 // Auth data access: users, identities, login attempts, tokens, recovery codes.
 
-const USER_COLUMNS = 'id, email, display_name, password_hash, role, status, email_verified_at, totp_secret, totp_enabled_at, totp_last_timestep, last_login_at, created_at, updated_at';
+const USER_COLUMNS = 'id, email, display_name, password_hash, role, status, email_verified_at, totp_secret, totp_enabled_at, totp_last_timestep, last_login_at, created_at, updated_at, os_member_id, os_roles, os_capability, os_member_kind, os_synced_at';   // os_* since db/021
 
 function find_user(PDO $pdo, int $id): ?array
 {

@@ -5,6 +5,7 @@ require_once dirname(__DIR__, 2) . '/app/features/users/queries.php';
 require_once dirname(__DIR__, 2) . '/app/mail.php';
 
 require_post();
+os_refuse_if_managed();           // os-adoption: people are granted in the kernel
 verify_csrf();
 $user = require_role();
 

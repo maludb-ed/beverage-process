@@ -9,6 +9,7 @@
 $pending  = $pending ?? null;
 $navigate = $navigate ?? null;
 $context  = $context ?? [];
+$actions  = $actions ?? [];
 ?>
 <div class="assistant-exchange" id="assistant-exchange-latest">
     <div class="fs-12 text-muted text-truncate" id="assistant-exchange-you">You: <?= e($message) ?></div>
@@ -27,5 +28,8 @@ $context  = $context ?? [];
     </div>
     <?php if ($pending !== null): ?>
         <div class="fs-12 text-danger mt-1" id="assistant-confirm-summary"><?= e($pending) ?></div>
+    <?php endif; ?>
+    <?php if (!empty($actions)): ?>
+        <div class="fs-12 text-muted mt-1" id="assistant-exchange-actions"><?php foreach ($actions as $i => $a): ?><?= $i > 0 ? ' · ' : '' ?><span id="assistant-exchange-action-<?= $i ?>"><?= e((string) ($a['tool'] ?? '')) ?> <?= in_array($a['status'] ?? '', ['ok', 'success'], true) ? '✓' : (($a['status'] ?? '') === 'awaiting_approval' ? '⏸ awaiting approval' : '✗') ?></span><?php endforeach; ?></div>
     <?php endif; ?>
 </div>

@@ -14,4 +14,4 @@ if ($id !== null) {
     $screen = 'user-add';
 }
 log_screen_entered($screen, 'user', $id, $target['display_name'] ?: null);
-render_screen($id ? 'Edit User' : 'Invite User', $screen, view('users/partials/form.php', ['target' => $target, 'errors' => [], 'currentUserId' => (int) $user['id']]), 'user', $id);
+render_screen($id ? 'Edit User' : 'Invite User', $screen, (os_enabled() ? os_managed_notice() : '') . view('users/partials/form.php', ['target' => $target, 'errors' => [], 'currentUserId' => (int) $user['id']]), 'user', $id);

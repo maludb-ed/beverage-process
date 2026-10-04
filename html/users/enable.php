@@ -7,6 +7,7 @@ require_once dirname(__DIR__, 2) . '/app/features/users/queries.php';
 // goes back to active; someone who never accepted their invitation goes back to invited, and
 // the owner then uses Resend invitation (disabling cancelled their old link).
 require_post();
+os_refuse_if_managed();           // os-adoption: people are granted in the kernel
 verify_csrf();
 $user = require_role();
 

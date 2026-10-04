@@ -4,4 +4,4 @@ require_once dirname(__DIR__) . '/app/bootstrap.php';
 require_post();
 verify_csrf();
 logout_user();
-header('Location: /login', true, 303);
+header('Location: ' . (os_enabled() ? os_launcher_url() : '/login'), true, 303);

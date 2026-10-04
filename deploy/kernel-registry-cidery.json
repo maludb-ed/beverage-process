@@ -1,0 +1,134 @@
+{
+    "schema": "maludb-os.registry/1",
+    "app_key": "cidery",
+    "name": "Cidery",
+    "note": "The kernel installer (bin/app_install.php, step registry) writes mcp/registries/cidery.json from this resolve block plus mcp/action_registry.json. Each find_<kind> tool on the records MCP server answers {\"rows\": [{<kind>_id, label, detail}]} for `q`; the kernel substitutes the id into the endpoint path.",
+    "resolve": {
+        "batch": {
+            "tool": "find_batch",
+            "query_param": "q",
+            "id_field": "batch_id",
+            "label_field": "label",
+            "params": [
+                "batch"
+            ]
+        },
+        "customer": {
+            "tool": "find_customer",
+            "query_param": "q",
+            "id_field": "customer_id",
+            "label_field": "label",
+            "params": [
+                "customer"
+            ]
+        },
+        "item": {
+            "tool": "find_item",
+            "query_param": "q",
+            "id_field": "item_id",
+            "label_field": "label",
+            "params": [
+                "item"
+            ]
+        },
+        "keg": {
+            "tool": "find_keg",
+            "query_param": "q",
+            "id_field": "keg_id",
+            "label_field": "label",
+            "params": [
+                "keg"
+            ]
+        },
+        "lot": {
+            "tool": "find_lot",
+            "query_param": "q",
+            "id_field": "lot_id",
+            "label_field": "label",
+            "params": [
+                "lot"
+            ]
+        },
+        "order": {
+            "tool": "find_order",
+            "query_param": "q",
+            "id_field": "order_id",
+            "label_field": "label",
+            "params": [
+                "order"
+            ]
+        },
+        "packaging_run": {
+            "tool": "find_packaging_run",
+            "query_param": "q",
+            "id_field": "packaging_run_id",
+            "label_field": "label",
+            "params": [
+                "packaging_run"
+            ]
+        },
+        "po": {
+            "tool": "find_po",
+            "query_param": "q",
+            "id_field": "po_id",
+            "label_field": "label",
+            "params": [
+                "po"
+            ]
+        },
+        "product": {
+            "tool": "find_product",
+            "query_param": "q",
+            "id_field": "product_id",
+            "label_field": "label",
+            "params": [
+                "product"
+            ]
+        },
+        "receipt": {
+            "tool": "find_receipt",
+            "query_param": "q",
+            "id_field": "receipt_id",
+            "label_field": "label",
+            "params": [
+                "receipt"
+            ]
+        },
+        "report": {
+            "tool": "find_report",
+            "query_param": "q",
+            "id_field": "report_id",
+            "label_field": "label",
+            "params": [
+                "report"
+            ]
+        },
+        "sales_order": {
+            "tool": "find_sales_order",
+            "query_param": "q",
+            "id_field": "sales_order_id",
+            "label_field": "label",
+            "params": [
+                "sales_order"
+            ]
+        },
+        "supplier": {
+            "tool": "find_supplier",
+            "query_param": "q",
+            "id_field": "supplier_id",
+            "label_field": "label",
+            "params": [
+                "supplier"
+            ]
+        },
+        "vessel": {
+            "tool": "find_vessel",
+            "query_param": "q",
+            "id_field": "vessel_id",
+            "label_field": "label",
+            "params": [
+                "vessel"
+            ]
+        }
+    }
+}

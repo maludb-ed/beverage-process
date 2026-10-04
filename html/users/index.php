@@ -14,4 +14,4 @@ if (is_results_request('users-list-results')) {
     exit;
 }
 log_screen_entered('users-list');
-render_screen('Users', 'users-list', view('users/page.php', $data));
+render_screen('Users', 'users-list', (os_enabled() ? os_managed_notice() : '') . view('users/page.php', $data));

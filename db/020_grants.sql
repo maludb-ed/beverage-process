@@ -41,3 +41,7 @@ ALTER ROLE cidery_records_ro SET search_path = app, public;
 -- time. (MaluDB's internal lookup functions are not granted: the reader role reads
 -- through the facade views and text search, as MaluDB intends for maludb_read.)
 GRANT SELECT (id, client_name, timezone, volume_display_unit, mass_display_unit, fruit_display_unit) ON app.client_settings TO cidery_activity_ro;
+
+-- os-adoption (db/021): the sign-on tables are auth material too.
+REVOKE SELECT ON app.sso_nonces, app.member_sessions, app.directory_sync_state, app.activity_ingest_state FROM cidery_records_ro;
+REVOKE SELECT ON app.sso_nonces, app.member_sessions FROM cidery_activity_ro;
