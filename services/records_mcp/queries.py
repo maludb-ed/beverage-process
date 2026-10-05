@@ -553,7 +553,8 @@ TANK_BOARD = """
 SELECT vb.vessel_name, vb.vessel_kind, vb.capacity_l, vb.vessel_status, pr.name AS premises_name, vb.occupant_kind, vb.occupant_label,
        vb.volume_l, vb.fill_pct, vb.occupied_since, vb.current_stage_code, st.name AS stage_name, vb.product_name,
        b.status AS batch_status, se.entered_at AS stage_since,
-       CASE WHEN vb.occupant_kind = 'lot' THEN (SELECT i.name FROM app.lots l JOIN app.items i ON i.id = l.item_id WHERE l.id = vb.occupant_id) END AS lot_item
+       CASE WHEN vb.occupant_kind = 'lot' THEN (SELECT i.name FROM app.lots l JOIN app.items i ON i.id = l.item_id WHERE l.id = vb.occupant_id) END AS lot_item,
+       vb.board_x, vb.board_y
   FROM app.v_vessel_board vb
   JOIN app.premises pr ON pr.id = vb.premises_id
   LEFT JOIN app.batches b ON vb.occupant_kind = 'batch' AND b.id = vb.occupant_id

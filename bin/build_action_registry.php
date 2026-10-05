@@ -23,7 +23,7 @@ const FEATURE_KIND = [
     'vessels' => 'vessel', 'items' => 'item', 'suppliers' => 'supplier', 'lots' => 'lot', 'batches' => 'batch', 'purchase-orders' => 'po',
     'receipts' => 'receipt', 'production-orders' => 'order', 'kegs' => 'keg', 'orders' => 'sales_order', 'packaging-runs' => 'packaging_run',
     'customers' => 'customer', 'locations' => 'location', 'premises' => 'premises', 'products' => 'product', 'ttb-reports' => 'report',
-    'reason-codes' => 'reason',
+    'reason-codes' => 'reason', 'tanks' => 'vessel',
 ];
 /** Features the kernel manages itself while OS_ENABLED is on: no action tool is made for them. */
 const MANAGED_BY_KERNEL = ['users'];

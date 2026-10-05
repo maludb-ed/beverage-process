@@ -29,7 +29,7 @@ class TankBoardInput(Input):
 @records_tool("production_tank_board", "What is in every vessel",
               """Call for what is in every vessel right now, since when and at what stage (R23), or what is in one tank. Each
               vessel: kind, capacity, status, occupant (batch number or juice lot), product, volume in liters and gallons, fill
-              percent, occupied since, current stage and since when.""")
+              percent, occupied since, current stage and since when, and where it stands on the Tank view (floor_position, grid units).""")
 async def production_tank_board(p: TankBoardInput) -> dict:
     premises = await resolve_opt("premises", p.premises)
     vessel = await resolve_opt("vessel", p.vessel)
@@ -38,7 +38,8 @@ async def production_tank_board(p: TankBoardInput) -> dict:
         "vessel": r["vessel_name"], "kind": r["vessel_kind"], "capacity": vol(r["capacity_l"]), "vessel_status": r["vessel_status"],
         "occupant_kind": r["occupant_kind"], "occupant": r["occupant_label"], "product": r["product_name"] or r["lot_item"],
         "volume": vol(r["volume_l"]), "fill_pct": r["fill_pct"], "occupied_since": r["occupied_since"], "stage": r["current_stage_code"],
-        "stage_name": r["stage_name"], "stage_since": r["stage_since"], "batch_status": r["batch_status"]}) for r in rows]
+        "stage_name": r["stage_name"], "stage_since": r["stage_since"], "batch_status": r["batch_status"],
+        "floor_position": None if r["board_x"] is None else {"x": r["board_x"], "y": r["board_y"]}}) for r in rows]
     return {"resolved": echo(premises=premises, vessel=vessel), "count": len(out), "vessels": out,
             "occupied": sum(1 for o in out if o.get("occupant")), "total_volume": vol(sum(float(r["volume_l"] or 0) for r in rows))}
 

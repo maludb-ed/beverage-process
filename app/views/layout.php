@@ -17,7 +17,7 @@ $appName = (string) config('app.name', 'Cidery');
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="/assets/css/app-overrides.css?v=20261001c" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/app-overrides.css?v=20261005a" />
 </head>
 <body hx-boost="false">
     <nav class="nxl-navigation" id="left-sidenav">

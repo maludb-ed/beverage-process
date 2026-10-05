@@ -1,6 +1,6 @@
 {
     "generated_from": "config/manifest.json (docs/05-action-manifest.md)",
-    "generated_at": "2026-10-04T22:58:22+00:00",
+    "generated_at": "2026-10-05T00:06:13+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -560,6 +560,15 @@
             "built": true,
             "stub": false
         },
+        "tank-view": {
+            "screen": "tank-view",
+            "url": "/tanks/",
+            "section": "Slice 3: inventory",
+            "when": "see the tanks as they stand on the floor and how much each holds (juice, fermenting, base cider, finished); arrange them by dragging",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
         "rack-add": {
             "screen": "rack-add",
             "url": "/racks/new",
@@ -577,7 +586,7 @@
             "section": "Slice 3: inventory",
             "when": "add or change a numbered rack in a storage area — the form for an existing record",
             "params": [],
-            "built": false,
+            "built": true,
             "stub": false
         },
         "transfers-list": {
@@ -5945,6 +5954,40 @@
             "who": "receiving",
             "built": true,
             "controller": "suppliers/save.php"
+        },
+        "tank_position_set": {
+            "action": "tank_position_set",
+            "section": "Foundation",
+            "endpoint": "/tanks/{vessel}/position",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "vessel",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the tank (its number or name, or its id)"
+                },
+                {
+                    "name": "x",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "y",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "grid units where the tank stands on the Tank view"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "fixed": [],
+            "log_event": "tank.position_set",
+            "who": "production",
+            "built": true,
+            "controller": "tanks/position.php"
         },
         "transfer_create": {
             "action": "transfer_create",

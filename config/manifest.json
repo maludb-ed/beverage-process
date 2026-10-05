@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T18:19:27+00:00",
+  "generated_at": "2026-10-05T00:06:12+00:00",
   "generated_by": "services/actions_mcp/build_manifest.py",
   "source": "docs/05-action-manifest.md",
   "screens": [
@@ -15,8 +15,6 @@
       "navigable": true,
       "route": {
         "controller": "html/index.php",
-        "http": 200,
-        "sample_path": "/",
         "status": "ok"
       }
     },
@@ -32,8 +30,6 @@
       "navigable": true,
       "route": {
         "controller": "html/ama/index.php",
-        "http": 200,
-        "sample_path": "/ama/",
         "status": "ok"
       }
     },
@@ -49,8 +45,6 @@
       "navigable": false,
       "route": {
         "controller": "html/login.php",
-        "http": 200,
-        "sample_path": "/login",
         "status": "ok"
       },
       "not_navigable_reason": "the sign-in page is for signed-out users"
@@ -67,9 +61,7 @@
       "navigable": false,
       "route": {
         "controller": "html/auth/2fa.php",
-        "http": 303,
-        "sample_path": "/login/2fa",
-        "status": "error"
+        "status": "ok"
       },
       "not_navigable_reason": "part of signing in"
     },
@@ -85,8 +77,6 @@
       "navigable": false,
       "route": {
         "controller": "html/auth/reset.php",
-        "http": 200,
-        "sample_path": "/password/reset",
         "status": "ok"
       },
       "not_navigable_reason": "for signed-out users"
@@ -103,8 +93,6 @@
       "navigable": true,
       "route": {
         "controller": "html/settings/profile.php",
-        "http": 200,
-        "sample_path": "/settings/profile",
         "status": "ok"
       }
     },
@@ -120,8 +108,6 @@
       "navigable": true,
       "route": {
         "controller": "html/settings/2fa.php",
-        "http": 200,
-        "sample_path": "/settings/2fa",
         "status": "ok"
       }
     },
@@ -137,8 +123,6 @@
       "navigable": true,
       "route": {
         "controller": "html/settings/client.php",
-        "http": 200,
-        "sample_path": "/settings/client",
         "status": "ok"
       }
     },
@@ -154,8 +138,6 @@
       "navigable": true,
       "route": {
         "controller": "html/settings/mcp-tokens.php",
-        "http": 200,
-        "sample_path": "/settings/mcp-tokens",
         "status": "ok"
       }
     },
@@ -171,8 +153,6 @@
       "navigable": true,
       "route": {
         "controller": "html/activity/index.php",
-        "http": 200,
-        "sample_path": "/activity/",
         "status": "ok"
       }
     },
@@ -188,8 +168,6 @@
       "navigable": true,
       "route": {
         "controller": "html/premises/index.php",
-        "http": 200,
-        "sample_path": "/premises/",
         "status": "ok"
       }
     },
@@ -208,8 +186,6 @@
       "navigable": true,
       "route": {
         "controller": "html/premises/form.php",
-        "http": 200,
-        "sample_path": "/premises/new",
         "status": "ok"
       }
     },
@@ -225,8 +201,6 @@
       "navigable": true,
       "route": {
         "controller": "html/premises/form.php",
-        "http": 200,
-        "sample_path": "/premises/2/edit",
         "status": "ok"
       }
     },
@@ -242,8 +216,6 @@
       "navigable": true,
       "route": {
         "controller": "html/locations/index.php",
-        "http": 200,
-        "sample_path": "/locations/",
         "status": "ok"
       }
     },
@@ -262,8 +234,6 @@
       "navigable": true,
       "route": {
         "controller": "html/locations/form.php",
-        "http": 200,
-        "sample_path": "/locations/new",
         "status": "ok"
       }
     },
@@ -279,8 +249,6 @@
       "navigable": true,
       "route": {
         "controller": "html/locations/form.php",
-        "http": 200,
-        "sample_path": "/locations/4/edit",
         "status": "ok"
       }
     },
@@ -296,8 +264,6 @@
       "navigable": true,
       "route": {
         "controller": "html/vessels/index.php",
-        "http": 200,
-        "sample_path": "/vessels/",
         "status": "ok"
       }
     },
@@ -317,8 +283,6 @@
       "navigable": true,
       "route": {
         "controller": "html/vessels/form.php",
-        "http": 200,
-        "sample_path": "/vessels/new",
         "status": "ok"
       }
     },
@@ -334,8 +298,6 @@
       "navigable": true,
       "route": {
         "controller": "html/vessels/form.php",
-        "http": 200,
-        "sample_path": "/vessels/1/edit",
         "status": "ok"
       }
     },
@@ -351,8 +313,6 @@
       "navigable": true,
       "route": {
         "controller": "html/items/index.php",
-        "http": 200,
-        "sample_path": "/items/",
         "status": "ok"
       }
     },
@@ -372,8 +332,6 @@
       "navigable": true,
       "route": {
         "controller": "html/items/form.php",
-        "http": 200,
-        "sample_path": "/items/new",
         "status": "ok"
       }
     },
@@ -389,8 +347,6 @@
       "navigable": true,
       "route": {
         "controller": "html/items/form.php",
-        "http": 200,
-        "sample_path": "/items/2/edit",
         "status": "ok"
       }
     },
@@ -406,8 +362,6 @@
       "navigable": true,
       "route": {
         "controller": "html/items/view.php",
-        "http": 200,
-        "sample_path": "/items/2",
         "status": "ok"
       }
     },
@@ -425,8 +379,6 @@
       "navigable": true,
       "route": {
         "controller": "html/item-classes/index.php",
-        "http": 200,
-        "sample_path": "/item-classes/",
         "status": "ok"
       }
     },
@@ -444,8 +396,6 @@
       "navigable": true,
       "route": {
         "controller": "html/item-classes/form.php",
-        "http": 200,
-        "sample_path": "/item-classes/new",
         "status": "ok"
       }
     },
@@ -461,8 +411,6 @@
       "navigable": true,
       "route": {
         "controller": "html/item-classes/form.php",
-        "http": 200,
-        "sample_path": "/item-classes/5/edit",
         "status": "ok"
       }
     },
@@ -478,8 +426,6 @@
       "navigable": true,
       "route": {
         "controller": "html/units/index.php",
-        "http": 200,
-        "sample_path": "/units/",
         "status": "ok"
       }
     },
@@ -495,8 +441,6 @@
       "navigable": true,
       "route": {
         "controller": "html/suppliers/index.php",
-        "http": 200,
-        "sample_path": "/suppliers/",
         "status": "ok"
       }
     },
@@ -515,8 +459,6 @@
       "navigable": true,
       "route": {
         "controller": "html/suppliers/form.php",
-        "http": 200,
-        "sample_path": "/suppliers/new",
         "status": "ok"
       }
     },
@@ -532,8 +474,6 @@
       "navigable": true,
       "route": {
         "controller": "html/suppliers/form.php",
-        "http": 200,
-        "sample_path": "/suppliers/2/edit",
         "status": "ok"
       }
     },
@@ -549,8 +489,6 @@
       "navigable": true,
       "route": {
         "controller": "html/suppliers/view.php",
-        "http": 200,
-        "sample_path": "/suppliers/2",
         "status": "ok"
       }
     },
@@ -566,8 +504,6 @@
       "navigable": true,
       "route": {
         "controller": "html/users/index.php",
-        "http": 200,
-        "sample_path": "/users/",
         "status": "ok"
       }
     },
@@ -586,8 +522,6 @@
       "navigable": true,
       "route": {
         "controller": "html/users/form.php",
-        "http": 200,
-        "sample_path": "/users/new",
         "status": "ok"
       }
     },
@@ -603,8 +537,6 @@
       "navigable": true,
       "route": {
         "controller": "html/users/form.php",
-        "http": 200,
-        "sample_path": "/users/5/edit",
         "status": "ok"
       }
     },
@@ -620,8 +552,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reason-codes/index.php",
-        "http": 200,
-        "sample_path": "/reason-codes/",
         "status": "ok"
       }
     },
@@ -637,8 +567,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reason-codes/form.php",
-        "http": 200,
-        "sample_path": "/reason-codes/new",
         "status": "ok"
       }
     },
@@ -654,8 +582,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reason-codes/form.php",
-        "http": 200,
-        "sample_path": "/reason-codes/1/edit",
         "status": "ok"
       }
     },
@@ -671,8 +597,6 @@
       "navigable": true,
       "route": {
         "controller": "html/purchase-orders/index.php",
-        "http": 200,
-        "sample_path": "/purchase-orders/",
         "status": "ok"
       }
     },
@@ -693,8 +617,6 @@
       "navigable": true,
       "route": {
         "controller": "html/purchase-orders/form.php",
-        "http": 200,
-        "sample_path": "/purchase-orders/new",
         "status": "ok"
       }
     },
@@ -710,8 +632,6 @@
       "navigable": true,
       "route": {
         "controller": "html/purchase-orders/form.php",
-        "http": 200,
-        "sample_path": "/purchase-orders/1/edit",
         "status": "ok"
       }
     },
@@ -727,8 +647,6 @@
       "navigable": true,
       "route": {
         "controller": "html/purchase-orders/view.php",
-        "http": 200,
-        "sample_path": "/purchase-orders/1",
         "status": "ok"
       }
     },
@@ -744,8 +662,6 @@
       "navigable": true,
       "route": {
         "controller": "html/receipts/index.php",
-        "http": 200,
-        "sample_path": "/receipts/",
         "status": "ok"
       }
     },
@@ -764,8 +680,6 @@
       "navigable": true,
       "route": {
         "controller": "html/receipts/form.php",
-        "http": 200,
-        "sample_path": "/receipts/new",
         "status": "ok"
       }
     },
@@ -781,8 +695,6 @@
       "navigable": true,
       "route": {
         "controller": "html/receipts/form.php",
-        "http": 200,
-        "sample_path": "/receipts/1/edit",
         "status": "ok"
       }
     },
@@ -798,8 +710,6 @@
       "navigable": true,
       "route": {
         "controller": "html/receipts/view.php",
-        "http": 200,
-        "sample_path": "/receipts/1",
         "status": "ok"
       }
     },
@@ -815,8 +725,6 @@
       "navigable": true,
       "route": {
         "controller": "html/receipts/projected.php",
-        "http": 200,
-        "sample_path": "/receipts/projected",
         "status": "ok"
       }
     },
@@ -832,8 +740,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lots/index.php",
-        "http": 200,
-        "sample_path": "/lots/",
         "status": "ok"
       }
     },
@@ -849,8 +755,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lots/view.php",
-        "http": 200,
-        "sample_path": "/lots/2",
         "status": "ok"
       }
     },
@@ -866,8 +770,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lots/form.php",
-        "http": 200,
-        "sample_path": "/lots/2/edit",
         "status": "ok"
       }
     },
@@ -883,8 +785,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lots/coa-form.php",
-        "http": 200,
-        "sample_path": "/lots/2/coa/new",
         "status": "ok"
       }
     },
@@ -900,8 +800,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lots/release.php",
-        "http": 200,
-        "sample_path": "/lots/2/release",
         "status": "ok"
       }
     },
@@ -917,8 +815,6 @@
       "navigable": true,
       "route": {
         "controller": "html/receipts/putaway.php",
-        "http": 200,
-        "sample_path": "/receipts/1/putaway",
         "status": "ok"
       }
     },
@@ -934,8 +830,6 @@
       "navigable": true,
       "route": {
         "controller": "html/inventory/materials.php",
-        "http": 200,
-        "sample_path": "/inventory/materials",
         "status": "ok"
       }
     },
@@ -951,8 +845,6 @@
       "navigable": true,
       "route": {
         "controller": "html/inventory/finished.php",
-        "http": 200,
-        "sample_path": "/inventory/finished",
         "status": "ok"
       }
     },
@@ -972,8 +864,6 @@
       "navigable": true,
       "route": {
         "controller": "html/inventory/movements.php",
-        "http": 200,
-        "sample_path": "/inventory/movements",
         "status": "ok"
       }
     },
@@ -989,8 +879,6 @@
       "navigable": true,
       "route": {
         "controller": "html/inventory/reorder.php",
-        "http": 200,
-        "sample_path": "/inventory/reorder",
         "status": "ok"
       }
     },
@@ -1006,8 +894,6 @@
       "navigable": true,
       "route": {
         "controller": "html/racks/index.php",
-        "http": 200,
-        "sample_path": "/racks/",
         "status": "ok"
       }
     },
@@ -1023,8 +909,21 @@
       "navigable": true,
       "route": {
         "controller": "html/racks/fifo.php",
-        "http": 200,
-        "sample_path": "/racks/fifo",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "tank-view",
+      "url": "/tanks/",
+      "title": "Tank view",
+      "when": "see the tanks as they stand on the floor and how much each holds (juice, fermenting, base cider, finished); arrange them by dragging",
+      "section": "Slice 3: inventory",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/tanks/index.php",
         "status": "ok"
       }
     },
@@ -1042,8 +941,6 @@
       "navigable": true,
       "route": {
         "controller": "html/racks/form.php",
-        "http": 200,
-        "sample_path": "/racks/new",
         "status": "ok"
       }
     },
@@ -1056,14 +953,11 @@
       "prefill": [],
       "record_kind": null,
       "search": false,
-      "navigable": false,
+      "navigable": true,
       "route": {
         "controller": "html/racks/form.php",
-        "http": 404,
-        "sample_path": "/racks/5/edit",
-        "status": "missing"
-      },
-      "not_navigable_reason": "the screen is not built yet (missing)"
+        "status": "ok"
+      }
     },
     {
       "id": "transfers-list",
@@ -1077,8 +971,6 @@
       "navigable": true,
       "route": {
         "controller": "html/transfers/index.php",
-        "http": 200,
-        "sample_path": "/transfers/",
         "status": "ok"
       }
     },
@@ -1100,8 +992,6 @@
       "navigable": true,
       "route": {
         "controller": "html/transfers/form.php",
-        "http": 200,
-        "sample_path": "/transfers/new",
         "status": "ok"
       }
     },
@@ -1117,8 +1007,6 @@
       "navigable": true,
       "route": {
         "controller": "html/transfers/view.php",
-        "http": 200,
-        "sample_path": "/transfers/1",
         "status": "ok"
       }
     },
@@ -1134,8 +1022,6 @@
       "navigable": true,
       "route": {
         "controller": "html/adjustments/index.php",
-        "http": 200,
-        "sample_path": "/adjustments/",
         "status": "ok"
       }
     },
@@ -1157,8 +1043,6 @@
       "navigable": true,
       "route": {
         "controller": "html/adjustments/form.php",
-        "http": 200,
-        "sample_path": "/adjustments/new",
         "status": "ok"
       }
     },
@@ -1174,8 +1058,6 @@
       "navigable": true,
       "route": {
         "controller": "html/adjustments/view.php",
-        "http": 200,
-        "sample_path": "/adjustments/1",
         "status": "ok"
       }
     },
@@ -1191,8 +1073,6 @@
       "navigable": true,
       "route": {
         "controller": "html/counts/index.php",
-        "http": 200,
-        "sample_path": "/counts/",
         "status": "ok"
       }
     },
@@ -1211,8 +1091,6 @@
       "navigable": true,
       "route": {
         "controller": "html/counts/form.php",
-        "http": 200,
-        "sample_path": "/counts/new",
         "status": "ok"
       }
     },
@@ -1228,8 +1106,6 @@
       "navigable": true,
       "route": {
         "controller": "html/counts/view.php",
-        "http": 200,
-        "sample_path": "/counts/1",
         "status": "ok"
       }
     },
@@ -1245,8 +1121,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/index.php",
-        "http": 200,
-        "sample_path": "/products/",
         "status": "ok"
       }
     },
@@ -1265,8 +1139,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/form.php",
-        "http": 200,
-        "sample_path": "/products/new",
         "status": "ok"
       }
     },
@@ -1282,8 +1154,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/form.php",
-        "http": 200,
-        "sample_path": "/products/1/edit",
         "status": "ok"
       }
     },
@@ -1299,8 +1169,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/view.php",
-        "http": 200,
-        "sample_path": "/products/1",
         "status": "ok"
       }
     },
@@ -1318,8 +1186,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/recipes-form.php",
-        "http": 200,
-        "sample_path": "/products/1/recipes/new",
         "status": "ok"
       }
     },
@@ -1335,10 +1201,7 @@
       "navigable": true,
       "route": {
         "controller": "html/recipes/form.php",
-        "http": 409,
-        "sample_path": "/recipes/1/edit",
-        "status": "ok",
-        "renders_screen": "recipe-view"
+        "status": "ok"
       }
     },
     {
@@ -1353,8 +1216,6 @@
       "navigable": true,
       "route": {
         "controller": "html/recipes/view.php",
-        "http": 200,
-        "sample_path": "/recipes/1",
         "status": "ok"
       }
     },
@@ -1370,8 +1231,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-configs/index.php",
-        "http": 200,
-        "sample_path": "/packaging-configs/",
         "status": "ok"
       }
     },
@@ -1390,8 +1249,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-configs/form.php",
-        "http": 200,
-        "sample_path": "/packaging-configs/new",
         "status": "ok"
       }
     },
@@ -1407,8 +1264,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-configs/form.php",
-        "http": 200,
-        "sample_path": "/packaging-configs/1/edit",
         "status": "ok"
       }
     },
@@ -1424,8 +1279,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/specs.php",
-        "http": 200,
-        "sample_path": "/products/1/specs",
         "status": "ok"
       }
     },
@@ -1444,8 +1297,6 @@
       "navigable": true,
       "route": {
         "controller": "html/products/specs-form.php",
-        "http": 200,
-        "sample_path": "/products/1/specs/new",
         "status": "ok"
       }
     },
@@ -1461,8 +1312,6 @@
       "navigable": true,
       "route": {
         "controller": "html/specs/form.php",
-        "http": 200,
-        "sample_path": "/specs/1/edit",
         "status": "ok"
       }
     },
@@ -1478,8 +1327,6 @@
       "navigable": true,
       "route": {
         "controller": "html/standard-costs/index.php",
-        "http": 200,
-        "sample_path": "/standard-costs/",
         "status": "ok"
       }
     },
@@ -1498,8 +1345,6 @@
       "navigable": true,
       "route": {
         "controller": "html/standard-costs/form.php",
-        "http": 200,
-        "sample_path": "/standard-costs/new",
         "status": "ok"
       }
     },
@@ -1515,8 +1360,6 @@
       "navigable": true,
       "route": {
         "controller": "html/approvals/index.php",
-        "http": 200,
-        "sample_path": "/approvals/",
         "status": "ok"
       }
     },
@@ -1535,8 +1378,6 @@
       "navigable": true,
       "route": {
         "controller": "html/approvals/form.php",
-        "http": 200,
-        "sample_path": "/approvals/new",
         "status": "ok"
       }
     },
@@ -1552,8 +1393,6 @@
       "navigable": true,
       "route": {
         "controller": "html/approvals/form.php",
-        "http": 200,
-        "sample_path": "/approvals/1/edit",
         "status": "ok"
       }
     },
@@ -1569,8 +1408,6 @@
       "navigable": true,
       "route": {
         "controller": "html/production-orders/index.php",
-        "http": 200,
-        "sample_path": "/production-orders/",
         "status": "ok"
       }
     },
@@ -1590,8 +1427,6 @@
       "navigable": true,
       "route": {
         "controller": "html/production-orders/form.php",
-        "http": 200,
-        "sample_path": "/production-orders/new",
         "status": "ok"
       }
     },
@@ -1607,8 +1442,6 @@
       "navigable": true,
       "route": {
         "controller": "html/production-orders/form.php",
-        "http": 200,
-        "sample_path": "/production-orders/1/edit",
         "status": "ok"
       }
     },
@@ -1624,8 +1457,6 @@
       "navigable": true,
       "route": {
         "controller": "html/production-orders/view.php",
-        "http": 200,
-        "sample_path": "/production-orders/1",
         "status": "ok"
       }
     },
@@ -1641,8 +1472,6 @@
       "navigable": true,
       "route": {
         "controller": "html/production-orders/calendar.php",
-        "http": 200,
-        "sample_path": "/production-orders/calendar",
         "status": "ok"
       }
     },
@@ -1658,8 +1487,6 @@
       "navigable": true,
       "route": {
         "controller": "html/press-runs/index.php",
-        "http": 200,
-        "sample_path": "/press-runs/",
         "status": "ok"
       }
     },
@@ -1677,8 +1504,6 @@
       "navigable": true,
       "route": {
         "controller": "html/press-runs/form.php",
-        "http": 200,
-        "sample_path": "/press-runs/new",
         "status": "ok"
       }
     },
@@ -1694,8 +1519,6 @@
       "navigable": true,
       "route": {
         "controller": "html/press-runs/form.php",
-        "http": 200,
-        "sample_path": "/press-runs/1/edit",
         "status": "ok"
       }
     },
@@ -1711,8 +1534,6 @@
       "navigable": true,
       "route": {
         "controller": "html/press-runs/view.php",
-        "http": 200,
-        "sample_path": "/press-runs/1",
         "status": "ok"
       }
     },
@@ -1728,8 +1549,6 @@
       "navigable": true,
       "route": {
         "controller": "html/tank-board/index.php",
-        "http": 200,
-        "sample_path": "/tank-board/",
         "status": "ok"
       }
     },
@@ -1745,8 +1564,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/index.php",
-        "http": 200,
-        "sample_path": "/batches/",
         "status": "ok"
       }
     },
@@ -1766,8 +1583,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/form.php",
-        "http": 200,
-        "sample_path": "/batches/new",
         "status": "ok"
       }
     },
@@ -1783,8 +1598,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/view.php",
-        "http": 200,
-        "sample_path": "/batches/2",
         "status": "ok"
       }
     },
@@ -1800,8 +1613,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/form.php",
-        "http": 200,
-        "sample_path": "/batches/2/edit",
         "status": "ok"
       }
     },
@@ -1820,8 +1631,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/readings-form.php",
-        "http": 200,
-        "sample_path": "/batches/2/readings/new",
         "status": "ok"
       }
     },
@@ -1841,8 +1650,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/additions-form.php",
-        "http": 200,
-        "sample_path": "/batches/2/additions/new",
         "status": "ok"
       }
     },
@@ -1860,8 +1667,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/stage.php",
-        "http": 200,
-        "sample_path": "/batches/2/stage",
         "status": "ok"
       }
     },
@@ -1881,8 +1686,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/transfer.php",
-        "http": 200,
-        "sample_path": "/batches/2/transfer",
         "status": "ok"
       }
     },
@@ -1898,8 +1701,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/split.php",
-        "http": 200,
-        "sample_path": "/batches/2/split",
         "status": "ok"
       }
     },
@@ -1917,8 +1718,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/blend.php",
-        "http": 200,
-        "sample_path": "/batches/blend",
         "status": "ok"
       }
     },
@@ -1937,8 +1736,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/losses-form.php",
-        "http": 200,
-        "sample_path": "/batches/2/losses/new",
         "status": "ok"
       }
     },
@@ -1954,8 +1751,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/dump.php",
-        "http": 200,
-        "sample_path": "/batches/2/dump",
         "status": "ok"
       }
     },
@@ -1974,8 +1769,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/yeast-form.php",
-        "http": 200,
-        "sample_path": "/batches/2/yeast/new",
         "status": "ok"
       }
     },
@@ -1994,8 +1787,6 @@
       "navigable": true,
       "route": {
         "controller": "html/dispositions/form.php",
-        "http": 200,
-        "sample_path": "/dispositions/new",
         "status": "ok"
       }
     },
@@ -2011,8 +1802,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-runs/index.php",
-        "http": 200,
-        "sample_path": "/packaging-runs/",
         "status": "ok"
       }
     },
@@ -2031,8 +1820,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-runs/form.php",
-        "http": 200,
-        "sample_path": "/packaging-runs/new",
         "status": "ok"
       }
     },
@@ -2048,8 +1835,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-runs/form.php",
-        "http": 200,
-        "sample_path": "/packaging-runs/1/edit",
         "status": "ok"
       }
     },
@@ -2065,8 +1850,6 @@
       "navigable": true,
       "route": {
         "controller": "html/packaging-runs/view.php",
-        "http": 200,
-        "sample_path": "/packaging-runs/1",
         "status": "ok"
       }
     },
@@ -2082,8 +1865,6 @@
       "navigable": true,
       "route": {
         "controller": "html/finished-lots/index.php",
-        "http": 200,
-        "sample_path": "/finished-lots/",
         "status": "ok"
       }
     },
@@ -2099,8 +1880,6 @@
       "navigable": true,
       "route": {
         "controller": "html/finished-lots/view.php",
-        "http": 200,
-        "sample_path": "/finished-lots/10",
         "status": "ok"
       }
     },
@@ -2116,8 +1895,6 @@
       "navigable": true,
       "route": {
         "controller": "html/kegs/index.php",
-        "http": 200,
-        "sample_path": "/kegs/",
         "status": "ok"
       }
     },
@@ -2136,8 +1913,6 @@
       "navigable": true,
       "route": {
         "controller": "html/kegs/form.php",
-        "http": 200,
-        "sample_path": "/kegs/new",
         "status": "ok"
       }
     },
@@ -2153,8 +1928,6 @@
       "navigable": true,
       "route": {
         "controller": "html/kegs/form.php",
-        "http": 200,
-        "sample_path": "/kegs/1/edit",
         "status": "ok"
       }
     },
@@ -2170,8 +1943,6 @@
       "navigable": true,
       "route": {
         "controller": "html/kegs/view.php",
-        "http": 200,
-        "sample_path": "/kegs/1",
         "status": "ok"
       }
     },
@@ -2189,8 +1960,6 @@
       "navigable": true,
       "route": {
         "controller": "html/kegs/return.php",
-        "http": 200,
-        "sample_path": "/kegs/return",
         "status": "ok"
       }
     },
@@ -2206,8 +1975,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lab/index.php",
-        "http": 200,
-        "sample_path": "/lab/",
         "status": "ok"
       }
     },
@@ -2227,8 +1994,6 @@
       "navigable": true,
       "route": {
         "controller": "html/lab/form.php",
-        "http": 200,
-        "sample_path": "/lab/new",
         "status": "ok"
       }
     },
@@ -2244,8 +2009,6 @@
       "navigable": true,
       "route": {
         "controller": "html/sensory/index.php",
-        "http": 200,
-        "sample_path": "/sensory/",
         "status": "ok"
       }
     },
@@ -2263,8 +2026,6 @@
       "navigable": true,
       "route": {
         "controller": "html/sensory/form.php",
-        "http": 200,
-        "sample_path": "/sensory/new",
         "status": "ok"
       }
     },
@@ -2280,8 +2041,6 @@
       "navigable": true,
       "route": {
         "controller": "html/releases/index.php",
-        "http": 200,
-        "sample_path": "/releases/",
         "status": "ok"
       }
     },
@@ -2297,8 +2056,6 @@
       "navigable": true,
       "route": {
         "controller": "html/batches/release.php",
-        "http": 200,
-        "sample_path": "/batches/2/release",
         "status": "ok"
       }
     },
@@ -2316,8 +2073,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reports/yields.php",
-        "http": 200,
-        "sample_path": "/reports/yields",
         "status": "ok"
       }
     },
@@ -2335,8 +2090,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reports/juice-yield.php",
-        "http": 200,
-        "sample_path": "/reports/juice-yield",
         "status": "ok"
       }
     },
@@ -2354,8 +2107,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reports/batch-costs.php",
-        "http": 200,
-        "sample_path": "/reports/batch-costs",
         "status": "ok"
       }
     },
@@ -2373,8 +2124,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reports/valuation.php",
-        "http": 200,
-        "sample_path": "/reports/valuation",
         "status": "ok"
       }
     },
@@ -2390,8 +2139,6 @@
       "navigable": true,
       "route": {
         "controller": "html/customers/index.php",
-        "http": 200,
-        "sample_path": "/customers/",
         "status": "ok"
       }
     },
@@ -2410,8 +2157,6 @@
       "navigable": true,
       "route": {
         "controller": "html/customers/form.php",
-        "http": 200,
-        "sample_path": "/customers/new",
         "status": "ok"
       }
     },
@@ -2427,8 +2172,6 @@
       "navigable": true,
       "route": {
         "controller": "html/customers/form.php",
-        "http": 200,
-        "sample_path": "/customers/1/edit",
         "status": "ok"
       }
     },
@@ -2444,8 +2187,6 @@
       "navigable": true,
       "route": {
         "controller": "html/customers/view.php",
-        "http": 200,
-        "sample_path": "/customers/1",
         "status": "ok"
       }
     },
@@ -2461,8 +2202,6 @@
       "navigable": true,
       "route": {
         "controller": "html/removals/index.php",
-        "http": 200,
-        "sample_path": "/removals/",
         "status": "ok"
       }
     },
@@ -2481,8 +2220,6 @@
       "navigable": true,
       "route": {
         "controller": "html/removals/form.php",
-        "http": 200,
-        "sample_path": "/removals/new",
         "status": "ok"
       }
     },
@@ -2498,8 +2235,6 @@
       "navigable": true,
       "route": {
         "controller": "html/removals/form.php",
-        "http": 200,
-        "sample_path": "/removals/15/edit",
         "status": "ok"
       }
     },
@@ -2515,8 +2250,6 @@
       "navigable": true,
       "route": {
         "controller": "html/removals/view.php",
-        "http": 200,
-        "sample_path": "/removals/15",
         "status": "ok"
       }
     },
@@ -2534,8 +2267,6 @@
       "navigable": true,
       "route": {
         "controller": "html/removals/form.php",
-        "http": 200,
-        "sample_path": "/removals/new?direction=in",
         "status": "ok"
       }
     },
@@ -2551,8 +2282,6 @@
       "navigable": true,
       "route": {
         "controller": "html/ttb-reports/index.php",
-        "http": 200,
-        "sample_path": "/ttb-reports/",
         "status": "ok"
       }
     },
@@ -2570,8 +2299,6 @@
       "navigable": true,
       "route": {
         "controller": "html/ttb-reports/form.php",
-        "http": 200,
-        "sample_path": "/ttb-reports/new",
         "status": "ok"
       }
     },
@@ -2587,8 +2314,6 @@
       "navigable": true,
       "route": {
         "controller": "html/ttb-reports/view.php",
-        "http": 200,
-        "sample_path": "/ttb-reports/1",
         "status": "ok"
       }
     },
@@ -2607,8 +2332,6 @@
       "navigable": true,
       "route": {
         "controller": "html/trace/index.php",
-        "http": 200,
-        "sample_path": "/trace/",
         "status": "ok"
       }
     },
@@ -2624,8 +2347,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/index.php",
-        "http": 200,
-        "sample_path": "/orders/",
         "status": "ok"
       }
     },
@@ -2643,8 +2364,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/form.php",
-        "http": 200,
-        "sample_path": "/orders/new",
         "status": "ok"
       }
     },
@@ -2660,8 +2379,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/form.php",
-        "http": 200,
-        "sample_path": "/orders/1/edit",
         "status": "ok"
       }
     },
@@ -2677,8 +2394,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/view.php",
-        "http": 200,
-        "sample_path": "/orders/1",
         "status": "ok"
       }
     },
@@ -2694,8 +2409,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/package.php",
-        "http": 200,
-        "sample_path": "/orders/1/package",
         "status": "ok"
       }
     },
@@ -2713,8 +2426,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/package.php",
-        "http": 200,
-        "sample_path": "/orders/package",
         "status": "ok"
       }
     },
@@ -2730,8 +2441,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/to-package.php",
-        "http": 200,
-        "sample_path": "/orders/to-package",
         "status": "ok"
       }
     },
@@ -2747,8 +2456,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/standing.php",
-        "http": 200,
-        "sample_path": "/orders/standing",
         "status": "ok"
       }
     },
@@ -2766,8 +2473,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/standing-form.php",
-        "http": 200,
-        "sample_path": "/orders/standing/new",
         "status": "ok"
       }
     },
@@ -2783,8 +2488,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/standing-edit.php",
-        "http": 200,
-        "sample_path": "/orders/standing/1/edit",
         "status": "ok"
       }
     },
@@ -2800,8 +2503,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/standing.php",
-        "http": 200,
-        "sample_path": "/orders/standing/1",
         "status": "ok"
       }
     },
@@ -2817,8 +2518,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/import.php",
-        "http": 200,
-        "sample_path": "/orders/import",
         "status": "ok"
       }
     },
@@ -2834,8 +2533,6 @@
       "navigable": true,
       "route": {
         "controller": "html/orders/import.php",
-        "http": 200,
-        "sample_path": "/orders/import/1",
         "status": "ok"
       }
     },
@@ -2853,8 +2550,6 @@
       "navigable": true,
       "route": {
         "controller": "html/planning/index.php",
-        "http": 200,
-        "sample_path": "/planning/",
         "status": "ok"
       }
     },
@@ -2872,8 +2567,6 @@
       "navigable": true,
       "route": {
         "controller": "html/planning/production.php",
-        "http": 200,
-        "sample_path": "/planning/production",
         "status": "ok"
       }
     },
@@ -2891,8 +2584,6 @@
       "navigable": true,
       "route": {
         "controller": "html/planning/purchasing.php",
-        "http": 200,
-        "sample_path": "/planning/purchasing",
         "status": "ok"
       }
     },
@@ -2908,8 +2599,6 @@
       "navigable": true,
       "route": {
         "controller": "html/planning/forecast.php",
-        "http": 200,
-        "sample_path": "/planning/forecast",
         "status": "ok"
       }
     },
@@ -2929,8 +2618,6 @@
       "navigable": true,
       "route": {
         "controller": "html/reports/orders.php",
-        "http": 200,
-        "sample_path": "/reports/orders",
         "status": "ok"
       }
     }
@@ -2999,6 +2686,17 @@
       "undo": "restore_prior",
       "confirm": "no",
       "role": "owner",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "tank_position_set",
+      "section": "Foundation",
+      "endpoint": "POST /tanks/{id}/position",
+      "params": "x, y (grid units where the tank stands on the Tank view)",
+      "undo": "restore_prior",
+      "confirm": "no",
+      "role": "production",
       "exposed_by": null,
       "exposed": false
     },
@@ -4404,7 +4102,7 @@
     {
       "name": "navigate",
       "title": "Navigate",
-      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class, kind]\n  item-edit — Item [record]\n  item-view — Item [record]\n  item-classes-list — Item classes [prefill kind; q]\n  item-class-add — Item class [prefill kind]\n  item-class-edit — Item class [record]\n  units-list — Units\n  suppliers-list — Vendors [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on, item, qty]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  receipts-projected — Projected\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-materials — Materials\n  inventory-finished — Finished product\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  rack-add — Rack [prefill rack_number]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]\n\nCustomer orders and planning (docs/11, docs/12):\n  orders-list — Customer orders [q]\n  order-add — Customer order [prefill customer]\n  order-edit — Customer order [record]\n  order-view — Customer order [record]\n  order-package — Package for an order [record]\n  orders-package-format — Package for orders [prefill format]\n  orders-to-package — Packaging queue\n  standing-orders-list — Standing orders [q]\n  standing-order-add — Standing order [prefill customer]\n  standing-order-edit — Standing order [record]\n  standing-order-view — Standing order [record; q]\n  orders-import — Import orders\n  order-import-view — Order import [record]\n  planning — Projections [prefill demand]\n  planning-production — Suggested production [prefill demand]\n  planning-purchasing — Suggested purchases [prefill demand]\n  planning-forecast — Forecast\n  report-orders — Order history [prefill group_by, date_from, date_to]",
+      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class, kind]\n  item-edit — Item [record]\n  item-view — Item [record]\n  item-classes-list — Item classes [prefill kind; q]\n  item-class-add — Item class [prefill kind]\n  item-class-edit — Item class [record]\n  units-list — Units\n  suppliers-list — Vendors [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on, item, qty]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  receipts-projected — Projected\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-materials — Materials\n  inventory-finished — Finished product\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  tank-view — Tank view\n  rack-add — Rack [prefill rack_number]\n  rack-edit — Rack [record]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]\n\nCustomer orders and planning (docs/11, docs/12):\n  orders-list — Customer orders [q]\n  order-add — Customer order [prefill customer]\n  order-edit — Customer order [record]\n  order-view — Customer order [record]\n  order-package — Package for an order [record]\n  orders-package-format — Package for orders [prefill format]\n  orders-to-package — Packaging queue\n  standing-orders-list — Standing orders [q]\n  standing-order-add — Standing order [prefill customer]\n  standing-order-edit — Standing order [record]\n  standing-order-view — Standing order [record; q]\n  orders-import — Import orders\n  order-import-view — Order import [record]\n  planning — Projections [prefill demand]\n  planning-production — Suggested production [prefill demand]\n  planning-purchasing — Suggested purchases [prefill demand]\n  planning-forecast — Forecast\n  report-orders — Order history [prefill group_by, date_from, date_to]",
       "input_schema": {
         "properties": {
           "screen": {
@@ -4882,7 +4580,7 @@
             "type": "number"
           },
           "reason": {
-            "description": "Loss reason code or name: DUMP (Batch dumped, exceptional), BREAK (Breakage, exceptional), EVAP (Evaporation, expected), FILTER (Filtration loss, expected), LEES (Lees and sediment, expected), PKG (Packaging line loss, expected), RACK (Racking and transfer loss, expected), SAMPLE (Sampling and testing, expected), SPILL (Spill, exceptional), TOPUP (Top up loss, expected)",
+            "description": "Loss reason code or name: DUMP (Batch dumped, exceptional), BREAK (Breakage, exceptional), EVAP (Evaporation, expected), FILTER (Filtration loss, expected), LEES (Lees and sediment, expected), PKG (Packaging line loss, expected), RACK (Racking and transfer loss, expected), SAMPLE (Sampling and testing, expected), SPILL (Spill, exceptional)",
             "title": "Reason",
             "type": "string"
           },
@@ -7641,9 +7339,5 @@
       "controller": "html/orders/standing-active.php"
     }
   ],
-  "flagged": [
-    "login-2fa /login/2fa: error (HTTP 303, controller html/auth/2fa.php) — not navigable",
-    "rack-edit /racks/{id}/edit: missing (HTTP 404, controller html/racks/form.php) — not navigable",
-    "recipe-edit: the controller stamps data-screen=\"recipe-view\" (doc id differs)"
-  ]
+  "flagged": []
 }

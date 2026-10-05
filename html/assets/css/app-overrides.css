@@ -127,3 +127,33 @@ html.app-skin-dark .assistant-reply { background: #121a2d; border-color: #19253f
    enough to read an order badge and item line; the table scrolls inside its card on phones. */
 .receipts-projected-table td { min-width: 128px; vertical-align: top; }
 .receipts-projected-table td.receipts-projected-today { box-shadow: inset 0 0 0 2px var(--bs-primary); }
+
+/* TANK VIEW (tanks/partials/board.php): the floor is a dotted canvas; each vessel is a card at its grid position
+   with a glass that fills to the volume held. Dragging the name moves it (production); the canvas scrolls sideways. */
+.tank-view-scroll { overflow: auto; border: 1px solid var(--bs-border-color); border-radius: 8px; background: var(--bs-body-bg); }
+.tank-view-canvas { position: relative; min-width: 100%;
+    background-image: radial-gradient(circle, rgba(128, 128, 128, 0.28) 1px, transparent 1px); background-size: 20px 20px; }
+.tank-view-card { position: absolute; width: 160px; padding: 8px 8px 10px; border: 1px solid var(--bs-border-color); border-radius: 10px;
+    background: var(--bs-card-bg, #fff); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); text-align: center; user-select: none; }
+.tank-view-card-unplaced { border-style: dashed; }
+.tank-view-card-out { opacity: 0.6; }
+.tank-view-card-cleaning .tank-view-glass { border-color: var(--bs-info); }
+.tank-view-dragging { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18); z-index: 10; opacity: 0.95; }
+.tank-view-unsaved { border-color: var(--bs-danger); }
+.tank-view-handle { font-weight: 700; cursor: grab; touch-action: none; padding: 2px 0 6px; }
+.tank-view-handle-fixed { cursor: default; touch-action: auto; }
+.tank-view-dragging .tank-view-handle { cursor: grabbing; }
+.tank-view-glass { position: relative; width: 70px; height: 120px; margin: 0 auto; border: 2px solid rgba(128, 128, 128, 0.45);
+    border-top-width: 6px; border-radius: 10px 10px 26px 26px; overflow: hidden; background: rgba(128, 128, 128, 0.08); }
+.tank-view-liquid { position: absolute; left: 0; right: 0; bottom: 0; transition: height 0.3s ease; }
+.tank-view-liquid-juice { background: #f1e3a3; }
+.tank-view-liquid-fermenting { background: #d9c45a; }
+.tank-view-liquid-conditioning { background: #e4b84a; }
+.tank-view-liquid-finished { background: #c88a2c; }
+.tank-view-pct { position: absolute; top: 8px; left: 0; right: 0; font-size: 11px; font-weight: 600; color: var(--bs-body-color); }
+.tank-view-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: 1px; }
+.tank-view-what { margin-top: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tank-view-sub { font-size: 11px; color: var(--bs-secondary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tank-view-volume { font-size: 11px; margin: 2px 0 8px; }
+.tank-view-actions .btn { min-height: 0; padding: 2px 6px; font-size: 11px; }
+@media (max-width: 575px) { .tank-view-card { width: 140px; } .tank-view-glass { width: 60px; height: 100px; } }

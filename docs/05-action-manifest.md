@@ -90,6 +90,7 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | `reorder-list` | `/inventory/reorder` | Reorder | see what is below reorder point and on order |  |
 | `rack-board` | `/racks/` | Rack board | see which product, lot and batch is on each numbered rack; find where a product is stored |  |
 | `rack-fifo` | `/racks/fifo` | FIFO pick order | see which lot to pick or use next, oldest first, and the rack it is on |  |
+| `tank-view` | `/tanks/` | Tank view | see the tanks as they stand on the floor and how much each holds (juice, fermenting, base cider, finished); arrange them by dragging |  |
 | `rack-add` / `rack-edit` | `/racks/new`, `/racks/{id}/edit` | Rack | add or change a numbered rack in a storage area | `rack_number` |
 | `transfers-list` | `/transfers/` | Transfers | see stock transfers between locations |  |
 | `transfer-add` | `/transfers/new` | Transfer | move stock between locations | `from_location`, `to_location`, `item`, `lot_number`, `qty` |
@@ -237,6 +238,7 @@ Role column: the minimum role; `owner` can do everything.
 | `premises_create` / `premises_update` | `POST /premises/save` | name, kind, registry_number, filing_frequency | delete_row / restore_prior | no | owner |
 | `location_create` / `location_update` | `POST /locations/save` | name, kind, tax_state, premises | delete_row / restore_prior | no | owner |
 | `rack_create` / `rack_update` | `POST /racks/save` | area, rack_number | delete_row / restore_prior | no | owner |
+| `tank_position_set` | `POST /tanks/{id}/position` | x, y (grid units where the tank stands on the Tank view) | restore_prior | no | production |
 | `vessel_create` / `vessel_update` | `POST /vessels/save` | name, kind, capacity_gal, location | delete_row / restore_prior | no | production |
 | `vessel_set_status` | `POST /vessels/{id}/status` | status (empty, cleaning, out_of_service) | restore_prior | no | production |
 | `item_create` / `item_update` | `POST /items/save` | name, item_class, base_unit, lot_controlled, quarantine_default, reorder_point | delete_row / restore_prior | no | receiving |
