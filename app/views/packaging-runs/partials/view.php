@@ -20,6 +20,7 @@ $volumeOut = $posted ? $run['volume_out_l'] : $readback['volume_out_l'];
 $exceptional = $lossPct !== null && $lossPct > $expected;
 $tabs = ['materials' => 'Materials', 'loss' => 'Loss and yield', 'lot' => 'Finished lot'];
 ?>
+<?php $actions = nav_button('packaging-run-view-schedule-btn', '/schedule/?subject=packaging_run:' . (int) $run['id'], 'Schedule', 'feather-calendar', 'btn btn-light-brand') . (isset($user) && user_can($user, 'production') ? nav_button('packaging-run-view-reserve-btn', '/reservations/new?subject_kind=packaging_run&subject_id=' . (int) $run['id'], 'Reserve', 'feather-bookmark', 'btn btn-light-brand') : '') . ($actions ?? ''); ?>
 <?= view('shared/page-header.php', ['title' => $run['number'], 'screen' => 'packaging-run-view', 'crumbs' => ['Packaging' => null, 'Packaging runs' => '/packaging-runs/', $run['number'] => null], 'actionsHtml' => $actions]) ?>
 <div class="main-content" id="packaging-run-view-content">
     <div class="row">

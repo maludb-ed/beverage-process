@@ -54,6 +54,8 @@ KINDS: dict[str, Kind] = {
     "approval": _k("approval", "SELECT a.id, p.name || ' ' || a.kind AS label, a.reference_no AS alt, a.status AS detail FROM app.product_approvals a JOIN app.products p ON p.id = a.product_id"),
     "reason_code": _k("reason code", "SELECT id, code AS label, name AS alt, applies_to || ' · ' || classification AS detail FROM app.reason_codes", "active"),
     "ttb_report": _k("TTB report", "SELECT r.id, r.number AS label, r.period_start::text || ' to ' || r.period_end::text AS alt, r.status AS detail FROM app.period_reports r"),
+    "equipment": _k("equipment", "SELECT id, name AS label, NULL::text AS alt, kind || ' · ' || status AS detail FROM app.equipment", "active", plural="equipment"),
+    "reservation": _k("equipment reservation", "SELECT t.id, t.resource_name || ' · ' || COALESCE(t.subject_number, t.kind) || ' · ' || t.local_from::text AS label, t.subject_number AS alt, COALESCE(t.subject_label, t.notes, '') || ' · ' || t.role || ' · ' || t.local_from::text || ' to ' || t.local_to::text AS detail FROM app.v_equipment_schedule t"),
 }
 
 KIND_ALIASES = {
@@ -64,6 +66,7 @@ KIND_ALIASES = {
     "packaging run": "packaging_run", "production order": "production_order", "finished lot": "finished_lot",
     "finished_lots": "finished_lot", "recipes": "recipe", "recipe_version": "recipe", "reason": "reason_code",
     "ttb": "ttb_report", "report": "ttb_report", "packaging configuration": "packaging_config", "packaging_configuration": "packaging_config",
+    "reservations": "reservation", "booking": "reservation", "bookings": "reservation", "equipment reservation": "reservation",
 }
 
 

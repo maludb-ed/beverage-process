@@ -125,9 +125,9 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | Screen id | URL | Title | When the user wants to… | Prefill |
 |---|---|---|---|---|
 | `production-orders-list` | `/production-orders/` | Production orders | see planned, released, and in-progress orders |  |
-| `production-order-add` / `production-order-edit` | `/production-orders/new`, `/production-orders/{id}/edit` | Production order | plan a batch: product, recipe, volume, dates, vessels | `product`, `volume_gal`, `pitch_on` |
-| `production-order-view` | `/production-orders/{id}` | Production order | see an order, its material check, vessel conflicts, allocations; release or close it |  |
-| `production-calendar` | `/production-orders/calendar` | Vessel calendar | see planned vessel use over time and spot conflicts |  |
+| `production-order-add` / `production-order-edit` | `/production-orders/new`, `/production-orders/{id}/edit` | Production order | plan a batch: product, recipe, volume, dates, the equipment plan (vessels and equipment with their days) | `product`, `volume_gal`, `pitch_on` |
+| `production-order-view` | `/production-orders/{id}` | Production order | see an order as a run: its equipment plan with clashes, inputs (the material check, consumed so far), processing time (recipe stages planned vs actual), outputs (planned packages, batches, packaging runs, finished lots), allocations; release or close it |  |
+| `production-calendar` | `/production-orders/calendar` | Vessel calendar | (2026-10-08: redirects to the Equipment schedule, `/schedule/?kind=vessel`) |  |
 
 ### Slice 6: batch execution
 
@@ -223,6 +223,18 @@ Prefill parameters (for `navigate(screen, params)`) are listed where a create fo
 | `planning-forecast` | `/planning/forecast` | Forecast | see and set forecast demand per format and week |  |
 | `report-orders` | `/reports/orders` | Order history | see past orders by customer, product, format or month | `group_by`, `date_from`, `date_to` |
 
+### Equipment scheduling (docs/15, docs/16 — 2026-10-08)
+
+| Screen id | URL | Title | When the user wants to… | Prefill |
+|---|---|---|---|---|
+| `equipment-schedule` | `/schedule/` | Equipment schedule | see what is booked on every tank, press, line and piece of equipment, day by day, and spot clashes; `view=month` for the month grid | `from`, `weeks`, `view`, `month`, `premises_id`, `kind`, `resource`, `subject` |
+| `reservation-add` | `/reservations/new` | Reserve equipment | book a vessel or a piece of equipment for a run, or block it for cleaning, maintenance or a hold | `resource`, `on`, `subject_kind`, `subject_id`, `kind` |
+| `reservation-edit` | `/reservations/{id}/edit` | Reservation | change a booking's window, role, resource or notes |  |
+| `reservation-view` | `/reservations/{id}` | Reservation | see a booking, its overlaps and the vessel's occupant; cancel it |  |
+| `equipment-list` | `/equipment/` | Equipment | see the mills, pumps, filters, lines and other equipment, their status and next booking (cards) | `kind`, `status` |
+| `equipment-add` / `equipment-edit` | `/equipment/new`, `/equipment/{id}/edit` | Equipment | add or change a piece of equipment, set its status | `name`, `kind` |
+| `equipment-view` | `/equipment/{id}` | Equipment | see a piece of equipment and its bookings ahead and past; set its status |  |
+
 ## Action registry
 
 Rules (chat-actions skill, locked): creates and updates execute immediately and return an undo handle; destructive actions and anything that changes tax state confirm first; posting a document is immediate but its undo is a reversal document, never a delete. Every action calls the app's own endpoint with a signed action token; the endpoint applies the same `require_post()`, `verify_csrf()`, authorization, interlocks, and `log_activity()` as a human request.
@@ -310,10 +322,21 @@ Role column: the minimum role; `owner` can do everything.
 
 | Action | Endpoint | Parameters | Undo | Confirm | Role |
 |---|---|---|---|---|---|
-| `production_order_create` / `_update` | `POST /production-orders/save` | product, recipe_version?, volume_gal, pitch_on, package_on, vessels[] | delete_row / restore_prior | no | production |
+| `production_order_create` / `_update` | `POST /production-orders/save` | product, recipe_version?, volume_gal, pitch_on, package_on, plan[] (resource, role, planned_from, planned_to, all_day, start_time, end_time, share) | delete_row / restore_prior | no | production |
 | `production_order_release` | `POST /production-orders/{id}/release` | — (creates allocations) | restore_prior (releases allocations) | no | production |
 | `production_order_close` | `POST /production-orders/{id}/close` | — | restore_prior | no | production |
 | `production_order_cancel` | `POST /production-orders/{id}/cancel` | — | restore_prior | yes | production |
+
+### Equipment scheduling (docs/16)
+
+| Action | Endpoint | Parameters | Undo | Confirm | Role |
+|---|---|---|---|---|---|
+| `equipment_create` / `equipment_update` | `POST /equipment/save` | name, kind (mill, pump, filter, chiller, carbonator, canning_line, bottling_line, keg_line, keg_washer, labeler, other), premises, location, rating, status, notes | restore_prior (never deleted; deactivated) | no | production |
+| `equipment_set_status` | `POST /equipment/{id}/status` | status (available, cleaning, out_of_service) | restore_prior | no | production |
+| `equipment_reserve` | `POST /reservations/save` | vessel (the tank or press to book — one of vessel / equipment), equipment (the mill / pump / filter / line to book), from (first day), to (last day — inclusive), order (the production order it is for — one of order / batch / press_run / packaging_run / block), batch, press_run, packaging_run, block (cleaning / maintenance / hold — blocks the resource instead of a run), role (primary / maturation / brite / blend / press / mill / transfer / filter / carbonate / package / other), start_time (HH:MM when not all day), end_time (HH:MM when not all day), share (1 books over a clash as shared use — only when the organization allows double booking), notes | delete_row (cancels the booking) | no | production |
+| `equipment_reservation_update` | `POST /reservations/save` | reservation (the booking's id), vessel, equipment, from, to, order, batch, press_run, packaging_run, block, role, start_time, end_time, share, notes | restore_prior | no | production |
+| `equipment_reservation_cancel` | `POST /reservations/{id}/cancel` | — | none | yes | production |
+| `client_settings_update` | `POST /settings/client-save` | equipment_double_booking (on or off; with the display units and time zone) | restore_prior | no | owner |
 
 ### Batch execution
 
@@ -416,9 +439,14 @@ Role column: the minimum role; `owner` can do everything.
 | Order line | — | closed_short | cancelled | open | — | — |
 | Order import | imported | previewed | — | — | undone, abandoned | — |
 | Demand type (badge) | firm | standing | — | forecast | planned production | — |
+| Equipment | available | cleaning | out_of_service | — | — | — |
+| Equipment booking (bar) | the run's own colour; a block: cleaning = info, maintenance = secondary, hold = dark; a shared or overlapping bar is edged warning; a bar on a resource out of service is edged danger | | | | | |
+| Reservation | — | — | cancelled | booked | — | — |
 
 ## Activity log event names
 
 `screen_entered` on every screen render, plus one event per action above using the action name as the event name (`receipt_posted`, `lot_released`, `batch_pitched`, `removal_posted`, ...), `login`, `login_google`, `login_2fa`, `logout`, `totp_enabled`, `totp_disabled`, `identity_linked`, `password_reset`, `action_undone`, `assistant_message`, `ama_question`, `mcp_tool_called`.
 
 Customer orders and planning: `order_created`, `order_updated`, `order_confirmed`, `order_cancelled`, `order_closed`, `order_status_changed` (roll-up), `order_packaging_runs_created`, `order_shipment_created`, `order_created_from_standing`, `standing_order_created`, `standing_order_updated`, `standing_order_deactivated`, `orders_import_previewed`, `orders_imported`, `orders_import_undone`, `orders_import_discarded`, `forecast_generated`, `forecast_set`; `packaging_run_created` and `removal_created` are also written when an order creates them.
+
+Equipment scheduling (2026-10-08): `equipment_created`, `equipment_updated`, `equipment_status_set`, `equipment_reserved` (details: resource, window, run, role, `shared`, clashes), `equipment_reservation_updated`, `equipment_reservation_cancelled` (details `cause`: person, run_cancelled, run_closed); `production_order_created` / `_updated` carry the plan (`plan`) and, when a row was booked over a clash, `shared` and the clashing numbers; `production_order_cancelled` and `_closed` count the bookings cancelled or trimmed; `screen_entered` on `equipment-schedule` carries the window and filters.

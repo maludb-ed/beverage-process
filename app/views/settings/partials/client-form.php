@@ -16,7 +16,8 @@ $zones = array_combine(DateTimeZone::listIdentifiers(), DateTimeZone::listIdenti
                 <?= form_select($p, 'timezone', 'Time zone', $zones, $settings['timezone'] ?? '', $errors, ['required' => true]) ?>
                 <?= form_select($p, 'volume_display_unit', 'Volume display unit', $volumeUnits, $settings['volume_display_unit'] ?? '', $errors, ['required' => true]) ?>
                 <?= form_select($p, 'mass_display_unit', 'Mass display unit', $massUnits, $settings['mass_display_unit'] ?? '', $errors, ['required' => true]) ?>
-                <?= form_select($p, 'fruit_display_unit', 'Fruit weight display unit', $massUnits, $settings['fruit_display_unit'] ?? '', $errors, ['required' => true, 'last' => true]) ?>
+                <?= form_select($p, 'fruit_display_unit', 'Fruit weight display unit', $massUnits, $settings['fruit_display_unit'] ?? '', $errors, ['required' => true]) ?>
+                <?= form_checkbox($p, 'equipment_double_booking', 'Equipment may be double-booked', (bool) ($settings['equipment_double_booking'] ?? false), ['last' => true, 'help' => 'Off: a booking that overlaps another on the same tank, press, line or equipment is refused. On: the person may tick "Book anyway" and the booking is marked shared on the schedule.']) ?>
             </div>
         </div>
     </div></div>

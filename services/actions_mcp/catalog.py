@@ -19,6 +19,11 @@ ADDITION_PURPOSES = ["nutrient", "sulfite", "enzyme", "sweetener", "acid", "fini
 LOT_STATUSES = ["quarantine", "hold", "released", "rejected"]
 RELEASE_BASES = ["coa", "inspection", "readings", "sensory", "override", "other"]
 VESSEL_SETTABLE_STATUSES = ["empty", "cleaning", "out_of_service"]
+# app/features/equipment/queries.php and app/features/reservations/queries.php (db/023)
+EQUIPMENT_KINDS = ["mill", "pump", "filter", "chiller", "carbonator", "canning_line", "bottling_line", "keg_line", "keg_washer", "labeler", "other"]
+EQUIPMENT_STATUSES = ["available", "cleaning", "out_of_service"]
+RESERVATION_ROLES = ["primary", "maturation", "brite", "blend", "press", "mill", "transfer", "filter", "carbonate", "package", "other"]
+RESERVATION_BLOCKS = ["cleaning", "maintenance", "hold"]
 COUNT_KINDS = ["cycle", "physical"]
 KEG_EVENTS = ["fill", "clean", "mark_lost", "found", "retire"]
 KEG_OWNERSHIPS = ["owned", "rented", "customer_owned"]

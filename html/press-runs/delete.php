@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/press-runs/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/reservations/queries.php';
 
 require_post();
 verify_csrf();
@@ -13,6 +14,9 @@ try {
     $pdo->beginTransaction();
     if (!delete_press_run($pdo, $id)) {
         throw new RuntimeException('Only draft press runs can be deleted.');
+    }
+    foreach (cancel_subject_reservations($pdo, 'press_run', $id, (int) $user['id']) as $b) {
+        log_activity($pdo, 'equipment_reservation_cancelled', 'reservation', (int) $b['id'], $run['number'], ['status' => 'booked'], ['status' => 'cancelled'], ['cause' => 'run_cancelled'], 'press-run-view');
     }
     log_activity($pdo, 'press_run_deleted', 'press_run', $id, $run['number'], ['status' => $run['status'], 'run_on' => $run['run_on']], null, [], 'press-run-view');
     $pdo->commit();

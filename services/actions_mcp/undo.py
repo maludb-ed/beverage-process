@@ -167,6 +167,21 @@ async def _vessel(row, call):
             "summary": f"Vessel {row['entity_label']} back to {prior.replace('_', ' ')}"}
 
 
+@handles("equipment_status_set")
+async def _equipment_status(row, call):
+    prior = (row["before"] or {}).get("status")
+    if prior not in catalog.EQUIPMENT_STATUSES:
+        return _unavailable("The equipment's earlier status is not known.")
+    return {"path": f"/equipment/{row['entity_id']}/status", "fields": [("status", prior)], "event": "equipment_status_set",
+            "summary": f"Equipment {row['entity_label']} back to {prior.replace('_', ' ')}"}
+
+
+@handles("equipment_reserved")
+async def _equipment_reserved(row, call):
+    return {"path": f"/reservations/{row['entity_id']}/cancel", "fields": [], "event": "equipment_reservation_cancelled",
+            "summary": f"Booking {row['entity_label']} cancelled"}
+
+
 @handles("order_created", "order_created_from_standing")
 async def _order_created(row, call):
     o = await db.fetch_one("records", """SELECT so.status, EXISTS (SELECT 1 FROM app.v_sales_order_lines l WHERE l.sales_order_id = so.id

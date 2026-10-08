@@ -188,7 +188,12 @@
           "find_report",
           "find_sales_order",
           "find_supplier",
-          "find_vessel"
+          "find_vessel",
+          "equipment_schedule",
+          "equipment_free",
+          "find_equipment",
+          "find_press_run",
+          "find_reservation"
         ],
         "Activity MCP": [
           "activity_record_history",
@@ -210,6 +215,12 @@
           "count_start",
           "count_submit",
           "customer_create",
+          "equipment_create",
+          "equipment_reservation_cancel",
+          "equipment_reservation_update",
+          "equipment_reserve",
+          "equipment_set_status",
+          "equipment_update",
           "keg_clean",
           "keg_fill",
           "keg_found",

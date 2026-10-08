@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T00:06:12+00:00",
+  "generated_at": "2026-10-08T14:48:25+00:00",
   "generated_by": "services/actions_mcp/build_manifest.py",
   "source": "docs/05-action-manifest.md",
   "screens": [
@@ -1415,7 +1415,7 @@
       "id": "production-order-add",
       "url": "/production-orders/new",
       "title": "Production order",
-      "when": "plan a batch: product, recipe, volume, dates, vessels — the empty form for a new one",
+      "when": "plan a batch: product, recipe, volume, dates, the equipment plan (vessels and equipment with their days) — the empty form for a new one",
       "section": "Slice 5: production orders",
       "prefill": [
         "product",
@@ -1434,7 +1434,7 @@
       "id": "production-order-edit",
       "url": "/production-orders/{id}/edit",
       "title": "Production order",
-      "when": "plan a batch: product, recipe, volume, dates, vessels — the form for an existing record",
+      "when": "plan a batch: product, recipe, volume, dates, the equipment plan (vessels and equipment with their days) — the form for an existing record",
       "section": "Slice 5: production orders",
       "prefill": [],
       "record_kind": "production_order",
@@ -1449,7 +1449,7 @@
       "id": "production-order-view",
       "url": "/production-orders/{id}",
       "title": "Production order",
-      "when": "see an order, its material check, vessel conflicts, allocations; release or close it",
+      "when": "see an order as a run: its equipment plan with clashes, inputs (the material check, consumed so far), processing time (recipe stages planned vs actual), outputs (planned packages, batches, packaging runs, finished lots), allocations; release or close it",
       "section": "Slice 5: production orders",
       "prefill": [],
       "record_kind": "production_order",
@@ -1464,7 +1464,7 @@
       "id": "production-calendar",
       "url": "/production-orders/calendar",
       "title": "Vessel calendar",
-      "when": "see planned vessel use over time and spot conflicts",
+      "when": "(2026-10-08: redirects to the Equipment schedule, `/schedule/?kind=vessel`)",
       "section": "Slice 5: production orders",
       "prefill": [],
       "record_kind": null,
@@ -2620,6 +2620,147 @@
         "controller": "html/reports/orders.php",
         "status": "ok"
       }
+    },
+    {
+      "id": "equipment-schedule",
+      "url": "/schedule/",
+      "title": "Equipment schedule",
+      "when": "see what is booked on every tank, press, line and piece of equipment, day by day, and spot clashes; `view=month` for the month grid",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [
+        "from",
+        "weeks",
+        "view",
+        "month",
+        "premises_id",
+        "kind",
+        "resource",
+        "subject"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/schedule/index.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "reservation-add",
+      "url": "/reservations/new",
+      "title": "Reserve equipment",
+      "when": "book a vessel or a piece of equipment for a run, or block it for cleaning, maintenance or a hold",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [
+        "resource",
+        "on",
+        "subject_kind",
+        "subject_id",
+        "kind"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/reservations/form.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "reservation-edit",
+      "url": "/reservations/{id}/edit",
+      "title": "Reservation",
+      "when": "change a booking's window, role, resource or notes",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/reservations/form.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "reservation-view",
+      "url": "/reservations/{id}",
+      "title": "Reservation",
+      "when": "see a booking, its overlaps and the vessel's occupant; cancel it",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/reservations/view.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "equipment-list",
+      "url": "/equipment/",
+      "title": "Equipment",
+      "when": "see the mills, pumps, filters, lines and other equipment, their status and next booking (cards)",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [
+        "kind",
+        "status"
+      ],
+      "record_kind": null,
+      "search": true,
+      "navigable": true,
+      "route": {
+        "controller": "html/equipment/index.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "equipment-add",
+      "url": "/equipment/new",
+      "title": "Equipment",
+      "when": "add or change a piece of equipment, set its status — the empty form for a new one",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [
+        "name",
+        "kind"
+      ],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/equipment/form.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "equipment-edit",
+      "url": "/equipment/{id}/edit",
+      "title": "Equipment",
+      "when": "add or change a piece of equipment, set its status — the form for an existing record",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/equipment/form.php",
+        "status": "ok"
+      }
+    },
+    {
+      "id": "equipment-view",
+      "url": "/equipment/{id}",
+      "title": "Equipment",
+      "when": "see a piece of equipment and its bookings ahead and past; set its status",
+      "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+      "prefill": [],
+      "record_kind": null,
+      "search": false,
+      "navigable": true,
+      "route": {
+        "controller": "html/equipment/view.php",
+        "status": "ok"
+      }
     }
   ],
   "actions": [
@@ -3386,7 +3527,7 @@
       "name": "production_order_create",
       "section": "Production orders",
       "endpoint": "POST /production-orders/save",
-      "params": "product, recipe_version?, volume_gal, pitch_on, package_on, vessels[]",
+      "params": "product, recipe_version?, volume_gal, pitch_on, package_on, plan[] (resource, role, planned_from, planned_to, all_day, start_time, end_time, share)",
       "undo": "delete_row",
       "confirm": "no",
       "role": "production",
@@ -3397,7 +3538,7 @@
       "name": "production_order_update",
       "section": "Production orders",
       "endpoint": "POST /production-orders/save",
-      "params": "product, recipe_version?, volume_gal, pitch_on, package_on, vessels[]",
+      "params": "product, recipe_version?, volume_gal, pitch_on, package_on, plan[] (resource, role, planned_from, planned_to, all_day, start_time, end_time, share)",
       "undo": "restore_prior",
       "confirm": "no",
       "role": "production",
@@ -3434,6 +3575,83 @@
       "undo": "restore_prior",
       "confirm": "yes",
       "role": "production",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "equipment_create",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /equipment/save",
+      "params": "name, kind (mill, pump, filter, chiller, carbonator, canning_line, bottling_line, keg_line, keg_washer, labeler, other), premises, location, rating, status, notes",
+      "undo": "restore_prior (never deleted; deactivated)",
+      "confirm": "no",
+      "role": "production",
+      "exposed_by": "equipment_create",
+      "exposed": true
+    },
+    {
+      "name": "equipment_update",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /equipment/save",
+      "params": "name, kind (mill, pump, filter, chiller, carbonator, canning_line, bottling_line, keg_line, keg_washer, labeler, other), premises, location, rating, status, notes",
+      "undo": "restore_prior (never deleted; deactivated)",
+      "confirm": "no",
+      "role": "production",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "equipment_set_status",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /equipment/{id}/status",
+      "params": "status (available, cleaning, out_of_service)",
+      "undo": "restore_prior",
+      "confirm": "no",
+      "role": "production",
+      "exposed_by": "equipment_set_status",
+      "exposed": true
+    },
+    {
+      "name": "equipment_reserve",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /reservations/save",
+      "params": "vessel (the tank or press to book — one of vessel / equipment), equipment (the mill / pump / filter / line to book), from (first day), to (last day — inclusive), order (the production order it is for — one of order / batch / press_run / packaging_run / block), batch, press_run, packaging_run, block (cleaning / maintenance / hold — blocks the resource instead of a run), role (primary / maturation / brite / blend / press / mill / transfer / filter / carbonate / package / other), start_time (HH:MM when not all day), end_time (HH:MM when not all day), share (1 books over a clash as shared use — only when the organization allows double booking), notes",
+      "undo": "delete_row (cancels the booking)",
+      "confirm": "no",
+      "role": "production",
+      "exposed_by": "equipment_reserve",
+      "exposed": true
+    },
+    {
+      "name": "equipment_reservation_update",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /reservations/save",
+      "params": "reservation (the booking's id), vessel, equipment, from, to, order, batch, press_run, packaging_run, block, role, start_time, end_time, share, notes",
+      "undo": "restore_prior",
+      "confirm": "no",
+      "role": "production",
+      "exposed_by": null,
+      "exposed": false
+    },
+    {
+      "name": "equipment_reservation_cancel",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /reservations/{id}/cancel",
+      "params": "—",
+      "undo": "none",
+      "confirm": "yes",
+      "role": "production",
+      "exposed_by": "equipment_reservation_cancel",
+      "exposed": true
+    },
+    {
+      "name": "client_settings_update",
+      "section": "Equipment scheduling (docs/16)",
+      "endpoint": "POST /settings/client-save",
+      "params": "equipment_double_booking (on or off; with the display units and time zone)",
+      "undo": "restore_prior",
+      "confirm": "no",
+      "role": "owner",
       "exposed_by": null,
       "exposed": false
     },
@@ -4102,7 +4320,7 @@
     {
       "name": "navigate",
       "title": "Navigate",
-      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class, kind]\n  item-edit — Item [record]\n  item-view — Item [record]\n  item-classes-list — Item classes [prefill kind; q]\n  item-class-add — Item class [prefill kind]\n  item-class-edit — Item class [record]\n  units-list — Units\n  suppliers-list — Vendors [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on, item, qty]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  receipts-projected — Projected\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-materials — Materials\n  inventory-finished — Finished product\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  tank-view — Tank view\n  rack-add — Rack [prefill rack_number]\n  rack-edit — Rack [record]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]\n\nCustomer orders and planning (docs/11, docs/12):\n  orders-list — Customer orders [q]\n  order-add — Customer order [prefill customer]\n  order-edit — Customer order [record]\n  order-view — Customer order [record]\n  order-package — Package for an order [record]\n  orders-package-format — Package for orders [prefill format]\n  orders-to-package — Packaging queue\n  standing-orders-list — Standing orders [q]\n  standing-order-add — Standing order [prefill customer]\n  standing-order-edit — Standing order [record]\n  standing-order-view — Standing order [record; q]\n  orders-import — Import orders\n  order-import-view — Order import [record]\n  planning — Projections [prefill demand]\n  planning-production — Suggested production [prefill demand]\n  planning-purchasing — Suggested purchases [prefill demand]\n  planning-forecast — Forecast\n  report-orders — Order history [prefill group_by, date_from, date_to]",
+      "description": "Take the user to a screen of the application.\n\nCall this when the user asks to go somewhere or see something: \"go to…\", \"open…\", \"show me…\", \"take me to…\",\n\"back to the list\", \"new purchase order for Can Supply\". Do NOT call it to answer questions (use the record and\nactivity tools) or to save data (use the action tools). Compound utterances (\"go to create a PO for Lallemand\")\nare ONE call: `params` pre-fill the destination form.\n\n- `screen`: an id from the list below (unsure? call find_screen first).\n- `record`: for screens marked [record] — the record's label as said (\"L-261001-001\", \"B-26-004\", \"Hill Orchard\")\n  or its id from the screen context; it is resolved server side.\n- `params`: only the prefill names listed for that screen; list screens marked [q] take {\"q\": \"search text\"}.\n\nAfter a success result: tell the user where they are in one short sentence and END THE TURN — no further tool\ncalls. At most one navigation per message; a later call replaces an earlier one. The tool registers the\nnavigation; it does not know what the screen will show.\n\nScreens:\nShell and cross-cutting (Phase 2):\n  dashboard — Dashboard\n  ama — Ask me anything\n  settings-profile — My profile\n  settings-2fa — Two-factor authentication\n  settings-client — Organization settings\n  settings-mcp-tokens — AI access tokens [q]\n  activity-list — Activity [q]\n\nSlice 1: foundation:\n  premises-list — Premises [q]\n  premises-add — Premises [prefill name, kind]\n  premises-edit — Premises [record]\n  locations-list — Locations [q]\n  location-add — Location [prefill name, kind]\n  location-edit — Location [record]\n  vessels-list — Vessels [q]\n  vessel-add — Vessel [prefill name, kind, capacity_gal]\n  vessel-edit — Vessel [record]\n  items-list — Items [q]\n  item-add — Item [prefill name, item_class, kind]\n  item-edit — Item [record]\n  item-view — Item [record]\n  item-classes-list — Item classes [prefill kind; q]\n  item-class-add — Item class [prefill kind]\n  item-class-edit — Item class [record]\n  units-list — Units\n  suppliers-list — Vendors [q]\n  supplier-add — Supplier [prefill name, kind]\n  supplier-edit — Supplier [record]\n  supplier-view — Supplier [record]\n  users-list — Users [q]\n  user-add — User [prefill email, role]\n  user-edit — User [record]\n  reason-codes-list — Reason codes [q]\n  reason-code-add — Reason code\n  reason-code-edit — Reason code [record]\n\nSlice 2: receiving (exemplar):\n  purchase-orders-list — Purchase orders [q]\n  purchase-order-add — Purchase order [prefill supplier, expected_on, item, qty]\n  purchase-order-edit — Purchase order [record]\n  purchase-order-view — Purchase order [record]\n  receipts-list — Receipts [q]\n  receipt-add — Receipt [prefill supplier, po_number]\n  receipt-edit — Receipt [record]\n  receipt-view — Receipt [record]\n  receipts-projected — Projected\n  lots-list — Lots [q]\n  lot-view — Lot [record]\n  lot-edit — Lot [record]\n  lot-coa-add — Certificate of analysis [record]\n  lot-release — Release lot [record]\n  putaway — Putaway [record]\n\nSlice 3: inventory:\n  inventory-materials — Materials\n  inventory-finished — Finished product\n  inventory-movements — Movements [prefill item, lot_number, location; q]\n  reorder-list — Reorder [q]\n  rack-board — Rack board [q]\n  rack-fifo — FIFO pick order [q]\n  tank-view — Tank view\n  rack-add — Rack [prefill rack_number]\n  rack-edit — Rack [record]\n  transfers-list — Transfers [q]\n  transfer-add — Transfer [prefill from_location, to_location, item, lot_number, qty]\n  transfer-view — Transfer [record]\n  adjustments-list — Adjustments [q]\n  adjustment-add — Adjustment [prefill location, item, lot_number, qty_delta, reason]\n  adjustment-view — Adjustment [record]\n  counts-list — Counts [q]\n  count-add — Count [prefill location, kind]\n  count-view — Count [record]\n\nSlice 4: products and recipes:\n  products-list — Products [q]\n  product-add — Product [prefill name, style]\n  product-edit — Product [record]\n  product-view — Product [record]\n  recipe-add — Recipe version [record; prefill batch_volume_gal]\n  recipe-edit — Recipe version [record]\n  recipe-view — Recipe version [record]\n  packaging-configs-list — Packaging configurations [q]\n  packaging-config-add — Packaging configuration [prefill product, package_kind]\n  packaging-config-edit — Packaging configuration [record]\n  specs-list — Specs [record]\n  spec-add — Spec [record; prefill stage, measurement]\n  spec-edit — Spec [record]\n  standard-costs-list — Standard costs [q]\n  standard-cost-add — Standard cost [prefill item, cost]\n  approvals-list — Approvals [q]\n  approval-add — Approval [prefill product, kind]\n  approval-edit — Approval [record]\n\nSlice 5: production orders:\n  production-orders-list — Production orders [q]\n  production-order-add — Production order [prefill product, volume_gal, pitch_on]\n  production-order-edit — Production order [record]\n  production-order-view — Production order [record]\n  production-calendar — Vessel calendar\n\nSlice 6: batch execution:\n  press-runs-list — Press runs [q]\n  press-run-add — Press run [prefill press]\n  press-run-edit — Press run [record]\n  press-run-view — Press run [record]\n  tank-board — Tank board\n  batches-list — Batches [q]\n  batch-add — Pitch a batch [prefill product, vessel, production_order]\n  batch-view — Batch [record]\n  batch-edit — Batch [record]\n  batch-reading-add — Reading [record; prefill measurement, value]\n  batch-addition-add — Addition [record; prefill item, qty, purpose]\n  batch-stage-move — Move stage [record; prefill stage]\n  batch-transfer — Transfer [record; prefill to_vessel, volume_gal, loss_gal]\n  batch-split — Split [record]\n  batch-blend-add — Blend [prefill vessel]\n  batch-loss-add — Loss [record; prefill qty_gal, reason]\n  batch-dump — Dump batch [record]\n  yeast-harvest-add — Harvest yeast [record; prefill volume_l, generation]\n  pomace-disposition-add — Pomace disposition [prefill lot_number, destination]\n\nSlice 7: packaging:\n  packaging-runs-list — Packaging runs [q]\n  packaging-run-add — Packaging run [prefill batch, package]\n  packaging-run-edit — Packaging run [record]\n  packaging-run-view — Packaging run [record]\n  finished-lots-list — Finished goods [q]\n  finished-lot-view — Finished lot [record]\n  kegs-list — Kegs [q]\n  keg-add — Keg [prefill serial, size]\n  keg-edit — Keg [record]\n  keg-view — Keg [record]\n  keg-return — Keg returns [prefill serials]\n\nSlice 8: quality:\n  lab-list — Lab [q]\n  lab-reading-add — Lab reading [prefill batch, measurement, value]\n  sensory-list — Sensory [q]\n  sensory-add — Sensory record [prefill batch]\n  release-queue — Release queue [q]\n  batch-release — Release batch [record]\n\nSlice 9: reports:\n  report-yields — Yield report [prefill product]\n  report-juice-yield — Juice yield [prefill season_year]\n  report-batch-costs — Batch costs [prefill product]\n  report-valuation — Inventory valuation [prefill as_of]\n\nSlice 10: removals and compliance:\n  customers-list — Customers [q]\n  customer-add — Customer [prefill name, kind]\n  customer-edit — Customer [record]\n  customer-view — Customer [record]\n  removals-list — Removals [q]\n  removal-add — Removal [prefill customer, destination_kind]\n  removal-edit — Removal [record]\n  removal-view — Removal [record]\n  return-add — Return [prefill customer]\n  ttb-reports-list — TTB reports [q]\n  ttb-report-add — Generate report [prefill period]\n  ttb-report-view — TTB report [record]\n  trace — Trace [prefill lot_number, batch_number]\n\nCustomer orders and planning (docs/11, docs/12):\n  orders-list — Customer orders [q]\n  order-add — Customer order [prefill customer]\n  order-edit — Customer order [record]\n  order-view — Customer order [record]\n  order-package — Package for an order [record]\n  orders-package-format — Package for orders [prefill format]\n  orders-to-package — Packaging queue\n  standing-orders-list — Standing orders [q]\n  standing-order-add — Standing order [prefill customer]\n  standing-order-edit — Standing order [record]\n  standing-order-view — Standing order [record; q]\n  orders-import — Import orders\n  order-import-view — Order import [record]\n  planning — Projections [prefill demand]\n  planning-production — Suggested production [prefill demand]\n  planning-purchasing — Suggested purchases [prefill demand]\n  planning-forecast — Forecast\n  report-orders — Order history [prefill group_by, date_from, date_to]\n\nEquipment scheduling (docs/15, docs/16 — 2026-10-08):\n  equipment-schedule — Equipment schedule [prefill from, weeks, view, month, premises_id, kind, resource, subject]\n  reservation-add — Reserve equipment [prefill resource, on, subject_kind, subject_id, kind]\n  reservation-edit — Reservation [record]\n  reservation-view — Reservation [record]\n  equipment-list — Equipment [prefill kind, status; q]\n  equipment-add — Equipment [prefill name, kind]\n  equipment-edit — Equipment [record]\n  equipment-view — Equipment [record]",
       "input_schema": {
         "properties": {
           "screen": {
@@ -4175,11 +4393,11 @@
     {
       "name": "find_record",
       "title": "Find record",
-      "description": "Resolve a record label the user said to the matching records (id, label, detail), e.g. a batch\nnumber, lot number, item code or name, supplier, vessel. Call it only when an action or navigation failed as\nambiguous and you need to show the user the choices, or to check which record they mean; action tools and\nnavigate already resolve labels themselves. Kinds: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, sales_order, standing_order, order_import, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report. Read-only.",
+      "description": "Resolve a record label the user said to the matching records (id, label, detail), e.g. a batch\nnumber, lot number, item code or name, supplier, vessel. Call it only when an action or navigation failed as\nambiguous and you need to show the user the choices, or to check which record they mean; action tools and\nnavigate already resolve labels themselves. Kinds: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, sales_order, standing_order, order_import, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report, equipment, reservation. Read-only.",
       "input_schema": {
         "properties": {
           "kind": {
-            "description": "Record kind: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, sales_order, standing_order, order_import, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report",
+            "description": "Record kind: batch, lot, finished_lot, item, supplier, customer, purchase_order, receipt, vessel, location, premises, product, keg, transfer, adjustment, count, removal, press_run, sales_order, standing_order, order_import, packaging_run, production_order, recipe, packaging_config, spec, approval, reason_code, ttb_report, equipment, reservation",
             "title": "Kind",
             "type": "string"
           },
@@ -6779,6 +6997,441 @@
         "countsChanged"
       ],
       "controller": "html/counts/cancel.php"
+    },
+    {
+      "name": "equipment_create",
+      "title": "Add equipment",
+      "description": "Add a piece of equipment that holds no liquid — a mill, pump, filter, chiller, carbonator, canning or bottling line,\nkeg line, keg washer or labeler (\"add the new canning line, 120 cans a minute\"). A tank or a press is a VESSEL: use\nthe Vessels screen (vessel_create). Executes immediately; equipment is deactivated, never deleted. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "name": {
+            "description": "The equipment's name as said, e.g. 'canning line', 'pump 2'",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "kind": {
+            "description": "What it is",
+            "enum": [
+              "mill",
+              "pump",
+              "filter",
+              "chiller",
+              "carbonator",
+              "canning_line",
+              "bottling_line",
+              "keg_line",
+              "keg_washer",
+              "labeler",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "rating": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "In words: '120 cans/min', '4,000 L/h'",
+            "title": "Rating"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The area it stands in, when known",
+            "title": "Location"
+          },
+          "premises": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Premises name; omit when there is one",
+            "title": "Premises"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional note, the user's words",
+            "title": "Note"
+          }
+        },
+        "required": [
+          "name",
+          "kind"
+        ],
+        "title": "equipment_createArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "equipment_create"
+      ],
+      "endpoint": "POST /equipment/save",
+      "method": "POST",
+      "role": "production",
+      "confirm": "never",
+      "undo": {
+        "kind": "restore_prior",
+        "how": "Not undone by voice: deactivate it on its page (equipment is never deleted)"
+      },
+      "events": [
+        "equipment_created"
+      ],
+      "refresh": [
+        "equipmentChanged"
+      ],
+      "controller": "html/equipment/save.php"
+    },
+    {
+      "name": "equipment_set_status",
+      "title": "Set equipment status",
+      "description": "Set a piece of equipment's status (\"the canning line is out of service\", \"the filter is clean\"). Bookings ahead stay\nand are shaded on the schedule. Executes immediately and can be undone. For a tank use vessel_set_status. Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "equipment": {
+            "description": "Equipment name as said, e.g. 'canning line', 'pump 1'",
+            "title": "Equipment",
+            "type": "string"
+          },
+          "status": {
+            "description": "available, cleaning, out_of_service",
+            "enum": [
+              "available",
+              "cleaning",
+              "out_of_service"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "equipment",
+          "status"
+        ],
+        "title": "equipment_set_statusArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "equipment_set_status"
+      ],
+      "endpoint": "POST /equipment/{id}/status",
+      "method": "POST",
+      "role": "production",
+      "confirm": "never",
+      "undo": {
+        "kind": "restore_prior",
+        "how": "Re-POST the before-image status"
+      },
+      "events": [
+        "equipment_status_set"
+      ],
+      "refresh": [
+        "equipmentChanged"
+      ],
+      "controller": "html/equipment/status.php"
+    },
+    {
+      "name": "equipment_reserve",
+      "title": "Reserve equipment",
+      "description": "Book a tank, press, line or piece of equipment for a run, or block it (\"book FV-2 for WO-00012 from Nov 2 to Nov 16\",\n\"put the canning line on B-26-004 Nov 25 from 8 to 12\", \"block the filter for cleaning tomorrow\"). Give the days (and\ntimes when two runs share a day); say which run it is for, or a block. A window already booked is refused with the\nclashes named; when the organization allows double booking and the person wants it anyway, call again with\nshare=true. Executes immediately and can be undone (cancelled). Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "from_date": {
+            "description": "First day, ISO YYYY-MM-DD",
+            "format": "date",
+            "title": "From Date",
+            "type": "string"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Last day, inclusive; omit for one day",
+            "title": "To Date"
+          },
+          "vessel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The tank or press to book, e.g. 'FV-2' (one of vessel / equipment)",
+            "title": "Vessel"
+          },
+          "equipment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The equipment to book, e.g. 'canning line' (one of vessel / equipment)",
+            "title": "Equipment"
+          },
+          "order": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The production order it is for (WO-00012) — one of order / batch / press_run / packaging_run, or a block",
+            "title": "Order"
+          },
+          "batch": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The batch it is for (B-26-004)",
+            "title": "Batch"
+          },
+          "press_run": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The press run it is for (PR-00003)",
+            "title": "Press Run"
+          },
+          "packaging_run": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The packaging run it is for (PK-00005)",
+            "title": "Packaging Run"
+          },
+          "block": {
+            "anyOf": [
+              {
+                "enum": [
+                  "cleaning",
+                  "maintenance",
+                  "hold"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Block the resource instead of booking a run",
+            "title": "Block"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "primary",
+                  "maturation",
+                  "brite",
+                  "blend",
+                  "press",
+                  "mill",
+                  "transfer",
+                  "filter",
+                  "carbonate",
+                  "package",
+                  "other"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "What the resource does in the run; default primary for a vessel, other for equipment",
+            "title": "Role"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "HH:MM when it is not all day",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "HH:MM when it is not all day",
+            "title": "End Time"
+          },
+          "share": {
+            "default": false,
+            "description": "Book over a clash as shared use — only when the organization allows double booking and the person said so",
+            "title": "Share",
+            "type": "boolean"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional note, the user's words",
+            "title": "Note"
+          }
+        },
+        "required": [
+          "from_date"
+        ],
+        "title": "equipment_reserveArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "equipment_reserve"
+      ],
+      "endpoint": "POST /reservations/save",
+      "method": "POST",
+      "role": "production",
+      "confirm": "never",
+      "undo": {
+        "kind": "delete_row",
+        "how": "POST /reservations/{id}/cancel"
+      },
+      "events": [
+        "equipment_reserved"
+      ],
+      "refresh": [
+        "reservationsChanged"
+      ],
+      "controller": "html/reservations/save.php"
+    },
+    {
+      "name": "equipment_reservation_cancel",
+      "title": "Cancel a reservation",
+      "description": "Cancel an equipment booking (\"cancel the canning line booking for B-26-004\"). Asks for confirmation first; cannot be\nundone by voice (book it again). Cancelling a production order, press run or packaging run cancels its bookings by\nitself. If the result is needs_confirmation, ask the user the summary as one short yes/no question and end the turn; when the user confirms, call again with the same arguments plus confirmed=true (it executes only on the user's confirmed turn). Do NOT call this to answer questions (use the record/activity tools) or to move between screens (use navigate).\n\nAfter success: read back what was recorded in one short sentence (the `done` text) and END THE TURN — no further tool calls. Failures return field messages or candidates: fix the one value and retry once, or ask the user one short question.",
+      "input_schema": {
+        "properties": {
+          "reservation": {
+            "description": "The booking: the resource and the run as said ('FV-2 for WO-00012'), or its id from equipment_schedule (id:123)",
+            "title": "Reservation",
+            "type": "string"
+          },
+          "confirmed": {
+            "default": false,
+            "description": "Set true when re-calling after the user confirmed this tool's needs_confirmation summary. The app's confirmation header, not this flag, is what lets it execute.",
+            "title": "Confirmed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "reservation"
+        ],
+        "title": "equipment_reservation_cancelArguments",
+        "type": "object",
+        "additionalProperties": false
+      },
+      "kind": "action",
+      "doc_actions": [
+        "equipment_reservation_cancel"
+      ],
+      "endpoint": "POST /reservations/{id}/cancel",
+      "method": "POST",
+      "role": "production",
+      "confirm": "always",
+      "undo": {
+        "kind": "none",
+        "how": "Book it again"
+      },
+      "events": [
+        "equipment_reservation_cancelled"
+      ],
+      "refresh": [
+        "reservationsChanged"
+      ],
+      "controller": "html/reservations/cancel.php"
     },
     {
       "name": "order_create",

@@ -22,6 +22,15 @@
                 "customer"
             ]
         },
+        "equipment": {
+            "tool": "find_equipment",
+            "query_param": "q",
+            "id_field": "equipment_id",
+            "label_field": "label",
+            "params": [
+                "equipment"
+            ]
+        },
         "item": {
             "tool": "find_item",
             "query_param": "q",
@@ -76,6 +85,15 @@
                 "po"
             ]
         },
+        "press_run": {
+            "tool": "find_press_run",
+            "query_param": "q",
+            "id_field": "press_run_id",
+            "label_field": "label",
+            "params": [
+                "press_run"
+            ]
+        },
         "product": {
             "tool": "find_product",
             "query_param": "q",
@@ -101,6 +119,15 @@
             "label_field": "label",
             "params": [
                 "report"
+            ]
+        },
+        "reservation": {
+            "tool": "find_reservation",
+            "query_param": "q",
+            "id_field": "reservation_id",
+            "label_field": "label",
+            "params": [
+                "reservation"
             ]
         },
         "sales_order": {

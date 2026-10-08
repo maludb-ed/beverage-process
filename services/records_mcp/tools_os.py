@@ -51,5 +51,6 @@ def _make(kind: str):
                  call it yourself when a label is ambiguous. {k.hint}""")(find)
 
 
-for _kind in ("batch", "customer", "item", "keg", "lot", "order", "packaging_run", "po", "product", "receipt", "report", "sales_order", "supplier", "vessel", "location", "premises", "standing_order", "reason"):
+for _kind in ("batch", "customer", "item", "keg", "lot", "order", "packaging_run", "po", "product", "receipt", "report", "sales_order", "supplier", "vessel", "location", "premises", "standing_order", "reason",
+              "equipment", "press_run", "reservation"):
     _make(_kind)

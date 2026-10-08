@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/settings/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/reservations/queries.php';
 
 require_post();
 verify_csrf();
@@ -17,6 +18,7 @@ $input['timezone'] = request_string('timezone', 64);
 $input['volume_display_unit'] = request_string('volume_display_unit', 10);
 $input['mass_display_unit'] = request_string('mass_display_unit', 10);
 $input['fruit_display_unit'] = request_string('fruit_display_unit', 10);
+$input['equipment_double_booking'] = post_bool('equipment_double_booking');
 
 $errors = [];
 if ($input['client_name'] === '') { $errors['client_name'] = 'Client name is required.'; }
@@ -29,7 +31,10 @@ if ($errors === []) {
     try {
         $pdo->beginTransaction();
         $saved = update_client_settings($pdo, $input['client_name'], $input['timezone'], $input['volume_display_unit'], $input['mass_display_unit'], $input['fruit_display_unit']);
-        $fields = ['client_name', 'timezone', 'volume_display_unit', 'mass_display_unit', 'fruit_display_unit'];
+        set_double_booking($pdo, $input['equipment_double_booking']);
+        $saved['equipment_double_booking'] = $input['equipment_double_booking'];
+        $before['equipment_double_booking'] = (bool) $before['equipment_double_booking'];
+        $fields = ['client_name', 'timezone', 'volume_display_unit', 'mass_display_unit', 'fruit_display_unit', 'equipment_double_booking'];
         log_activity($pdo, 'client_settings_updated', 'client_settings', 1, $saved['client_name'],
             array_intersect_key($before, array_flip($fields)), array_intersect_key($saved, array_flip($fields)), [], 'settings-client');
         $pdo->commit();

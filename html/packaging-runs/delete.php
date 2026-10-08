@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/packaging-runs/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/reservations/queries.php';
 require_once dirname(__DIR__, 2) . '/app/features/orders/fulfillment.php';
 
 require_post();
@@ -15,6 +16,9 @@ try {
     $orderIds = orders_for_packaging_run($pdo, $id);
     if (!delete_packaging_run($pdo, $id)) {
         throw new RuntimeException('Only draft packaging runs can be deleted.');
+    }
+    foreach (cancel_subject_reservations($pdo, 'packaging_run', $id, (int) $user['id']) as $b) {
+        log_activity($pdo, 'equipment_reservation_cancelled', 'reservation', (int) $b['id'], $run['number'], ['status' => 'booked'], ['status' => 'cancelled'], ['cause' => 'run_cancelled'], 'packaging-run-view');
     }
     log_activity($pdo, 'packaging_run_deleted', 'packaging_run', $id, $run['number'], ['status' => $run['status'], 'run_on' => $run['run_on']], null, [], 'packaging-run-view');
     orders_refresh_statuses($pdo, $orderIds, 'packaging-run-view');

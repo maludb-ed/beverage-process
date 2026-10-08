@@ -617,6 +617,9 @@ SELECT po.id, po.number, po.status, p.name AS product_name, rv.version_no AS rec
        po.planned_package_on, po.released_at, ur.display_name AS released_by, po.created_at, po.notes,
        (SELECT jsonb_agg(jsonb_build_object('vessel', v.name, 'role', pov.role, 'from', pov.planned_from, 'to', pov.planned_to) ORDER BY pov.planned_from)
           FROM app.production_order_vessels pov JOIN app.vessels v ON v.id = pov.vessel_id WHERE pov.production_order_id = po.id) AS vessels,
+       (SELECT jsonb_agg(jsonb_build_object('resource', s.resource_name, 'resource_kind', s.resource_kind, 'role', s.role, 'from', s.local_from, 'to', s.local_to,
+                         'all_day', s.all_day, 'shared', s.shared, 'overlaps', s.clash_count) ORDER BY s.starts_at)
+          FROM app.v_equipment_schedule s WHERE s.subject_kind = 'production_order' AND s.subject_id = po.id) AS equipment,
        (SELECT jsonb_agg(jsonb_build_object('item_code', i.code, 'qty_base', a.qty_base, 'unit', i.base_unit_code, 'lot', l.lot_number,
                          'open', a.released_at IS NULL) ORDER BY i.code)
           FROM app.allocations a JOIN app.items i ON i.id = a.item_id LEFT JOIN app.lots l ON l.id = a.lot_id WHERE a.production_order_id = po.id) AS allocations,
@@ -1400,3 +1403,36 @@ SELECT c.table_name, t.table_type, string_agg(c.column_name || ':' || CASE
 
 LOT_IDS_BY_NUMBER = "SELECT id FROM app.lots WHERE lot_number = ANY(%(n)s)"
 BATCH_IDS_BY_NUMBER = "SELECT id FROM app.batches WHERE number = ANY(%(n)s)"
+
+# Equipment scheduling (db/023, docs/16) ------------------------------------------------------------------------
+EQUIPMENT_SCHEDULE = """
+SELECT s.id, s.resource_kind, s.resource_name, s.resource_type, s.resource_status, s.capacity_l, s.kind, s.subject_kind, s.subject_number,
+       s.subject_label, s.subject_status, s.role, s.starts_at, s.ends_at, s.all_day, s.local_from, s.local_to, s.shared, s.clash_count, s.notes
+  FROM app.v_equipment_schedule s
+ WHERE tstzrange(s.starts_at, s.ends_at) && tstzrange(%(starts)s::timestamptz, %(ends)s::timestamptz)
+   AND (CAST(%(resource_kind)s AS text) IS NULL OR s.resource_kind = %(resource_kind)s)
+   AND (CAST(%(resource_id)s AS bigint) IS NULL OR s.resource_id = %(resource_id)s)
+   AND (CAST(%(resource_type)s AS text) IS NULL OR s.resource_type = %(resource_type)s)
+   AND (CAST(%(premises_id)s AS bigint) IS NULL OR s.premises_id = %(premises_id)s)
+   AND (CAST(%(subject_kind)s AS text) IS NULL OR (s.subject_kind = %(subject_kind)s AND s.subject_id = %(subject_id)s))
+ ORDER BY s.resource_kind, s.resource_name, s.starts_at, s.id
+ LIMIT %(lim)s OFFSET %(off)s
+"""
+
+EQUIPMENT_RESOURCES = """
+SELECT r.resource_kind, r.resource_id, r.name, r.kind, r.premises_id, r.status, r.capacity_l
+  FROM app.v_equipment_resources r
+ WHERE r.active AND r.status <> 'out_of_service'
+   AND (CAST(%(resource_kind)s AS text) IS NULL OR r.resource_kind = %(resource_kind)s)
+   AND (CAST(%(resource_type)s AS text) IS NULL OR r.kind = %(resource_type)s)
+   AND (CAST(%(premises_id)s AS bigint) IS NULL OR r.premises_id = %(premises_id)s)
+   AND (CAST(%(min_capacity_l)s AS numeric) IS NULL OR r.capacity_l >= %(min_capacity_l)s)
+ ORDER BY r.sort_group, r.name
+"""
+
+EQUIPMENT_BOOKED_WINDOWS = """
+SELECT s.resource_kind, s.resource_id, s.starts_at, s.ends_at
+  FROM app.v_equipment_schedule s
+ WHERE tstzrange(s.starts_at, s.ends_at) && tstzrange(%(starts)s::timestamptz, %(ends)s::timestamptz)
+ ORDER BY s.resource_kind, s.resource_id, s.starts_at
+"""

@@ -32,6 +32,7 @@ $vesselHtml = $vessels === [] ? '<span class="text-muted">None</span>' : implode
 $taxHtml = batches_tax_class_badge($batch['tax_class']) . ($batch['tax_class_override'] !== null ? ' <small class="text-muted">override</small>' : '');
 $tabs = ['readings' => 'Readings', 'consumptions' => 'Consumptions', 'transfers' => 'Transfers', 'losses' => 'Losses', 'lineage' => 'Lineage', 'cost' => 'Cost'];
 ?>
+<?php $actions = nav_button('batch-view-schedule-btn', '/schedule/?subject=batch:' . (int) $batch['id'], 'Schedule', 'feather-calendar', 'btn btn-light-brand') . (isset($user) && user_can($user, 'production') ? nav_button('batch-view-reserve-btn', '/reservations/new?subject_kind=batch&subject_id=' . (int) $batch['id'], 'Reserve', 'feather-bookmark', 'btn btn-light-brand') : '') . ($actions ?? ''); ?>
 <?= view('shared/page-header.php', ['title' => $batch['number'], 'screen' => 'batch-view', 'crumbs' => ['Production' => null, 'Batches' => '/batches/', $batch['number'] => null], 'actionsHtml' => $actions]) ?>
 <div class="main-content" id="batch-view-content">
     <div class="row">

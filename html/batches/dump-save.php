@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once dirname(__DIR__, 2) . '/app/bootstrap.php';
 require_once dirname(__DIR__, 2) . '/app/features/batches/queries.php';
+require_once dirname(__DIR__, 2) . '/app/features/reservations/queries.php';
 
 require_post();
 verify_csrf();
@@ -29,6 +30,9 @@ if ($errors === []) {
         if ($locked['status'] !== 'active') { throw new RuntimeException('Batch ' . $batch['number'] . ' is no longer active.'); }
         $vessels = array_column(find_batch_vessels($pdo, $id), 'vessel_name');
         $result = dump_batch($pdo, $locked, $reason, $at->format(DATE_ATOM), $input['note'], (int) $user['id']);
+        foreach (cancel_subject_reservations($pdo, 'batch', $id, (int) $user['id']) as $b) {
+            log_activity($pdo, 'equipment_reservation_cancelled', 'reservation', (int) $b['id'], $batch['number'], ['status' => 'booked'], ['status' => 'cancelled'], ['cause' => 'run_cancelled'], 'batch-dump');
+        }
         log_activity($pdo, 'batch_dumped', 'batch', $id, $batch['number'], ['status' => 'active', 'volume_l' => (float) $locked['current_volume_l'], 'vessels' => $vessels],
             ['status' => 'dumped', 'reason' => $reason['code'], 'ttb_category' => $reason['ttb_category']] + $result, [], 'batch-dump');
         $pdo->commit();

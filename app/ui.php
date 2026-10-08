@@ -14,7 +14,7 @@ const STATUS_COLORS = [
     'counting' => 'info', 'review' => 'warning', 'approved' => 'success',
     'retired' => 'secondary', 'planned' => 'dark', 'in_progress' => 'info', 'complete' => 'success',
     'packaged' => 'success', 'dumped' => 'danger',
-    'empty' => 'success', 'in_use' => 'info', 'cleaning' => 'warning', 'out_of_service' => 'danger',
+    'empty' => 'success', 'in_use' => 'info', 'cleaning' => 'warning', 'out_of_service' => 'danger', 'available' => 'success', 'booked' => 'info',
     'filled' => 'info', 'at_customer' => 'info', 'returned_dirty' => 'warning', 'lost' => 'danger',
     'final' => 'info', 'filed' => 'success',
     'received' => 'success',

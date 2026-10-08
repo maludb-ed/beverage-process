@@ -70,8 +70,11 @@ Endpoints: `https://{client}.{domain}/mcp/records` and `/mcp/activity` (domain p
 | `production_tank_board` | R23 | `premises?`, `vessel?` | Every vessel: occupant (juice lot or batch), volume, fill percent, stage, since when | `app.v_vessel_board` |
 | `production_batches_in_progress` | R24 | `product?`, `stage?` | Active batches with stage, volume, planned package date, days in stage | `batches`, `stage_events`, `production_orders` |
 | `production_press_runs` | R25 | `date_from?`, `date_to?` | Press runs with fruit in, juice out, pomace, yield per ton and bushel | `press_runs`, `app.v_press_run_yields` |
-| `production_orders_by_status` | R26 | `status?` | Orders with product, planned volume, dates, vessels, allocations | `production_orders` and children |
+| `production_orders_by_status` | R26 | `status?` | Orders with product, planned volume, dates, vessels, the equipment plan (every booking with its days, shared mark and overlaps), allocations, batches | `production_orders` and children, `app.v_equipment_schedule` |
 | `production_order_shortages` | R13 | `order_number?` | Per open order: required lines vs available vs on order | `production_orders`, `recipe_lines`, `app.v_item_stock` |
+| `equipment_schedule` | E1 | `vessel?` or `equipment?`, `kind?`, `premises?`, `date_from?`, `date_to?`, `order?` or `batch?` | What is booked on which tank, press, line or equipment, when and for which run; each booking's role, days, times, shared mark and overlaps | `app.v_equipment_schedule` (db/023) |
+| `equipment_free` | E2 | `kind`, `days`, `min_capacity_l?`/`min_capacity_gal?`, `premises?`, `date_from?`, `date_to?` | Every resource of the kind with its free windows of at least `days`, earliest first | `app.v_equipment_resources`, `app.v_equipment_schedule` |
+| `find_equipment` / `find_press_run` / `find_reservation` | helper | `q` | Resolvers: equipment by name; press runs by number; a booking by its resource or run (or `id:`) | `equipment`, `press_runs`, `app.v_equipment_schedule` |
 | `batch_find` | helper | `query` | Batches matching by number or product | `batches` |
 | `batch_consumptions` | R27, R28 | `batch_number`, `purpose?`, `stage?` | Lots consumed with quantity, purpose, stage, when, by whom | `consumptions`, `lots` |
 | `batch_blends` | R29 | `batch_number` | Blend events in and out with volumes and fractions | `batch_blends`, `batch_blend_inputs`, `batch_lineage` |

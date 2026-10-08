@@ -41,20 +41,22 @@ days back the same way, so a booking's days never drift across a time zone or a 
 
 | Entity | success | warning | danger | info | secondary | dark |
 |---|---|---|---|---|---|---|
-| Equipment status | available | — | out_of_service | cleaning | — | — |
+| Equipment status | available | cleaning | out_of_service | — | — | — |
 | Vessel status (unchanged) | empty | — | out_of_service | cleaning | in_use | — |
-| Booking (bar or chip) | — | shared day (background) | on a resource out of service | cleaning block | maintenance block, hold | — |
+| Booking (bar or chip) | — | a bar that overlaps another or is shared: edged warning | on a resource out of service: edged danger | cleaning block | maintenance block | hold |
+| Reservation status | — | — | cancelled | booked | — | — |
 | Booking of a run | the run's own status colour: `production_order_status_color()` for an order, the batch, press-run and packaging-run colours for theirs | | | | | |
 
-A bar's text is the run's number, product and role ("WO-00012 · Dry · Primary"); a block's is its kind and note. The
-current occupant of a vessel that is not the booked run shows as the vessel's info badge on today's cell, as the old
-calendar did.
+A bar's text is the run's number, product and role ("WO-00012 · Dry · Primary"); a block's is its kind and note; a timed
+booking carries a clock; a bar that runs on past the window has a dashed end. What a vessel holds right now shows as an
+info badge ("Now: B-26-004") under its name. (Built 2026-10-08: the equipment status colours follow the locked vocabulary,
+where cleaning is warning; the plan's "cleaning = info" was wrong.)
 
 ## 3. Screen registry (new and changed)
 
 | Screen id | URL | Title | When the user wants to… | Prefill |
 |---|---|---|---|---|
-| `equipment-schedule` | `/schedule/` | Equipment schedule | see what is booked on every tank, press, line and piece of equipment, day by day, and spot clashes; `?view=month` for the month grid | `from` (a Monday), `weeks` (1–12), `view`, `premises`, `kind`, `resource` |
+| `equipment-schedule` | `/schedule/` | Equipment schedule | see what is booked on every tank, press, line and piece of equipment, day by day, and spot clashes; `?view=month` for the month grid | `from` (any date; the window starts on its Monday), `weeks` (1, 2, 4, 8, 12), `view`, `month`, `premises_id`, `kind` (vessel, equipment, or a vessel or equipment kind), `resource` (vessel:12), `subject` (batch:4 — one run's bookings) |
 | `reservation-add` | `/reservations/new` | Reserve equipment | book a resource for a run or block it for cleaning, maintenance or a hold | `resource` (vessel:ID or equipment:ID), `on`, `subject_kind`, `subject_id`, `kind` |
 | `reservation-edit` | `/reservations/{id}/edit` | Reservation | change a booking's window, role, resource or notes | |
 | `reservation-view` | `/reservations/{id}` | Reservation | see a booking — its resource, window, run, who booked it — and cancel it | |
@@ -75,7 +77,7 @@ Navigation: Production → Production orders, **Equipment schedule**, Press runs
 |---|---|---|---|---|---|
 | `equipment_create` / `equipment_update` | `POST /equipment/save` | name, kind, premises, location?, rating?, status?, notes?, active? | delete_row / restore_prior | no | production |
 | `equipment_set_status` | `POST /equipment/{id}/status` | status (available, cleaning, out_of_service) | restore_prior | no | production |
-| `equipment_reserve` | `POST /reservations/save` | resource (vessel or equipment, by name), kind (run, cleaning, maintenance, hold), run? (order, batch, press_run or packaging_run — required for a run), role?, from, to, all_day? (default true), start_time?, end_time?, share? (book over a clash; only honoured under the allow policy), notes? | delete_row | no | production |
+| `equipment_reserve` | `POST /reservations/save` | the form sends resource (vessel:12 / equipment:3), kind, subject_kind + subject_id, role, planned_from, planned_to, all_day, start_time, end_time, share, notes; the kernel's actions server sends ids by name instead — vessel or equipment, order / batch / press_run / packaging_run or block, from, to, start_time, end_time (nothing = all day), share, notes — and the handler reads both | delete_row (cancels) | no | production |
 | `equipment_reservation_update` | `POST /reservations/save` | id + the same | restore_prior | no | production |
 | `equipment_reservation_cancel` | `POST /reservations/{id}/cancel` | — | restore_prior | no | production |
 | `production_order_create` / `_update` | existing | `vessels[]` as today; gains `equipment[]` (resource, role, from, to) | as today | no | production |

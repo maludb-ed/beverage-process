@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 function find_client_settings(PDO $pdo): array
 {
-    $row = $pdo->query('SELECT id, client_name, subdomain, timezone, volume_display_unit, mass_display_unit, fruit_display_unit FROM app.client_settings WHERE id = 1')->fetch();
+    $row = $pdo->query("SELECT id, client_name, subdomain, timezone, volume_display_unit, mass_display_unit, fruit_display_unit, (settings #>> '{equipment,double_booking}') = 'allow' AS equipment_double_booking FROM app.client_settings WHERE id = 1")->fetch();
     if ($row === false) {
         throw new RuntimeException('Client settings row is missing.');
     }

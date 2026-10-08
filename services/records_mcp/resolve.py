@@ -66,6 +66,14 @@ KINDS: dict[str, Kind] = {
     "measurement": Kind("measurement", "app.measurement_types t", ("t.code", "t.name"), "t.code", "t.name || ' (' || t.unit || ')'",
                         "Use a measurement code such as sg, brix, ph, free_so2, total_so2, abv, co2.", id_col="t.code"),
     "stage": Kind("stage", "app.stages t", ("t.code", "t.name"), "t.code", "t.name", "Stages: pitch, primary, rack, maturation, blend, back_sweeten, carbonate, package.", id_col="t.code"),
+    "equipment": Kind("equipment", "app.equipment t", ("t.name",), "t.name", "t.kind || ' · ' || t.status",
+                      "Use the equipment's name such as 'canning line' or 'pump 1'; equipment_schedule lists equipment. A tank or a press is a vessel, not equipment."),
+    "press_run": Kind("press run", "app.press_runs t", ("t.number",), "t.number", "t.status || ' · ' || t.run_on", "Press run numbers look like PR-00001; production_press_runs lists them."),
+    "reservation": Kind("equipment reservation",
+                        "app.v_equipment_schedule t", ("t.resource_name", "t.subject_number"),
+                        "t.resource_name || ' · ' || COALESCE(t.subject_number, t.kind) || ' · ' || t.local_from::text",
+                        "COALESCE(t.subject_label, t.notes, '') || ' · ' || t.role || ' · ' || t.local_from::text || ' to ' || t.local_to::text",
+                        "Name the resource or the run it is booked for (FV-2, WO-00012); equipment_schedule lists bookings with their ids (id:123 works)."),
 }
 
 _ID = re.compile(r"^id:(\d+)$", re.IGNORECASE)

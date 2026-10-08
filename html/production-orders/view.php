@@ -8,7 +8,8 @@ $pdo = db();
 $id = request_integer('id') ?? not_found('That production order does not exist.');
 $order = find_production_order($pdo, $id) ?? not_found('That production order does not exist.');
 log_screen_entered('production-order-view', 'production_order', $id, $order['number']);
+$plan = find_order_plan($pdo, $id);
 render_screen($order['number'], 'production-order-view', view('production-orders/partials/view.php', [
-    'order' => $order, 'vessels' => find_production_order_vessels($pdo, $id), 'conflicts' => find_vessel_conflicts($pdo, $id),
-    'materials' => find_material_check($pdo, $id), 'allocations' => find_allocations($pdo, $id), 'user' => $user,
+    'order' => $order, 'plan' => $plan, 'materials' => find_material_check($pdo, $id), 'allocations' => find_allocations($pdo, $id),
+    'consumed' => find_order_consumed($pdo, $id), 'processing' => find_order_processing_time($pdo, $order, $plan), 'outputs' => find_order_outputs($pdo, $order), 'user' => $user,
 ]), 'production_order', $id);

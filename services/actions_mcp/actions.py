@@ -1004,3 +1004,142 @@ def _make_step(spec: tuple) -> None:
 
 for _spec in DOCUMENT_STEPS:
     _make_step(_spec)
+
+
+# Equipment scheduling (db/023, docs/16) ------------------------------------------------------------------------
+
+@action(ActionMeta(
+    name="equipment_create", title="Add equipment", doc_actions=["equipment_create"],
+    endpoint="POST /equipment/save", role="production", confirm="never",
+    undo_kind="restore_prior", undo_how="Not undone by voice: deactivate it on its page (equipment is never deleted)",
+    events=["equipment_created"], refresh=["equipmentChanged"]))
+async def equipment_create(
+    call: Call,
+    name: Annotated[str, Field(min_length=1, max_length=120, description="The equipment's name as said, e.g. 'canning line', 'pump 2'")],
+    kind: Annotated[Literal["mill", "pump", "filter", "chiller", "carbonator", "canning_line", "bottling_line", "keg_line", "keg_washer", "labeler", "other"], Field(description="What it is")],
+    rating: Annotated[str | None, Field(default=None, max_length=120, description="In words: '120 cans/min', '4,000 L/h'")] = None,
+    location: Annotated[str | None, Field(default=None, max_length=120, description="The area it stands in, when known")] = None,
+    premises: Annotated[str | None, Field(default=None, max_length=120, description="Premises name; omit when there is one")] = None,
+    note: Note = None,
+) -> dict[str, Any]:
+    """Add a piece of equipment that holds no liquid — a mill, pump, filter, chiller, carbonator, canning or bottling line,
+    keg line, keg washer or labeler ("add the new canning line, 120 cans a minute"). A tank or a press is a VESSEL: use
+    the Vessels screen (vessel_create). Executes immediately; equipment is deactivated, never deleted. <<not_for>>
+
+    <<terminal>>"""
+    prem_id = (await resolve.resolve("premises", premises))["id"] if premises else await default_premises()
+    loc = await resolve.resolve("location", location) if location else None
+    return await perform(call, ACTIONS_META["equipment_create"], "/equipment/save", [
+        ("premises_id", prem_id), ("location_id", loc["id"] if loc else ""), ("name", name), ("kind", kind), ("status", "available"),
+        ("rating", rating or ""), ("notes", note or "")], done=f"Equipment {name} added ({kind.replace('_', ' ')})", undo_available=False)
+
+
+@action(ActionMeta(
+    name="equipment_set_status", title="Set equipment status", doc_actions=["equipment_set_status"],
+    endpoint="POST /equipment/{id}/status", role="production", confirm="never",
+    undo_kind="restore_prior", undo_how="Re-POST the before-image status",
+    events=["equipment_status_set"], refresh=["equipmentChanged"]))
+async def equipment_set_status(
+    call: Call,
+    equipment: Annotated[str, Field(description="Equipment name as said, e.g. 'canning line', 'pump 1'")],
+    status: Annotated[Literal["available", "cleaning", "out_of_service"], Field(description="available, cleaning, out_of_service")],
+) -> dict[str, Any]:
+    """Set a piece of equipment's status ("the canning line is out of service", "the filter is clean"). Bookings ahead stay
+    and are shaded on the schedule. Executes immediately and can be undone. For a tank use vessel_set_status. <<not_for>>
+
+    <<terminal>>"""
+    e = await resolve.resolve("equipment", equipment)
+    return await perform(call, ACTIONS_META["equipment_set_status"], f"/equipment/{e['id']}/status", [("status", status)],
+                         done=f"Equipment {e['label']} is now {status.replace('_', ' ')}")
+
+
+@action(ActionMeta(
+    name="equipment_reserve", title="Reserve equipment", doc_actions=["equipment_reserve"],
+    endpoint="POST /reservations/save", role="production", confirm="never",
+    undo_kind="delete_row", undo_how="POST /reservations/{id}/cancel",
+    events=["equipment_reserved"], refresh=["reservationsChanged"]))
+async def equipment_reserve(
+    call: Call,
+    from_date: Annotated[date, Field(description="First day, ISO YYYY-MM-DD")],
+    to_date: Annotated[date | None, Field(default=None, description="Last day, inclusive; omit for one day")] = None,
+    vessel: Annotated[str | None, Field(default=None, description="The tank or press to book, e.g. 'FV-2' (one of vessel / equipment)")] = None,
+    equipment: Annotated[str | None, Field(default=None, description="The equipment to book, e.g. 'canning line' (one of vessel / equipment)")] = None,
+    order: Annotated[str | None, Field(default=None, description="The production order it is for (WO-00012) — one of order / batch / press_run / packaging_run, or a block")] = None,
+    batch: Annotated[str | None, Field(default=None, description="The batch it is for (B-26-004)")] = None,
+    press_run: Annotated[str | None, Field(default=None, description="The press run it is for (PR-00003)")] = None,
+    packaging_run: Annotated[str | None, Field(default=None, description="The packaging run it is for (PK-00005)")] = None,
+    block: Annotated[Literal["cleaning", "maintenance", "hold"] | None, Field(default=None, description="Block the resource instead of booking a run")] = None,
+    role: Annotated[Literal["primary", "maturation", "brite", "blend", "press", "mill", "transfer", "filter", "carbonate", "package", "other"] | None,
+                    Field(default=None, description="What the resource does in the run; default primary for a vessel, other for equipment")] = None,
+    start_time: Annotated[str | None, Field(default=None, pattern=r"^([01]\d|2[0-3]):[0-5]\d$", description="HH:MM when it is not all day")] = None,
+    end_time: Annotated[str | None, Field(default=None, pattern=r"^([01]\d|2[0-3]):[0-5]\d$", description="HH:MM when it is not all day")] = None,
+    share: Annotated[bool, Field(description="Book over a clash as shared use — only when the organization allows double booking and the person said so")] = False,
+    note: Note = None,
+) -> dict[str, Any]:
+    """Book a tank, press, line or piece of equipment for a run, or block it ("book FV-2 for WO-00012 from Nov 2 to Nov 16",
+    "put the canning line on B-26-004 Nov 25 from 8 to 12", "block the filter for cleaning tomorrow"). Give the days (and
+    times when two runs share a day); say which run it is for, or a block. A window already booked is refused with the
+    clashes named; when the organization allows double booking and the person wants it anyway, call again with
+    share=true. Executes immediately and can be undone (cancelled). <<not_for>>
+
+    <<terminal>>"""
+    if bool(vessel) == bool(equipment):
+        raise Invalid("Name exactly one of vessel or equipment.", "vessel")
+    runs = [k for k, v in (("order", order), ("batch", batch), ("press_run", press_run), ("packaging_run", packaging_run)) if v]
+    if block is None and len(runs) != 1:
+        raise Invalid("Say which run the booking is for (one of order, batch, press_run, packaging_run), or a block (cleaning, maintenance, hold).", "order")
+    if block is not None and runs:
+        raise Invalid("A block has no run; give a run or a block, not both.", "block")
+    fields: list[tuple[str, Any]] = [("planned_from", from_date.isoformat()), ("planned_to", (to_date or from_date).isoformat()), ("notes", note or "")]
+    if vessel:
+        v = await resolve.resolve("vessel", vessel)
+        fields.append(("resource", f"vessel:{v['id']}"))
+        what = v["label"]
+    else:
+        e = await resolve.resolve("equipment", equipment)
+        fields.append(("resource", f"equipment:{e['id']}"))
+        what = e["label"]
+    if block is not None:
+        fields.append(("kind", block))
+        for_text = block
+    else:
+        kind_map = {"order": ("production_order", "production_order"), "batch": ("batch", "batch"), "press_run": ("press_run", "press_run"), "packaging_run": ("packaging_run", "packaging_run")}
+        resolve_kind, subject_kind = kind_map[runs[0]]
+        found = await resolve.resolve(resolve_kind, {"order": order, "batch": batch, "press_run": press_run, "packaging_run": packaging_run}[runs[0]])
+        fields += [("kind", "run"), ("subject_kind", subject_kind), ("subject_id", found["id"])]
+        for_text = found["label"]
+    fields.append(("role", role or ("primary" if vessel else "other")))
+    if start_time or end_time:
+        if not (start_time and end_time):
+            raise Invalid("Give both a start and an end time, or neither.", "start_time")
+        fields += [("all_day", "0"), ("start_time", start_time), ("end_time", end_time)]
+    else:
+        fields.append(("all_day", "1"))
+    if share:
+        fields.append(("share", "1"))
+    when = from_date.isoformat() + ("" if not to_date or to_date == from_date else f" to {to_date.isoformat()}") + (f", {start_time}–{end_time}" if start_time else "")
+    return await perform(call, ACTIONS_META["equipment_reserve"], "/reservations/save", fields,
+                         done=f"{what} booked for {for_text}, {when}" + (" (shared)" if share else ""),
+                         field_map={"clashes": "share", "resource": "vessel", "subject_id": "order", "planned_to": "to_date", "planned_from": "from_date"})
+
+
+@action(ActionMeta(
+    name="equipment_reservation_cancel", title="Cancel a reservation", doc_actions=["equipment_reservation_cancel"],
+    endpoint="POST /reservations/{id}/cancel", role="production", confirm="always",
+    undo_kind="none", undo_how="Book it again",
+    events=["equipment_reservation_cancelled"], refresh=["reservationsChanged"]))
+async def equipment_reservation_cancel(
+    call: Call,
+    reservation: Annotated[str, Field(description="The booking: the resource and the run as said ('FV-2 for WO-00012'), or its id from equipment_schedule (id:123)")],
+    confirmed: Confirmed = False,
+) -> dict[str, Any]:
+    """Cancel an equipment booking ("cancel the canning line booking for B-26-004"). Asks for confirmation first; cannot be
+    undone by voice (book it again). Cancelling a production order, press run or packaging run cancels its bookings by
+    itself. <<confirm>> <<not_for>>
+
+    <<terminal>>"""
+    r = await resolve.resolve("reservation", reservation)
+    if not confirmed:
+        return needs_confirmation(f"Cancel the booking {r['label']} ({r['detail']})? It cannot be undone by voice.")
+    return await perform(call, ACTIONS_META["equipment_reservation_cancel"], f"/reservations/{r['id']}/cancel", [],
+                         done=f"Booking {r['label']} cancelled", undo_available=False)

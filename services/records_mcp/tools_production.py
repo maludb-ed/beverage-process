@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import datetime as dt
 from typing import Literal
+from zoneinfo import ZoneInfo
 
 from pydantic import Field, model_validator
 
@@ -422,3 +423,142 @@ async def co_product_dispositions(p: CoProductInput) -> dict:
     return page(out, p, resolved=echo(lot=lot),
                 totals_by_destination=[{"destination": t["destination"], "dispositions": t["dispositions"], "qty": fmt.q(t["qty_base"], t["base_unit_code"], fruit=True)} for t in totals],
                 still_on_hand=[{"lot_number": o["lot_number"], "item": o["item_name"], "location": o["location_name"], "qty": fmt.q(o["qty_on_hand"], o["base_unit_code"], fruit=True)} for o in on_hand])
+
+
+# Equipment scheduling (db/023, docs/16) ------------------------------------------------------------------------
+
+RESOURCE_KINDS = ("vessel", "equipment")
+VESSEL_TYPES = ("tank", "fermenter", "brite", "tote", "ibc", "barrel", "press")
+EQUIPMENT_TYPES = ("mill", "pump", "filter", "chiller", "carbonator", "canning_line", "bottling_line", "keg_line", "keg_washer", "labeler", "other")
+
+
+def _kind_filter(kind: str | None) -> tuple[str | None, str | None]:
+    """'vessel' / 'equipment' → the resource kind; a type such as 'fermenter' or 'canning_line' → the kind and the type."""
+    if kind is None:
+        return None, None
+    k = kind.strip().lower().replace(" ", "_")
+    if k in RESOURCE_KINDS:
+        return k, None
+    if k in VESSEL_TYPES:
+        return "vessel", k
+    if k in EQUIPMENT_TYPES:
+        return "equipment", k
+    raise ToolFailure(f"Unknown kind '{kind}'. Use vessel, equipment, or one of: " + ", ".join(VESSEL_TYPES + EQUIPMENT_TYPES) + ".")
+
+
+def _window(date_from: dt.date | None, date_to: dt.date | None, default_weeks: int) -> tuple[dt.datetime, dt.datetime, dt.date, dt.date]:
+    tz = ZoneInfo(fmt.tz())
+    start = date_from or fmt.today()
+    end = date_to or (start + dt.timedelta(weeks=default_weeks))
+    if end < start:
+        raise ToolFailure("date_to is before date_from.")
+    return (dt.datetime.combine(start, dt.time(), tz), dt.datetime.combine(end + dt.timedelta(days=1), dt.time(), tz), start, end)
+
+
+def _booking(r: dict) -> dict:
+    tz = ZoneInfo(fmt.tz())
+    out = {"reservation_id": r["id"], "resource": r["resource_name"], "resource_kind": r["resource_kind"], "resource_type": r["resource_type"],
+           "resource_status": r["resource_status"], "booking": r["kind"], "role": r["role"], "from": r["local_from"], "to": r["local_to"],
+           "all_day": r["all_day"], "shared": r["shared"], "overlaps": r["clash_count"], "notes": r["notes"]}
+    if r["subject_kind"]:
+        out["for"] = {"kind": r["subject_kind"], "number": r["subject_number"], "label": r["subject_label"], "status": r["subject_status"]}
+    if not r["all_day"]:
+        out["starts_at"] = r["starts_at"].astimezone(tz).strftime("%Y-%m-%d %H:%M")
+        out["ends_at"] = r["ends_at"].astimezone(tz).strftime("%Y-%m-%d %H:%M")
+    return fmt.drop_none(out)
+
+
+class ScheduleInput(Paged):
+    vessel: str | None = Field(None, max_length=60, description="One vessel, e.g. FV-1 (tanks and presses are vessels).")
+    equipment: str | None = Field(None, max_length=120, description="One piece of equipment, e.g. 'canning line', 'pump 1'.")
+    kind: str | None = Field(None, max_length=30, description="'vessel' or 'equipment', or a type: fermenter, brite, tank, press, canning_line, pump, filter, …")
+    premises: str | None = Field(None, max_length=120, description="Premises name; default all.")
+    date_from: dt.date | None = Field(None, description="Window start (ISO date); default today.")
+    date_to: dt.date | None = Field(None, description="Window end, inclusive; default 4 weeks after date_from.")
+    order: str | None = Field(None, max_length=40, description="Only the bookings of one production order (WO-00012).")
+    batch: str | None = Field(None, max_length=40, description="Only the bookings of one batch (B-26-004).")
+
+
+@records_tool("equipment_schedule", "What is booked on which equipment, when",
+              """Call for the equipment schedule: what is booked on which tank, press, line or piece of equipment, when and for which
+              run (E1) — "what is on the canning line next week", "when is FV-2 booked", "what equipment does WO-00012 hold". Each
+              booking: the resource, the run (production order, batch, press run or packaging run) or the block (cleaning,
+              maintenance, hold), its role, its days (and times when not all day), whether it is shared and how many other
+              bookings it overlaps. Bookings of cancelled runs are gone; what a tank holds right now is production_tank_board.""")
+async def equipment_schedule(p: ScheduleInput) -> dict:
+    vessel = await resolve_opt("vessel", p.vessel)
+    equipment = await resolve_opt("equipment", p.equipment)
+    premises = await resolve_opt("premises", p.premises)
+    order = await resolve_opt("order", p.order)
+    batch = await resolve_opt("batch", p.batch)
+    if vessel and equipment:
+        raise ToolFailure("Name a vessel or a piece of equipment, not both.")
+    resource_kind, resource_type = _kind_filter(p.kind)
+    resource_id = None
+    if vessel:
+        resource_kind, resource_id = "vessel", rid(vessel)
+    elif equipment:
+        resource_kind, resource_id = "equipment", rid(equipment)
+    subject_kind = subject_id = None
+    if order:
+        subject_kind, subject_id = "production_order", rid(order)
+    elif batch:
+        subject_kind, subject_id = "batch", rid(batch)
+    starts, ends, d0, d1 = _window(p.date_from, p.date_to, 4)
+    rows = await db.fetch_all("records", Q.EQUIPMENT_SCHEDULE, std(p, starts=starts, ends=ends, resource_kind=resource_kind, resource_id=resource_id,
+                                                                     resource_type=resource_type, premises_id=rid(premises), subject_kind=subject_kind, subject_id=subject_id))
+    out = [_booking(r) for r in rows]
+    return page(out, p, resolved=echo(vessel=vessel, equipment=equipment, premises=premises, order=order, batch=batch),
+                window={"from": d0, "to": d1}, shared=sum(1 for o in out if o.get("shared")), overlapping=sum(1 for o in out if o.get("overlaps")))
+
+
+class FreeInput(Input):
+    kind: str = Field(..., max_length=30, description="What is needed: 'vessel', 'equipment', or a type such as fermenter, brite, tank, press, canning_line, pump, filter.")
+    days: int = Field(1, ge=1, le=365, description="How many whole days in a row are needed.")
+    min_capacity_l: float | None = Field(None, ge=0, description="For vessels: at least this capacity in liters.")
+    min_capacity_gal: float | None = Field(None, ge=0, description="For vessels: at least this capacity in US gallons (converted).")
+    premises: str | None = Field(None, max_length=120, description="Premises name; default all.")
+    date_from: dt.date | None = Field(None, description="Look from this date (ISO); default today.")
+    date_to: dt.date | None = Field(None, description="Look up to this date, inclusive; default 12 weeks after date_from.")
+    limit: int = Field(20, ge=1, le=100, description="At most this many resources.")
+
+
+@records_tool("equipment_free", "When is equipment free",
+              """Call to find when a resource is free for a stretch of days (E2) — "where can I ferment 500 gallons for two weeks
+              from Monday", "when is a brite free for 3 days", "which fermenters are open in December". For every active vessel or
+              piece of equipment of the kind (with at least the capacity, when given) that is not out of service: its free
+              windows of at least `days` whole days inside the window, the first one first; resources with the earliest free
+              window come first. A free window means no booking at all; it does not look at what a tank holds today
+              (production_tank_board does).""")
+async def equipment_free(p: FreeInput) -> dict:
+    premises = await resolve_opt("premises", p.premises)
+    resource_kind, resource_type = _kind_filter(p.kind)
+    min_l = p.min_capacity_l
+    if p.min_capacity_gal is not None:
+        min_l = max(min_l or 0.0, p.min_capacity_gal * 3.785411784)
+    starts, ends, d0, d1 = _window(p.date_from, p.date_to, 12)
+    resources = await db.fetch_all("records", Q.EQUIPMENT_RESOURCES, {"resource_kind": resource_kind, "resource_type": resource_type, "premises_id": rid(premises), "min_capacity_l": min_l})
+    booked = await db.fetch_all("records", Q.EQUIPMENT_BOOKED_WINDOWS, {"starts": starts, "ends": ends})
+    by_key: dict[tuple[str, int], list[tuple[dt.datetime, dt.datetime]]] = {}
+    for b in booked:
+        by_key.setdefault((b["resource_kind"], b["resource_id"]), []).append((b["starts_at"], b["ends_at"]))
+    need = dt.timedelta(days=p.days)
+    tz = ZoneInfo(fmt.tz())
+    out = []
+    for r in resources:
+        cursor = starts
+        windows = []
+        for s, e in sorted(by_key.get((r["resource_kind"], r["resource_id"]), [])):
+            if s > cursor and s - cursor >= need:
+                windows.append((cursor, s))
+            cursor = max(cursor, e)
+        if ends > cursor and ends - cursor >= need:
+            windows.append((cursor, ends))
+        if not windows:
+            continue
+        out.append({"resource": r["name"], "resource_kind": r["resource_kind"], "type": r["kind"], "status": r["status"], "capacity": vol(r["capacity_l"]),
+                    "free": [{"from": s.astimezone(tz).date(), "to": (e.astimezone(tz) - dt.timedelta(days=1)).date(), "days": (e - s).days} for s, e in windows],
+                    "first_free": windows[0][0].astimezone(tz).date()})
+    out.sort(key=lambda o: (o["first_free"], o["resource"]))
+    return {"resolved": echo(premises=premises), "window": {"from": d0, "to": d1}, "days_needed": p.days, "count": len(out), "resources": out[: p.limit],
+            "none_free": [r["name"] for r in resources if r["name"] not in {o["resource"] for o in out}]}

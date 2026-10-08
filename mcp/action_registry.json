@@ -1,6 +1,6 @@
 {
     "generated_from": "config/manifest.json (docs/05-action-manifest.md)",
-    "generated_at": "2026-10-05T00:06:13+00:00",
+    "generated_at": "2026-10-08T14:48:25+00:00",
     "screens": {
         "dashboard": {
             "screen": "dashboard",
@@ -877,7 +877,7 @@
             "screen": "production-order-add",
             "url": "/production-orders/new",
             "section": "Slice 5: production orders",
-            "when": "plan a batch: product, recipe, volume, dates, vessels — the empty form for a new one",
+            "when": "plan a batch: product, recipe, volume, dates, the equipment plan (vessels and equipment with their days) — the empty form for a new one",
             "params": [
                 "product",
                 "volume_gal",
@@ -890,7 +890,7 @@
             "screen": "production-order-edit",
             "url": "/production-orders/{id}/edit",
             "section": "Slice 5: production orders",
-            "when": "plan a batch: product, recipe, volume, dates, vessels — the form for an existing record",
+            "when": "plan a batch: product, recipe, volume, dates, the equipment plan (vessels and equipment with their days) — the form for an existing record",
             "params": [],
             "built": true,
             "stub": false
@@ -899,7 +899,7 @@
             "screen": "production-order-view",
             "url": "/production-orders/{id}",
             "section": "Slice 5: production orders",
-            "when": "see an order, its material check, vessel conflicts, allocations; release or close it",
+            "when": "see an order as a run: its equipment plan with clashes, inputs (the material check, consumed so far), processing time (recipe stages planned vs actual), outputs (planned packages, batches, packaging runs, finished lots), allocations; release or close it",
             "params": [],
             "built": true,
             "stub": false
@@ -908,7 +908,7 @@
             "screen": "production-calendar",
             "url": "/production-orders/calendar",
             "section": "Slice 5: production orders",
-            "when": "see planned vessel use over time and spot conflicts",
+            "when": "(2026-10-08: redirects to the Equipment schedule, `/schedule/?kind=vessel`)",
             "params": [],
             "built": true,
             "stub": false
@@ -1632,6 +1632,99 @@
             ],
             "built": true,
             "stub": false
+        },
+        "equipment-schedule": {
+            "screen": "equipment-schedule",
+            "url": "/schedule/",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "see what is booked on every tank, press, line and piece of equipment, day by day, and spot clashes; `view=month` for the month grid",
+            "params": [
+                "from",
+                "weeks",
+                "view",
+                "month",
+                "premises_id",
+                "kind",
+                "resource",
+                "subject"
+            ],
+            "built": true,
+            "stub": false
+        },
+        "reservation-add": {
+            "screen": "reservation-add",
+            "url": "/reservations/new",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "book a vessel or a piece of equipment for a run, or block it for cleaning, maintenance or a hold",
+            "params": [
+                "resource",
+                "on",
+                "subject_kind",
+                "subject_id",
+                "kind"
+            ],
+            "built": true,
+            "stub": false
+        },
+        "reservation-edit": {
+            "screen": "reservation-edit",
+            "url": "/reservations/{id}/edit",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "change a booking's window, role, resource or notes",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
+        "reservation-view": {
+            "screen": "reservation-view",
+            "url": "/reservations/{id}",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "see a booking, its overlaps and the vessel's occupant; cancel it",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
+        "equipment-list": {
+            "screen": "equipment-list",
+            "url": "/equipment/",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "see the mills, pumps, filters, lines and other equipment, their status and next booking (cards)",
+            "params": [
+                "kind",
+                "status"
+            ],
+            "built": true,
+            "stub": false
+        },
+        "equipment-add": {
+            "screen": "equipment-add",
+            "url": "/equipment/new",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "add or change a piece of equipment, set its status — the empty form for a new one",
+            "params": [
+                "name",
+                "kind"
+            ],
+            "built": true,
+            "stub": false
+        },
+        "equipment-edit": {
+            "screen": "equipment-edit",
+            "url": "/equipment/{id}/edit",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "add or change a piece of equipment, set its status — the form for an existing record",
+            "params": [],
+            "built": true,
+            "stub": false
+        },
+        "equipment-view": {
+            "screen": "equipment-view",
+            "url": "/equipment/{id}",
+            "section": "Equipment scheduling (docs/15, docs/16 — 2026-10-08)",
+            "when": "see a piece of equipment and its bookings ahead and past; set its status",
+            "params": [],
+            "built": true,
+            "stub": false
         }
     },
     "actions": {
@@ -2283,25 +2376,15 @@
         },
         "client_settings_update": {
             "action": "client_settings_update",
-            "section": "Foundation",
-            "endpoint": "/settings/client/save",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/settings/client-save",
             "method": "POST",
             "params": [
                 {
-                    "name": "client_name",
+                    "name": "equipment_double_booking",
                     "required": false,
                     "repeated": false,
-                    "hint": ""
-                },
-                {
-                    "name": "timezone",
-                    "required": false,
-                    "repeated": false,
-                    "hint": ""
-                },
-                {
-                    "name": null,
-                    "note": "display units"
+                    "hint": "on or off; with the display units and time zone"
                 }
             ],
             "undo": "restore prior",
@@ -2594,6 +2677,378 @@
             "who": "compliance",
             "built": true,
             "controller": "customers/save.php"
+        },
+        "equipment_create": {
+            "action": "equipment_create",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/equipment/save",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "name",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "mill, pump, filter, chiller, carbonator, canning_line, bottling_line, keg_line, keg_washer, labeler, other"
+                },
+                {
+                    "name": "premises",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "location",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "rating",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "notes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior (never deleted; deactivated)",
+            "confirm": false,
+            "approval": null,
+            "fixed": [],
+            "log_event": "equipment.create",
+            "who": "production",
+            "built": true,
+            "controller": "equipment/save.php"
+        },
+        "equipment_reservation_cancel": {
+            "action": "equipment_reservation_cancel",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/reservations/{reservation}/cancel",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "reservation",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the reservation (its number or name, or its id)"
+                }
+            ],
+            "undo": null,
+            "confirm": true,
+            "approval": null,
+            "fixed": [],
+            "log_event": "equipment_reservation.cancel",
+            "who": "production",
+            "built": true,
+            "controller": "reservations/cancel.php"
+        },
+        "equipment_reservation_update": {
+            "action": "equipment_reservation_update",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/reservations/save",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "reservation",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the booking's id"
+                },
+                {
+                    "name": "vessel",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "equipment",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "from",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "to",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "batch",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "press_run",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "packaging_run",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "block",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "role",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "start_time",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "end_time",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "share",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "notes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "fixed": [],
+            "log_event": "equipment_reservation.update",
+            "who": "production",
+            "built": true,
+            "controller": "reservations/save.php"
+        },
+        "equipment_reserve": {
+            "action": "equipment_reserve",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/reservations/save",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "vessel",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the tank or press to book — one of vessel / equipment"
+                },
+                {
+                    "name": "equipment",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the mill / pump / filter / line to book"
+                },
+                {
+                    "name": "from",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "first day"
+                },
+                {
+                    "name": "to",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "last day — inclusive"
+                },
+                {
+                    "name": "order",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "the production order it is for — one of order / batch / press_run / packaging_run / block"
+                },
+                {
+                    "name": "batch",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "press_run",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "packaging_run",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "block",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "cleaning / maintenance / hold — blocks the resource instead of a run"
+                },
+                {
+                    "name": "role",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "primary / maturation / brite / blend / press / mill / transfer / filter / carbonate / package / other"
+                },
+                {
+                    "name": "start_time",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "HH:MM when not all day"
+                },
+                {
+                    "name": "end_time",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "HH:MM when not all day"
+                },
+                {
+                    "name": "share",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "1 books over a clash as shared use — only when the organization allows double booking"
+                },
+                {
+                    "name": "notes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "delete row (cancels the booking)",
+            "confirm": false,
+            "approval": null,
+            "fixed": [],
+            "log_event": "equipment.reserve",
+            "who": "production",
+            "built": true,
+            "controller": "reservations/save.php"
+        },
+        "equipment_set_status": {
+            "action": "equipment_set_status",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/equipment/{equipment}/status",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "equipment",
+                    "required": true,
+                    "repeated": false,
+                    "hint": "the equipment (its number or name, or its id)"
+                },
+                {
+                    "name": "status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "available, cleaning, out_of_service"
+                }
+            ],
+            "undo": "restore prior",
+            "confirm": false,
+            "approval": null,
+            "fixed": [],
+            "log_event": "equipment.set_status",
+            "who": "production",
+            "built": true,
+            "controller": "equipment/status.php"
+        },
+        "equipment_update": {
+            "action": "equipment_update",
+            "section": "Equipment scheduling (docs/16)",
+            "endpoint": "/equipment/save",
+            "method": "POST",
+            "params": [
+                {
+                    "name": "name",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "kind",
+                    "required": false,
+                    "repeated": false,
+                    "hint": "mill, pump, filter, chiller, carbonator, canning_line, bottling_line, keg_line, keg_washer, labeler, other"
+                },
+                {
+                    "name": "premises",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "location",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "rating",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "status",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                },
+                {
+                    "name": "notes",
+                    "required": false,
+                    "repeated": false,
+                    "hint": ""
+                }
+            ],
+            "undo": "restore prior (never deleted; deactivated)",
+            "confirm": false,
+            "approval": null,
+            "fixed": [],
+            "log_event": "equipment.update",
+            "who": "production",
+            "built": true,
+            "controller": "equipment/save.php"
         },
         "finished_lot_tax_class_override": {
             "action": "finished_lot_tax_class_override",
@@ -4551,7 +5006,7 @@
                     "name": "press_run",
                     "required": true,
                     "repeated": false,
-                    "hint": "the press run's id"
+                    "hint": "the press run (its number or name, or its id)"
                 },
                 {
                     "name": null,
@@ -4840,10 +5295,10 @@
                     "hint": ""
                 },
                 {
-                    "name": "vessels",
+                    "name": "plan",
                     "required": false,
                     "repeated": true,
-                    "hint": ""
+                    "hint": "resource, role, planned_from, planned_to, all_day, start_time, end_time, share"
                 }
             ],
             "undo": "delete row",
@@ -4916,10 +5371,10 @@
                     "hint": ""
                 },
                 {
-                    "name": "vessels",
+                    "name": "plan",
                     "required": false,
                     "repeated": true,
-                    "hint": ""
+                    "hint": "resource, role, planned_from, planned_to, all_day, start_time, end_time, share"
                 }
             ],
             "undo": "restore prior",

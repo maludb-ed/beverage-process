@@ -23,13 +23,13 @@ const FEATURE_KIND = [
     'vessels' => 'vessel', 'items' => 'item', 'suppliers' => 'supplier', 'lots' => 'lot', 'batches' => 'batch', 'purchase-orders' => 'po',
     'receipts' => 'receipt', 'production-orders' => 'order', 'kegs' => 'keg', 'orders' => 'sales_order', 'packaging-runs' => 'packaging_run',
     'customers' => 'customer', 'locations' => 'location', 'premises' => 'premises', 'products' => 'product', 'ttb-reports' => 'report',
-    'reason-codes' => 'reason', 'tanks' => 'vessel',
+    'reason-codes' => 'reason', 'tanks' => 'vessel', 'equipment' => 'equipment', 'reservations' => 'reservation', 'press-runs' => 'press_run',
 ];
 /** Features the kernel manages itself while OS_ENABLED is on: no action tool is made for them. */
 const MANAGED_BY_KERNEL = ['users'];
 /** Two-word entities, so the log event splits at the right place (receipt_line.weigh_tag, not receipt.line_weigh_tag). */
 const TWO_WORD = ['item_class', 'purchase_order', 'production_order', 'packaging_run', 'packaging_config', 'press_run', 'standing_order', 'finished_lot',
-    'reason_code', 'standard_cost', 'sales_order', 'count_line', 'supplier_item', 'item_unit', 'recipe_version', 'lab_reading', 'ttb_report', 'tank_board', 'customer_order'];
+    'reason_code', 'standard_cost', 'sales_order', 'count_line', 'supplier_item', 'item_unit', 'recipe_version', 'lab_reading', 'ttb_report', 'tank_board', 'customer_order', 'equipment_reservation'];
 
 function singular(string $feature): string
 {

@@ -42,7 +42,7 @@ function navigation_groups(): array
         ]],
         ['label' => 'Production', 'icon' => 'feather-droplet', 'items' => [
             ['screen' => 'production-orders-list', 'label' => 'Production orders', 'url' => '/production-orders/', 'slice' => 5],
-            ['screen' => 'production-calendar', 'label' => 'Vessel calendar', 'url' => '/production-orders/calendar', 'slice' => 5],
+            ['screen' => 'equipment-schedule', 'label' => 'Equipment schedule', 'url' => '/schedule/', 'slice' => 13],
             ['screen' => 'press-runs-list', 'label' => 'Press runs', 'url' => '/press-runs/', 'slice' => 6],
             ['screen' => 'tank-board', 'label' => 'Tank board', 'url' => '/tank-board/', 'slice' => 6],
             ['screen' => 'batches-list', 'label' => 'Batches', 'url' => '/batches/', 'slice' => 6],
@@ -86,6 +86,7 @@ function navigation_groups(): array
             ['screen' => 'premises-list', 'label' => 'Premises', 'url' => '/premises/', 'slice' => 1],
             ['screen' => 'locations-list', 'label' => 'Locations', 'url' => '/locations/', 'slice' => 1],
             ['screen' => 'vessels-list', 'label' => 'Vessels', 'url' => '/vessels/', 'slice' => 1],
+            ['screen' => 'equipment-list', 'label' => 'Equipment', 'url' => '/equipment/', 'slice' => 13],
             ['screen' => 'items-list', 'label' => 'Items', 'url' => '/items/', 'slice' => 1],
             ['screen' => 'item-classes-list', 'label' => 'Item classes', 'url' => '/item-classes/', 'slice' => 1],
             ['screen' => 'units-list', 'label' => 'Units', 'url' => '/units/', 'slice' => 1],

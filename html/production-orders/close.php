@@ -13,7 +13,15 @@ try {
     $pdo->beginTransaction();
     $order = find_production_order($pdo, $id, true) ?? not_found('That production order does not exist.');
     $after = close_production_order($pdo, $id, (int) $user['id']);
-    log_activity($pdo, 'production_order_closed', 'production_order', $id, $order['number'], ['status' => $order['status']], $after, [], 'production-order-view');
+    $bookings = trim_subject_reservations($pdo, 'production_order', $id, (int) $user['id']);
+    foreach ($bookings['cancelled'] as $b) {
+        log_activity($pdo, 'equipment_reservation_cancelled', 'reservation', (int) $b['id'], $order['number'], ['status' => 'booked'], ['status' => 'cancelled'], ['cause' => 'run_closed'], 'production-order-view');
+    }
+    foreach ($bookings['trimmed'] as $b) {
+        log_activity($pdo, 'equipment_reservation_updated', 'reservation', (int) $b['id'], $order['number'], [], ['ends_at' => $b['ends_at']], ['cause' => 'run_closed'], 'production-order-view');
+    }
+    log_activity($pdo, 'production_order_closed', 'production_order', $id, $order['number'], ['status' => $order['status']],
+        $after + ['bookings_cancelled' => count($bookings['cancelled']), 'bookings_trimmed' => count($bookings['trimmed'])], [], 'production-order-view');
     $pdo->commit();
     flash('success', 'Production order ' . $order['number'] . ' closed.');
     hx_trigger('productionOrdersChanged');

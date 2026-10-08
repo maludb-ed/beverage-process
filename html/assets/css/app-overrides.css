@@ -157,3 +157,22 @@ html.app-skin-dark .assistant-reply { background: #121a2d; border-color: #19253f
 .tank-view-volume { font-size: 11px; margin: 2px 0 8px; }
 .tank-view-actions .btn { min-height: 0; padding: 2px 6px; font-size: 11px; }
 @media (max-width: 575px) { .tank-view-card { width: 140px; } .tank-view-glass { width: 60px; height: 100px; } }
+
+/* EQUIPMENT SCHEDULE (schedule/partials/timeline.php): resources as rows, days as columns, a bar per booking spanning
+   its days; two bookings that overlap on one resource take two lanes; a bar that overlaps another is edged amber. */
+.schedule-table th, .schedule-table td { padding: 0.25rem 0.3rem; vertical-align: middle; }
+.schedule-table .schedule-day { min-width: 2.1rem; text-align: center; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.schedule-table .schedule-resource { position: sticky; left: 0; z-index: 2; min-width: 11rem; max-width: 14rem; background: var(--bs-card-bg, #fff); border-right: 2px solid var(--bs-border-color); }
+.schedule-table .schedule-weekend { background: rgba(var(--bs-secondary-rgb), 0.06); }
+.schedule-table .schedule-today { box-shadow: inset 0 -3px 0 var(--bs-primary); }
+.schedule-table td.schedule-today { box-shadow: inset 3px 0 0 rgba(var(--bs-primary-rgb), 0.35); }
+.schedule-table .schedule-group td { background: rgba(var(--bs-secondary-rgb), 0.08); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+.schedule-bar { display: block; border-radius: 6px; padding: 2px 6px; font-size: 11px; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid transparent; text-decoration: none; }
+.schedule-bar-shared { border-color: var(--bs-warning); box-shadow: inset 0 0 0 1px var(--bs-warning); }
+.schedule-bar-out { border-color: var(--bs-danger); }
+.schedule-bar-cut-start { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-style: dashed; }
+.schedule-bar-cut-end { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right-style: dashed; }
+.schedule-scroll { overflow: auto; }
+html.app-skin-dark .schedule-table .schedule-resource { background: var(--bs-dark); }
+.schedule-month-table td { vertical-align: top; min-width: 7rem; height: 6rem; }
+.schedule-chip { display: block; border-radius: 6px; padding: 1px 6px; font-size: 11px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid transparent; text-decoration: none; }

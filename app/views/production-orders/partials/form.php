@@ -1,4 +1,4 @@
-<?php /** @var array $order  @var array $rows  @var array $errors  @var array $rowErrors  @var array $products  @var array $premises  @var array $vesselCatalog  @var array $recipes */
+<?php /** @var array $order  @var array $rows  @var array $errors  @var array $rowErrors  @var array $products  @var array $premises  @var array $groups  @var array $catalog  @var array $recipes  @var bool $allowShare */
 $id = $order['id'] ?? null;
 $isEdit = $id !== null;
 $title = $isEdit ? 'Edit ' . ($order['number'] ?? 'Production Order') : 'Add Production Order';
@@ -33,16 +33,17 @@ $volumeL = is_numeric($gal) ? from_display((float) $gal, 'L') : null;
                     <?= form_textarea($p, 'notes', 'Notes', $order['notes'] ?? '', $errors, ['last' => true]) ?>
                 </div>
             </div>
-            <div class="card" id="production-order-form-vessels-card">
+            <div class="card" id="production-order-form-plan-card">
                 <div class="card-header">
-                    <h5 class="card-title">Vessel plan</h5>
-                    <button type="button" class="btn btn-sm btn-light-brand" id="production-order-form-vessel-add-btn"
-                            hx-get="/production-orders/vessel-row" hx-target="#production-order-form-vessels" hx-swap="beforeend"
-                            hx-include="#production-order-form-field-planned-volume-gal" hx-vals='js:{n: "n" + Date.now()}'><i class="feather-plus me-1"></i>Add vessel</button>
+                    <h5 class="card-title">Equipment plan</h5>
+                    <button type="button" class="btn btn-sm btn-light-brand" id="production-order-form-plan-add-btn"
+                            hx-get="/production-orders/plan-row" hx-target="#production-order-form-plan" hx-swap="beforeend"
+                            hx-include="#production-order-form-field-planned-volume-gal" hx-vals='js:{n: "n" + Date.now()}'><i class="feather-plus me-1"></i>Add a row</button>
                 </div>
-                <div class="card-body" id="production-order-form-vessels">
+                <div class="card-body" id="production-order-form-plan">
+                    <div class="fs-12 text-muted mb-3" id="production-order-form-plan-help">Book the tanks, the press, the lines and any equipment this run needs, with the days each is held. A row that overlaps another booking is refused<?= $allowShare ? ' unless you tick "Book anyway"' : '' ?>.</div>
                     <?php foreach ($rows as $n => $row): ?>
-                        <?= view('production-orders/partials/vessel-row.php', ['n' => $n, 'row' => $row, 'rowErrors' => $rowErrors[$n] ?? [], 'vesselCatalog' => $vesselCatalog, 'volumeL' => $volumeL]) ?>
+                        <?= view('production-orders/partials/plan-row.php', ['n' => $n, 'row' => $row, 'rowErrors' => $rowErrors[$n] ?? [], 'groups' => $groups, 'catalog' => $catalog, 'volumeL' => $volumeL, 'allowShare' => $allowShare]) ?>
                     <?php endforeach; ?>
                 </div>
             </div>

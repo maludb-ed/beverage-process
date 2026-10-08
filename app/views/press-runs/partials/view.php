@@ -14,6 +14,7 @@ if ($isDraft && user_can($user, 'production')) {
 }
 $li = static fn(string $key, string $icon, string $label, string $html, bool $last = false) => '<li class="hstack justify-content-between ' . ($last ? 'mb-0' : 'mb-4') . '"><span class="text-muted fw-medium hstack gap-3"><i class="' . e($icon) . '"></i>' . e($label) . '</span><span id="press-run-view-' . e($key) . '" class="text-end">' . $html . '</span></li>';
 ?>
+<?php $actions = nav_button('press-run-view-schedule-btn', '/schedule/?subject=press_run:' . (int) $run['id'], 'Schedule', 'feather-calendar', 'btn btn-light-brand') . (isset($user) && user_can($user, 'production') ? nav_button('press-run-view-reserve-btn', '/reservations/new?subject_kind=press_run&subject_id=' . (int) $run['id'], 'Reserve', 'feather-bookmark', 'btn btn-light-brand') : '') . ($actions ?? ''); ?>
 <?= view('shared/page-header.php', ['title' => $run['number'], 'screen' => 'press-run-view', 'crumbs' => ['Production' => null, 'Press runs' => '/press-runs/', $run['number'] => null], 'actionsHtml' => $actions]) ?>
 <div class="main-content" id="press-run-view-content">
     <div class="row">

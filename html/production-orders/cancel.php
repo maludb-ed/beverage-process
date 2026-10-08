@@ -13,7 +13,11 @@ try {
     $pdo->beginTransaction();
     $order = find_production_order($pdo, $id, true) ?? not_found('That production order does not exist.');
     $after = cancel_production_order($pdo, $id, (int) $user['id']);
-    log_activity($pdo, 'production_order_cancelled', 'production_order', $id, $order['number'], ['status' => $order['status']], $after, [], 'production-order-view');
+    $bookings = cancel_subject_reservations($pdo, 'production_order', $id, (int) $user['id']);
+    foreach ($bookings as $b) {
+        log_activity($pdo, 'equipment_reservation_cancelled', 'reservation', (int) $b['id'], $order['number'], ['status' => 'booked'], ['status' => 'cancelled'], ['cause' => 'run_cancelled'], 'production-order-view');
+    }
+    log_activity($pdo, 'production_order_cancelled', 'production_order', $id, $order['number'], ['status' => $order['status']], $after + ['bookings_cancelled' => count($bookings)], [], 'production-order-view');
     $pdo->commit();
     flash('success', 'Production order ' . $order['number'] . ' cancelled.');
     hx_trigger('productionOrdersChanged');

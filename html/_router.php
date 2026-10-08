@@ -16,6 +16,10 @@ declare(strict_types=1);
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = '/' . trim($path, '/');
 $root = __DIR__;
+// Under php -S (development) a real file — the assets — is served as it is.
+if (PHP_SAPI === 'cli-server' && $path !== '/' && is_file($root . $path)) {
+    return false;
+}
 
 $fixed = [
     '/sso'              => 'sso.php',              // the Business OS kernel's hand-off (os-adoption)
