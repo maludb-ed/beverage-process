@@ -1,7 +1,7 @@
 # Equipment scheduling: plan
 
 **Date:** 2026-10-08
-**Status:** for the owner's checkpoint. Section 10 lists the decisions with a recommendation each; nothing is built. Follows
+**Status:** APPROVED 2026-10-08 — the owner took every recommendation of section 10 (D1–D13). Step 1 is built the same day: [16-equipment-schedule-design.md](16-equipment-schedule-design.md) and `db/023_equipment_schedule.sql`, proven by `scripts/prove-equipment-schedule.sh` (39 checks). Follows
 the customer-orders pattern ([11](11-customer-orders-plan.md) plan → [12](12-customer-orders-design.md) design with the
 schema file → [13](13-customer-orders-progress.md) steps): when the answers are in, the design doc and
 `db/023_equipment_schedule.sql` come next, proven before a screen is written.

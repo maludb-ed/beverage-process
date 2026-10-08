@@ -45,3 +45,6 @@ GRANT SELECT (id, client_name, timezone, volume_display_unit, mass_display_unit,
 -- os-adoption (db/021): the sign-on tables are auth material too.
 REVOKE SELECT ON app.sso_nonces, app.member_sessions, app.directory_sync_state, app.activity_ingest_state FROM cidery_records_ro;
 REVOKE SELECT ON app.sso_nonces, app.member_sessions FROM cidery_activity_ro;
+
+-- Equipment scheduling (db/023): the clash function and the time zone helper, for the records server's schedule tools.
+GRANT EXECUTE ON FUNCTION app.equipment_clashes(text, bigint, timestamptz, timestamptz, bigint), app.client_timezone() TO cidery_records_ro;
